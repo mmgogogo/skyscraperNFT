@@ -28,3 +28,16 @@
 ├── web3
 │   └── app.js                          # web3库 实现方案js部分
 └── web3_example.html                   # web3库 实现方案js部分
+
+##### 开启本地rpc节点
+```
+$ npm install -g ganache-cli
+
+# or 
+
+$ yarn global add ganache-cli
+
+# start node server
+$ ganache-cli
+
+```
