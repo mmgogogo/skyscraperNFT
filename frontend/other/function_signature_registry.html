@@ -1,0 +1,74 @@
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.2.3/milligram.min.css">
+    <title>function signature registry</title>
+    <link rel="icon" type="image/jpg" href="func.png"/>
+  </head>
+  <body class="container" style="padding-top: 3%;">
+    <h4>Function Signature Registry</h4>
+    <form>
+      <input name="signature" type="text" maxlength="100" placeholder="4byte" aria-labelledby="submit-signature">
+        <button type="submit" id="submit-signature">Lookup Signature</button>
+    </form>
+    <form>
+      <input name="convert" type="text" maxlength="100" placeholder="function name" aria-labelledby="submit-function">
+        <button type="submit" id="submit-function">Convert Function</button>
+    </form>
+    </div>
+
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"
+        type="application/javascript"></script>
+    <script type="text/javascript" src="signature-registry.js"></script>
+    <script type="text/javascript">
+
+    const form = document.forms[0]
+    const stringForm = document.forms[1]
+    const formInput = form.elements['signature'];
+    const stringFormInput = stringForm.elements['convert'];
+
+    const network = "homestead";
+    const PROJECT_ID = '2b87743d59bb4d95934857be8a9168e0'
+    const provider = ethers.getDefaultProvider(network, {
+      infura: PROJECT_ID,
+    })
+
+    let registry = new ethers.Contract( '0x44691B39d1a75dC4E0A0346CBB15E310e6ED1E86' , SignatureRegistry.abi , provider )
+      
+      form.onsubmit = function(event) {
+        // stop our form submission from refreshing the page
+        event.preventDefault();
+        let input = formInput.value
+
+        registry.entries(input).then(function(result){
+          var div = document.createElement('div');
+          div.id = 'signature-result';
+
+          if(!result){
+            result = "not found"
+          }
+          
+          div.innerHTML = input + " => " + result
+          document.body.appendChild(div);   
+
+        })
+
+        form.reset()
+      }
+
+      stringForm.onsubmit = function(event) {
+        // stop our form submission from refreshing the page
+        event.preventDefault();
+        let input = stringFormInput.value
+        let result = ethers.utils.id(input)
+        var div = document.createElement('div');
+        div.id = 'convert-result';
+        // splice the string to the first ten chars
+        div.innerHTML = input + " => " + result.substring(0,10)
+        document.body.appendChild(div); 
+
+        stringForm.reset()
+      }
+    </script>
+  </body>
+</html>

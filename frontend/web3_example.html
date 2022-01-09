@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NFT WEB3 APP</title>
+    <link rel="shortcut icon" href="https://vitejs.dev/logo.svg" />
+    <style>
+        fieldset {width: 550px; margin-bottom: 50px;}
+    </style>
+</head>
+<body>
+<fieldset>
+    <legend>&nbsp;<b>合约浏览器</b>&nbsp;</legend>
+    <p><span id="id_span_scan">...</span></p>
+</fieldset>
+<fieldset>
+    <legend>&nbsp;<b>连接小狐狸</b>&nbsp;</legend>
+    <p>
+        <button id="id_btn_wallet">连接小狐狸</button><br />
+        <span id="id_span_wallet"></span>
+    </p>
+</fieldset>
+<fieldset>
+    <legend>&nbsp;<b>保存元数据至IPFS</b>&nbsp;</legend>
+    <p>
+    <form>
+        <p><label> 文件: <input type="file" id="id_file" /> </label></p>
+        <p><label> 标题: <input type="text" id="id_name" /> </label></p>
+        <p><label> 描述: <input type="text" id="id_desc" size="60" /> </label></p>
+        <p><button type="submit" id="id_btn">保存至IPFS</button></p>
+    </form>
+    <pre id="out"></pre>
+    </p>
+</fieldset>
+
+<fieldset>
+    <legend>&nbsp;<b>管理员：添加作品</b>&nbsp;</legend>
+    <p>
+        <input type="text" id="id_input_price" placeholder="价格，单位是 BNB" /><br />
+        <input type="text" id="id_input_token_uri" placeholder="元数据存储位置（IPFS地址）" size="60" /><br />
+        <input type="text" id="id_input_amount" placeholder="可铸造数量，至少是1" /><br />
+        <button id="id_btn_add_artwork">添加作品</button><br />
+        <span id="id_span_add_artwork"></span>
+    </p>
+</fieldset>
+
+<fieldset>
+    <legend>&nbsp;<b>管理员：修改作品</b>&nbsp;</legend>
+    <p>
+        <input type="text" id="id_input_artworkId_set" placeholder="要修改的 作品ID" /><br />
+        <input type="text" id="id_input_new_price" placeholder="价格，单位是 BNB" /><br />
+        <input type="text" id="id_input_new_amount" placeholder="可铸造数量，0表示不修改" /><br />
+        <button id="id_btn_set_artwork">修改作品</button><br />
+        <span id="id_span_set_artwork"></span>
+    </p>
+</fieldset>
+
+<fieldset>
+    <legend>&nbsp;<b>管理员：删除作品</b>&nbsp;</legend>
+    <p>
+        <input type="text" id="id_input_artworkId_del" placeholder="要删除的 作品ID" /><br />
+        <button id="id_btn_del_artwork">删除作品</button><br />
+        <span id="id_span_del_artwork"></span>
+    </p>
+</fieldset>
+
+<fieldset>
+    <legend>&nbsp;<b>管理员：添加新管理员</b>&nbsp;</legend>
+    <p>
+        <input type="text" id="id_input_admin_address" placeholder="超级管理员地址" size="60" /><br />
+        <button id="id_btn_add_admin">添加超级管理员</button><br />
+        <span id="id_span_add_admin"></span>
+    </p>
+</fieldset>
+
+<fieldset>
+    <legend>&nbsp;<b>用户：按ID取作品</b>&nbsp;</legend>
+    <p>
+        <input type="text" id="id_input_artworkId" placeholder="作品 ID" /><br />
+        <button id="id_btn_get_artwork_by_id">取作品</button><br />
+        <span id="id_span_artwork_info"></span>
+    </p>
+</fieldset>
+
+<fieldset>
+    <legend>&nbsp;<b>用户：按作品ID购买（铸造）</b>&nbsp;</legend>
+    <p>
+        <input type="text" id="id_input_artworkId_for_mint" placeholder="作品 ID" /><br />
+        <button id="id_btn_mint_by_id">按作品ID，购买（铸造）NFT</button><br />
+        <span id="id_span_mint_info"></span>
+    </p>
+</fieldset>
+
+<fieldset>
+    <legend>&nbsp;<b>用户：按 NFT-ID 取元数据</b>&nbsp;</legend>
+    <p>
+        <input type="text" id="id_input_nftId" placeholder="NFT ID" /><br />
+        <button id="id_btn_get_metadata_by_nft_id">取NFT的元数据</button><br />
+        <span id="id_span_nft_metadata"></span>
+    </p>
+</fieldset>
+
+<fieldset>
+    <legend>&nbsp;<b>用户：拥有的NFT列表</b>&nbsp;</legend>
+    <p>
+        <button id="id_btn_get_nft_list">取我的NFT列表</button><br />
+        <span id="id_span_nft_list"></span>
+    </p>
+</fieldset>
+
+<fieldset>
+    <legend>&nbsp;<b>用户：销毁我的NFT</b>&nbsp;</legend>
+    <p>
+        <input type="text" id="id_input_nftId_for_burn" placeholder="我的待销毁 NFT ID" /><br />
+        <button id="id_btn_owner_burn">销毁</button><br />
+        <span id="id_span_owner_burn"></span>
+    </p>
+</fieldset>
+
+<fieldset>
+    <legend>&nbsp;<b>用户：售卖我的NFT</b>&nbsp;</legend>
+    <p>
+        <input type="text" id="id_input_nftId_for_sold" placeholder="我的待售 NFT ID" /><br />
+        <input type="text" id="id_input_nft_price_for_sold" placeholder="待售价格，单位是 BNB" /><br />
+        <button id="id_btn_owner_set_price">设定售卖价格</button><br />
+        <span id="id_span_owner_set_price"></span>
+    </p>
+</fieldset>
+
+<fieldset>
+    <legend>&nbsp;<b>用户：放弃售卖NFT</b>&nbsp;</legend>
+    <p>
+        <input type="text" id="id_input_nftId_not_for_sold" placeholder="放弃待售 NFT ID" /><br />
+        <button id="id_btn_owner_not_sell">放弃售卖</button><br />
+        <span id="id_span_owner_not_sell"></span>
+    </p>
+</fieldset>
+
+<fieldset>
+    <legend>&nbsp;<b>用户：买别人转售的NFT</b>&nbsp;</legend>
+    <p>
+        <input type="text" id="id_input_nftId_other_selling" placeholder="他人待售 NFT ID" /><br />
+        <button id="id_btn_buy">购买别人转售</button><br />
+        <span id="id_span_buy"></span>
+    </p>
+</fieldset>
+<script src="utils/file.js" type="module"></script>
+<script src="packages/web3.min.js"></script>
+<script src="abis/contract_nft.js"></script>
+<script src="web3/app.js"></script>
+</body>
+</html>

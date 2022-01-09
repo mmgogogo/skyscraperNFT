@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NFT WEB3 APP Ether</title>
+    <link rel="shortcut icon" href="https://vitejs.dev/logo.svg" />
+    <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/pure-min.css" integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aehk5" crossorigin="anonymous">
+    <link rel="stylesheet" href="packages/toastify.css" />
+    <script type="text/javascript" src="packages/ethers-5.2.umd.min.js"></script>
+    <script type="text/javascript" src="packages/toastify.js"></script>
+    <script type="text/javascript" src="contract/contract_abi.js"></script>
+    <style>
+        fieldset {width: 550px; margin-bottom: 50px;}
+    </style>
+</head>
+<body>
+<fieldset>
+    <legend>&nbsp;<b>连接小狐狸</b>&nbsp;</legend>
+    <p>
+        <button id="id_btn_wallet">连接小狐狸</button><button id="id_btn_wallet_switch">切换网络</button><br />
+        <span id="id_span_wallet"></span>
+    </p>
+</fieldset>
+<fieldset>
+    <legend>&nbsp;<b>用户：拥有的NFT列表</b>&nbsp;</legend>
+    <p>
+        <button id="id_btn_get_nft_list">取我的NFT列表</button><br />
+        <span id="id_span_nft_list"></span>
+    </p>
+</fieldset>
+<script src="ether/app.js"></script>
+</body>
+</html>
