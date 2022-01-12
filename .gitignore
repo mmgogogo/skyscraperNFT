@@ -1,2 +1,4 @@
-./backend/go-ethereum
-./contracts/examples/**
+backend/go-ethereum
+backend/Web3Pass
+
+contracts/examples
