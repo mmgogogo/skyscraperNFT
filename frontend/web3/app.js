@@ -1,24 +1,32 @@
 /**
  * 目标链ID
  */
-const targetChainId = "0x61"; // BSC测试链
+// const targetChainId = "0x61"; // BSC测试链
+const targetChainId = "0x3"; // ropsten
 
 /**
  * 合约地址
  */
-const contract_address = '0x2c3dA85c091A6886C029deAaD188eb9A07677bAA';
+// const contract_address = '0x2c3dA85c091A6886C029deAaD188eb9A07677bAA';
+const contract_address = '0x3e6afF11e4e842957D48F29E06901156E2742294';
+
+// const contract_url = "https://testnet.bscscan.com/address/" + contract_address;
+const contract_url = "https://ropsten.etherscan.io/address/" + contract_address;
 
 /**
  * 节点token
  * register: https://web3api.com/
  */
-const provider_token = 'RRXXG62RXYR52G2FUY37CG3E9ZZPCYMT9M';
+// const provider_token = 'RRXXG62RXYR52G2FUY37CG3E9ZZPCYMT9M';
+const provider_token = '735d69b2d035422ab5ff680934b338dc';
 /**
  * Web3 http provider
  * @mainnet https://bsc-mainnet.web3api.com/v1/
  * @testnet https://bsc-testnet.web3api.com/v1/
  */
-const web3_http_provider = 'https://bsc-testnet.web3api.com/v1/' + provider_token;
+// const web3_http_provider = 'https://bsc-testnet.web3api.com/v1/' + provider_token;
+const web3_http_provider = 'https://ropsten.infura.io/v3/' + provider_token;
+
 
 /**
  * ABI
@@ -64,7 +72,7 @@ const contract_abi = contract_nfttest;
     /**
      * 合约浏览器
      */
-    $('#id_span_scan').innerHTML = '<a target="_blank" href="https://testnet.bscscan.com/address/' + contract_address + '">打开合约浏览器网页</a>';
+    $('#id_span_scan').innerHTML = '<a target="_blank" href='+  + contract_address + '">打开合约浏览器网页</a>';
 
     /**
      * 连接钱包
@@ -159,19 +167,17 @@ const contract_abi = contract_nfttest;
             return;
         }
         $('#id_span_mint_info').innerHTML = "loading...";
-        myContract.methods.getArtwork(id).call().then(function (ret) {
-            console.log(ret);
-            if (parseInt(ret[3]) >= parseInt(ret[2])) {
-                $('#id_span_mint_info').innerHTML = '已售完！';
-                return;
-            }
-            myContract.methods.mintWithBuy(id).send({
-                value: new web3.utils.BN(ret[0])
-            }).then(function (ret) {
+        // myContract.methods.getArtwork(id).call().then(function (ret) {
+        //     console.log(ret);
+        //     if (parseInt(ret[3]) >= parseInt(ret[2])) {
+        //         $('#id_span_mint_info').innerHTML = '已售完！';
+        //         return;
+        //     }
+            myContract.methods.mint(id).send().then(function (ret) {
                 console.log(ret);
                 $('#id_span_mint_info').innerHTML = '你得到 NFT 的tokenID是：' + ret.events.MintToken.returnValues.tokenId;
             });
-        });
+        // });
     }
 
     /**
