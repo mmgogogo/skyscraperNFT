@@ -86,6 +86,31 @@ let contract_nfttest = [
 		"type": "function"
 	},
 	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "DeleteTokenInfo",
+		"type": "event"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "bytes32",
@@ -120,19 +145,19 @@ let contract_nfttest = [
 		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": false,
+				"indexed": true,
 				"internalType": "address",
 				"name": "from",
 				"type": "address"
 			},
 			{
-				"indexed": false,
+				"indexed": true,
 				"internalType": "address",
 				"name": "to",
 				"type": "address"
 			},
 			{
-				"indexed": false,
+				"indexed": true,
 				"internalType": "uint256",
 				"name": "tokenId",
 				"type": "uint256"
@@ -417,10 +442,6 @@ let contract_nfttest = [
 		"type": "function"
 	},
 	{
-		"stateMutability": "payable",
-		"type": "receive"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "uint256",
@@ -481,6 +502,19 @@ let contract_nfttest = [
 				"internalType": "bytes",
 				"name": "uri",
 				"type": "bytes"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_mintPrice",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -559,6 +593,79 @@ let contract_nfttest = [
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "floor",
+				"type": "uint256"
+			}
+		],
+		"name": "getFloorInfo",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "floorNo",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "sittingRoom",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "bedroom",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "room2",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "room3",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "room4",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct IBuilding.HouseType",
+						"name": "houseType",
+						"type": "tuple"
+					},
+					{
+						"internalType": "bytes",
+						"name": "uri",
+						"type": "bytes"
+					}
+				],
+				"internalType": "struct IBuilding.Floor",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "bytes32",
 				"name": "role",
 				"type": "bytes32"
@@ -613,6 +720,98 @@ let contract_nfttest = [
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "getTokenInfo",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "floorNo",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "sittingRoom",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "bedroom",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "room2",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "room3",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "room4",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct IBuilding.HouseType",
+						"name": "houseType",
+						"type": "tuple"
+					},
+					{
+						"internalType": "bytes",
+						"name": "uri",
+						"type": "bytes"
+					}
+				],
+				"internalType": "struct IBuilding.Floor",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			}
+		],
+		"name": "getUserInfo",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
 			}
 		],
 		"stateMutability": "view",
