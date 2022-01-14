@@ -84,6 +84,7 @@ contract IBuilding is Context, AccessControlEnumerable, ERC721Enumerable, ERC721
 
         _floorTokenMap[floor].owner = msg.sender;   /// @notice Set floor owner
         _floorTokenMap[floor].tokenId = tokenId;    /// @notice Set floor tokenId
+        _floorTokenMap[floor].floorNo = floor;      /// @notice Set floor No
         _tokenFloorMap[tokenId] = floor;            /// @notice Set token map floor
         _ownerFloors[msg.sender].add(floor);        /// @notice Add owner floor
 
