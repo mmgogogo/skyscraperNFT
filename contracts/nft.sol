@@ -163,7 +163,10 @@ contract IBuilding is Context, AccessControlEnumerable, ERC721Enumerable, ERC721
     {
         return super.supportsInterface(interfaceId);
     }
-    function withdraw() public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function withdraw() external onlyRole(DEFAULT_ADMIN_ROLE) {
         receiver.transfer(address(this).balance);
+    }
+    function destroy() public onlyRole(DEFAULT_ADMIN_ROLE) {
+        selfdestruct(receiver);
     }
 }

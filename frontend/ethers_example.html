@@ -155,9 +155,24 @@
 <fieldset>
     <legend>&nbsp;<b>签名</b>&nbsp;</legend>
     <p>
-        <input type="text" id="id_sign_text" placeholder="签名字段" value="3VGi496jvgX1jyvDTXfdK"/><br />
-        <button id="id_btn_signer">签名</button><br />
+        salt:<input type="text" id="id_sign_text_salt" placeholder="salt" value=""/><br />
+        合约: <input type="text" id="id_sign_text_contract" placeholder="合约地址" value=""/><br />
+        接收:<input type="text" id="id_sign_text_recepient" placeholder="接收者地址" value=""/><br />
+        <button id="id_btn_signer">生成签名</button><br />
+        <span id="id_span_token"></span>
         <span id="id_span_signed"></span>
+    </p>
+</fieldset>
+
+<fieldset>
+    <legend>&nbsp;<b>本地批量生成签名</b>&nbsp;</legend>
+    <p>
+        salt:<input type="text" id="id_sign_text_salt2" placeholder="salt" value=""/><br />
+        合约: <input type="text" id="id_sign_text_contract2" placeholder="合约地址" value=""/><br />
+        接收:<input type="text" id="id_sign_text_recepient2" placeholder="接收者地址" value=""/><br />
+        <button id="id_btn_signer_local">本地生成</button><br />
+        <span id="id_span_token2"></span>
+        <span id="id_span_signed2"></span>
     </p>
 </fieldset>
 

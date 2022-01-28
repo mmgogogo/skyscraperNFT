@@ -84,8 +84,8 @@ const contract_url = 'https://testnet.bscscan.com/address/' + contract_address;
      $('#id_btn_wallet').onclick = async function () {
          if (isMetaMaskInstalled()) {
              if (window.ethereum.chainId != targetChainId) {
-                 alert("链ID不是 " + targetChainId + "（BSC测试链）！请在钱包中切换");
-                 return;
+                //  alert("链ID不是 " + targetChainId + "（BSC测试链）！请在钱包中切换");
+                //  return;
              }
              console.log( ethereum );
              let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -467,40 +467,60 @@ const contract_url = 'https://testnet.bscscan.com/address/' + contract_address;
 
      /**
       * 签名
-      * // To sign a simple string, which are used for
-// logging into a service, such as CryptoKitties,
-// pass the string in.
-// '0x5a77beb84677b221d7110b08605a2658dd6c1e88a2ba9293436e587dbf6479d4798d0ca34ba2113bdb51ad97cd831975ccaccaf5f6fbd5d566fe662f11e2ca411b'
-
-//
-// A common case is also signing a hash, which is 32
-// bytes. It is important to note, that to sign binary
-// data it MUST be an Array (or TypedArray)
-//
-
-// This string is 66 characters long
-message = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
-
-// This array representation is 32 bytes long
-messageBytes = ethers.utils.arrayify(message);
-// Uint8Array [ 221, 242, 82, 173, 27, 226, 200, 155, 105, 194, 176, 104, 252, 55, 141, 170, 149, 43, 167, 241, 99, 196, 161, 22, 40, 245, 90, 77, 245, 35, 179, 239 ]
-
-// To sign a hash, you most often want to sign the bytes
-signature = await signer.signMessage(messageBytes)
-// '0xe099cce5e80dec1d8464d00c4156855d1c14cc4f83473deee7ab8e60be770f4b5ea04e90e7b7102ac5b493f7822b0ad10dc26bfda0761530a58e5f461f90b2fd1b'
+      *  To sign a simple string, which are used for logging into a service, such as CryptoKitties, pass the string in.
+      *  '0x5a77beb84677b221d7110b08605a2658dd6c1e88a2ba9293436e587dbf6479d4798d0ca34ba2113bdb51ad97cd831975ccaccaf5f6fbd5d566fe662f11e2ca411b'
+      *
+      *  A common case is also signing a hash, which is 32 bytes. It is important to note, that to sign binary
+      *  data it MUST be an Array (or TypedArray)
+      * 
+      *  n This string is 66 characters long
+      *  message = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+      *  This array representation is 32 bytes long
+      * 
+      *  messageBytes = ethers.utils.arrayify(message);
+      *  Uint8Array [ 221, 242, 82, 173, 27, 226, 200, 155, 105, 194, 176, 104, 252, 55, 141, 170, 149, 43, 167, 241, 99, 196, 161, 22, 40, 245, 90, 77, 245, 35, 179, 239 ]
+      *  To sign a hash, you most often want to sign the bytes
+      * 
+      *  signature = await signer.signMessage(messageBytes)
+      *  '0xe099cce5e80dec1d8464d00c4156855d1c14cc4f83473deee7ab8e60be770f4b5ea04e90e7b7102ac5b493f7822b0ad10dc26bfda0761530a58e5f461f90b2fd1b'
       */
       $('#id_btn_signer').onclick = async function () {
         if (isMetaMaskInstalled()) {
             if (appContractWriter) 
             {
-                let txt = $('#id_sign_text').value;
-                let signature = await walletSigner.signMessage(txt);
+                let salt = $('#id_sign_text_salt').value;
+                let contract = $('#id_sign_text_contract').value;
+                let owner = $('#id_sign_text_recepient').value;
+                console.log(["string","address","address"][salt,contract,owner])
+                let encodeStr = ethers.utils.defaultAbiCoder.encode(["string","address","address"],[salt,contract,owner]);
+                let hash = ethers.utils.keccak256(encodeStr);
+                // let token = ethers.utils.defaultAbiCoder.encode(["string","bytes32"],["\x19Ethereum Signed Message:\n32",hash]);
+                // console.log("token is ", token);
+                let signature = await walletSigner.signMessage( ethers.utils.arrayify(hash) );
 
+                $('#id_span_token').innerHTML = hash;
                 $('#id_span_signed').innerHTML = signature;
             }
             return;
         }
         alert("请安装钱包！");
+     };
+
+     $('#id_btn_signer_local').onclick = async function () {
+        let privateKey = "0xf77c3a3b6c4067c8e45e62a877e509130f9b294714bf73f25ddab2da0798d763"
+        let wallet = new ethers.Wallet(privateKey);
+        
+        let salt = $('#id_sign_text_salt2').value;
+        let contract = $('#id_sign_text_contract2').value;
+        let owner = $('#id_sign_text_recepient2').value;
+        console.log(["string","address","address"][salt,contract,owner])
+        let encodeStr = ethers.utils.defaultAbiCoder.encode(["string","address","address"],[salt,contract,owner]);
+        let hash = ethers.utils.keccak256(encodeStr);
+
+        let signature = await wallet.signMessage( ethers.utils.arrayify(hash) );
+
+        $('#id_span_token2').innerHTML = hash;
+        $('#id_span_signed2').innerHTML = signature;
      };
  
  })();
