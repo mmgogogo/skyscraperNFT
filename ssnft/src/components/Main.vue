@@ -48,7 +48,7 @@
           </div>
           <div class="bd4 flex-row justify-between">
             <div class="group1 flex-col"></div>
-            <span class="text tbox1 tline tprop tfont_m tfont_s24 tshadow tcolor tleft">{{ baseConfig.lang_007 }}</span>
+            <span class="text tbox1 tline tprop tfont_m tfont_s24 tshadow tcolor tleft" @click="hot()">{{ baseConfig.lang_007 }}</span>
           </div>
           <div class="bd8 flex-row justify-between">
             <div class="layer2 flex-col align-center">
@@ -86,7 +86,7 @@
       <!-- nav end -->
 
       <!-- hot start -->
-      <div class="hot flex-col" v-show="show.hot">
+      <div class="hot flex-col" v-show="showInfo.hot">
         <div class="group1 flex-col justify-between">
           <div class="main5 flex-col justify-center"><span class="txt5">Hot&nbsp;Floor</span></div>
           <div class="main6 flex-row">
@@ -102,7 +102,7 @@
       <!-- hot end -->
 
       <!-- mint start -->
-      <div class="shadow" v-show="show.mint">
+      <div class="shadow" v-show="showInfo.mint">
         <div id="mint" class="mint flex-col">
           <div class="block flex-row justify-between">
             <div class="main4 flex-col"></div>
@@ -193,6 +193,10 @@ export default {
       _that.$Dapp.connect()
       _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
       console.log('address ', _that.playerInfo.address)
+    },
+    hot () {
+      const _that = this
+      _that.showInfo.hot = true
     }
   },
   created () {
