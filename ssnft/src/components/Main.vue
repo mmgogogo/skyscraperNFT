@@ -54,8 +54,8 @@
             <div class="layer2 flex-col align-center">
               <div class="layer3 flex-col justify-between">
                 <div class="layer4 flex-col"></div>
-                <span class="txt3">
-                <router-link to="/building/mint">{{ baseConfig.lang_008 }}</router-link>
+                <span class="txt3" @click="mint()">
+                  {{ baseConfig.lang_008 }}
                 </span>
               </div>
             </div>
@@ -196,8 +196,23 @@ export default {
     },
     hot () {
       const _that = this
-      _that.showInfo.hot = true
+      if (_that.showInfo.hot) {
+        _that.showInfo.hot = false
+      } else {
+        _that.showInfo.hot = true
+      }
+      // 添加关闭倒计时
+    },
+    mint () {
+      const _that = this
+      if (_that.showInfo.mint) {
+        _that.showInfo.mint = false
+      } else {
+        _that.showInfo.mint = true
+      }
+      // 添加关闭倒计时
     }
+
   },
   created () {
     console.log('[navigator] created start!')
