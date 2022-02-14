@@ -27,7 +27,7 @@ const contract_url = 'https://testnet.bscscan.com/address/' + contract_address;
   */
  const network_http_provider = 'https://bsc-testnet.web3api.com/v1/' + provider_token;
  //  const network_http_provider = 'https://kovan.infura.io/v3/735d69b2d035422ab5ff680934b338dc';
-//  const network_http_provider = 'https://data-seed-prebsc-1-s1.binance.org:8545/';// https://data-seed-prebsc-1-s1.binance.org:8545/
+ //  const network_http_provider = 'https://data-seed-prebsc-1-s1.binance.org:8545/';// https://data-seed-prebsc-1-s1.binance.org:8545/
 
  /**
   * ABI
