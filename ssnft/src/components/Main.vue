@@ -185,7 +185,7 @@
 import * as ethers from 'ethers'
 export default {
   name: 'Navigator',
-  data() {
+  data () {
     // initial data
     return {
       // 兼容以前的名字
@@ -251,7 +251,6 @@ export default {
       // 添加关闭倒计时
     },
     mint () {
-      console.log('mint start.....')
       const _that = this
       if (_that.showInfo.mint) {
         _that.showInfo.mint = false
@@ -266,20 +265,20 @@ export default {
       const floorPrice = ethers.utils.parseUnits('0.1', 'gwei').toString()
       console.log('realmint:::', floorNum, floorPrice)
 
-      myContract.mintWithBuy(floorNum, { value: floorPrice }).then(function (ret) {
-          console.log(ret)
-          // myContractReader.on('MintToken', (from, tokenId, artworkId) => {
-          //   console.log(
-          //     `mint tokenId ${tokenId} artworkId${artworkId} from ${from} successful`
-          //   )
-            // if (
-            //   ethers.utils.getAddress(from) ==
-            //   ethers.utils.getAddress(ethereum.selectedAddress)
-            // ) {
-            //   console.log('tokenId', tokenId)
-            // }
-          // })
-        })
+      this.myContract.mint(floorNum, { value: floorPrice }).then(function (ret) {
+        console.log(ret)
+      // myContractReader.on('MintToken', (from, tokenId, artworkId) => {
+      //   console.log(
+      //     `mint tokenId ${tokenId} artworkId${artworkId} from ${from} successful`
+      //   )
+        // if (
+        //   ethers.utils.getAddress(from) ==
+        //   ethers.utils.getAddress(ethereum.selectedAddress)
+        // ) {
+        //   console.log('tokenId', tokenId)
+        // }
+      // })
+      })
     }
   },
   created () {
