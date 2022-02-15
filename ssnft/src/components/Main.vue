@@ -4,7 +4,7 @@
       <div class="navigation flex-row">
         <div class="logo flex-col"></div>
         <div class="wallet flex-col" @click="login()"></div>
-        <div class="profile flex-col"></div>
+        <div class="profile flex-col" @click="displayProfile()"></div>
       </div>
     </div>
     <div class="container flex-row">
@@ -177,6 +177,62 @@
           </div>
         </div>
       </div>
+      <!-- mint end -->
+    </div>
+
+    <!-- profile start -->
+    <div class="pcontent flex-col" v-show="showInfo.profile">
+      <div class="player5 flex-col">
+        <div class="player6 flex-col">
+          <div class="player7 flex-col justify-center align-center">
+            <div class="player8 flex-row">
+              <div class="pmod6 flex-col"><div class="psection11 flex-col"></div></div>
+              <span class="pinfo4">My&nbsp;Wallet</span>
+              <div class="pmod7 flex-col">
+                <div class="player9 flex-col" @click="close()"></div>
+              </div>
+            </div>
+          </div>
+          <div class="player10 flex-row">
+            <img class="picon2" referrerpolicy="no-referrer" src="images/collected.png" alt="" />
+            <!-- <div class="pgroup3 flex-col"></div> -->
+            <img class="pgroup3" referrerpolicy="no-referrer" src="images/created.png" alt="" />
+            <img class="plabel2" referrerpolicy="no-referrer" src="images/favorited.png" alt="" />
+          </div>
+          <div class="player11 flex-row">
+            <img class="plabel3" referrerpolicy="no-referrer" src="images/collected_gray.png" alt="" />
+            <span class="pword7">collected</span>
+            <img class="picon3" referrerpolicy="no-referrer" src="images/created_gray.png" alt="" />
+            <span class="pword8">created</span>
+            <img class="picon3" referrerpolicy="no-referrer" src="images/favorited_gray.png" alt="" />
+            <span class="pword9">favorited</span>
+          </div>
+          <div class="player12 flex-col"></div>
+          <div class="player13 flex-col"></div>
+          <div class="player14 flex-container">
+            <div class="pblock4">
+              <div class="player17 flex-col">
+                <img class="pimg1" referrerpolicy="no-referrer" src="images/nft_example001.png" alt="" />
+              </div>
+            </div>
+            <div class="pblock4">
+              <div class="player17 flex-col">
+                <img class="pimg1" referrerpolicy="no-referrer" src="images/nft_example002.png" alt="" />
+              </div>
+            </div>
+            <div class="pblock4">
+              <div class="player17 flex-col">
+                <img class="pimg1" referrerpolicy="no-referrer" src="images/nft_example003.png" alt="" />
+              </div>
+            </div>
+            <div class="pblock4">
+              <div class="player17 flex-col">
+                <img class="pimg1" referrerpolicy="no-referrer" src="images/nft_example004.png" alt="" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 </template>
@@ -217,7 +273,8 @@ export default {
       isShow: true,
       showInfo: {
         mint: false,
-        hot: false
+        hot: false,
+        profile: false
       },
       playerInfo: {
         metamask: '',
@@ -279,6 +336,15 @@ export default {
         // }
       // })
       })
+    },
+    displayProfile () {
+      const _that = this
+      _that.showInfo.profile = true
+    },
+    // 关闭个人信息窗口操作
+    close () {
+      const _that = this
+      _that.showInfo.profile = false
     }
   },
   created () {
@@ -291,18 +357,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
 </style>

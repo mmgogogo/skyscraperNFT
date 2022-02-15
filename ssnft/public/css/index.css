@@ -7,7 +7,7 @@
 
 .container {
   height: 92vh;
-  /* background: url(https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPng748f2b364ec73edd408ee66f850a0605badaa2ae6ffb729b52887ace61044aff) 100% no-repeat; */
+  background: url(../images/building_floors.png) 100% no-repeat;
   width: 100%;
   overflow-x: auto;
 }
