@@ -52,6 +52,7 @@ const Dapp = {
           // return Dapp
         }
         Dapp.Bridges.ethereum = window.ethereum
+        Dapp.Bridges.ethers = ethers
         Dapp.Bridges.local = new ethers.providers.Web3Provider(window.ethereum)
         Dapp.Bridges.reader = new ethers.Contract(contractAddress, contractAbi, Dapp.Bridges.local)
         Dapp.Bridges.signer = Dapp.Bridges.local.getSigner() // 钱包签名
@@ -98,6 +99,7 @@ const Dapp = {
               // let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
               // $('#id_span_wallet').innerHTML = '钱包地址：' + accounts[0]
               Dapp.Bridges.ethereum = window.ethereum
+              Dapp.Bridges.ethers = ethers
               Dapp.Bridges.local = new ethers.providers.Web3Provider(window.ethereum, 'any')
               Dapp.Bridges.reader = new ethers.Contract(contractAddress, contractAbi, Dapp.Bridges.local)
               Dapp.Bridges.signer = Dapp.Bridges.local.getSigner() // 钱包签名

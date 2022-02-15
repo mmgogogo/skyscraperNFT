@@ -6,3 +6,6 @@ client_explore
 client/node_modules
 
 exchange
+ssnft/yarn.lock
+.gitignore
+.vscode/settings.json

@@ -3,7 +3,8 @@
     <div class="header flex-col justify-center">
       <div class="navigation flex-row">
         <div class="logo flex-col"></div>
-        <div class="wallet flex-col" @click="login()"></div>
+        <div class="wallet flex-col"
+             @click="login()"></div>
         <div class="profile flex-col"></div>
       </div>
     </div>
@@ -15,7 +16,9 @@
             <div class="outer2 flex-col justify-between">
               <span class="text tbox tline tcolor tprop tfont_m tfont_s26 tshadow">{{ baseConfig.lang_001 }}</span>
               <div class="box1 flex-row justify-between">
-                <img class="icon1" referrerpolicy="no-referrer" src="images/building_logo.png" />
+                <img class="icon1"
+                     referrerpolicy="no-referrer"
+                     src="images/building_logo.png" />
                 <span class="box3 tfont_s30 tfont_m tleft tcolor tprop">{{ gameConfig.total }}</span>
               </div>
             </div>
@@ -48,24 +51,24 @@
           </div>
           <div class="bd4 flex-row justify-between">
             <div class="group1 flex-col"></div>
-            <span class="text tbox1 tline tprop tfont_m tfont_s24 tshadow tcolor tleft" @click="hot()">{{ baseConfig.lang_007 }}</span>
+            <span class="text tbox1 tline tprop tfont_m tfont_s24 tshadow tcolor tleft"
+                  @click="hot()">{{ baseConfig.lang_007 }}</span>
           </div>
           <div class="bd8 flex-row justify-between">
             <div class="layer2 flex-col align-center">
               <div class="layer3 flex-col justify-between">
                 <div class="layer4 flex-col"></div>
-                <span class="txt3" @click="mint()">
+                <span class="txt3"
+                      @click="mint()">
                   {{ baseConfig.lang_008 }}
                 </span>
               </div>
             </div>
             <div class="layer5 flex-col align-center">
               <div class="group2 flex-col justify-between">
-                <img
-                  class="label2"
-                  referrerpolicy="no-referrer"
-                  src="https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPng761b6545dec0faf9196ceabe44734f37945c18d76dcd24495b1dfc2be778eb39"
-                />
+                <img class="label2"
+                     referrerpolicy="no-referrer"
+                     src="https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPng761b6545dec0faf9196ceabe44734f37945c18d76dcd24495b1dfc2be778eb39" />
                 <span class="word4">{{ baseConfig.lang_009 }}</span>
               </div>
             </div>
@@ -86,7 +89,8 @@
       <!-- nav end -->
 
       <!-- hot start -->
-      <div class="hot flex-col" v-show="showInfo.hot">
+      <div class="hot flex-col"
+           v-show="showInfo.hot">
         <div class="group1 flex-col justify-between">
           <div class="main5 flex-col justify-center"><span class="txt5">Hot&nbsp;Floor</span></div>
           <div class="main6 flex-row">
@@ -102,16 +106,19 @@
       <!-- hot end -->
 
       <!-- mint start -->
-      <div class="shadow" v-show="showInfo.mint">
-        <div id="mint" class="mint flex-col">
+      <div class="shadow"
+           v-show="showInfo.mint">
+        <div id="mint"
+             class="mint flex-col">
           <div class="block flex-row justify-between">
             <div class="main4 flex-col"></div>
             <div class="main5 flex-col justify-between">
               <span class="txt3">Skyscraper&nbsp;Floor</span>
               <span class="txt4">
-              Phanta&nbsp;Bear&nbsp;is&nbsp;a&nbsp;collection&nbsp;of&nbsp;10,000&nbsp;algorithmically&nbsp;generated&nbsp;digital&nbsp;collectibles&nbsp;that&nbsp;double&nbsp;as&nbsp;memebership&nbsp;cards&nbsp;for&nbsp;the&nbsp;Ezek&nbsp;Club.&nbsp;Each&nbsp;Phanta&nbsp;Bear&nbsp;has&nbsp;a&nbsp;unique&nbsp;set&nbsp;of&nbsp;traits&nbsp;and&nbsp;unlocks&nbsp;varying,&nbsp;unique&nbsp;levels&nbsp;of&nbsp;access&nbsp;and&nbsp;perks&nbsp;for&nbsp;its&nbsp;owner.&nbsp;Phanta&nbsp;Bear&nbsp;project&nbsp;was&nbsp;jointly&nbsp;launched&nbsp;by&nbsp;PHANTACi&nbsp;and&nbsp;Ezek
+                Phanta&nbsp;Bear&nbsp;is&nbsp;a&nbsp;collection&nbsp;of&nbsp;10,000&nbsp;algorithmically&nbsp;generated&nbsp;digital&nbsp;collectibles&nbsp;that&nbsp;double&nbsp;as&nbsp;memebership&nbsp;cards&nbsp;for&nbsp;the&nbsp;Ezek&nbsp;Club.&nbsp;Each&nbsp;Phanta&nbsp;Bear&nbsp;has&nbsp;a&nbsp;unique&nbsp;set&nbsp;of&nbsp;traits&nbsp;and&nbsp;unlocks&nbsp;varying,&nbsp;unique&nbsp;levels&nbsp;of&nbsp;access&nbsp;and&nbsp;perks&nbsp;for&nbsp;its&nbsp;owner.&nbsp;Phanta&nbsp;Bear&nbsp;project&nbsp;was&nbsp;jointly&nbsp;launched&nbsp;by&nbsp;PHANTACi&nbsp;and&nbsp;Ezek
               </span>
-              <div class="mod2 flex-col justify-center"><span class="info7">mint</span></div>
+              <div class="mod2 flex-col justify-center"><span class="info7"
+                      @click="realMint()">MINT</span></div>
             </div>
           </div>
           <div class="block2 flex-col">
@@ -125,11 +132,17 @@
               </div>
             </div>
             <div class="box15 flex-row justify-between">
-                <div class="main6 flex-col"><div class="group6 flex-col"></div></div>
-                <span class="word11">1</span>
-                <div class="main7 flex-col"><div class="group7 flex-col"></div></div>
+              <div class="main6 flex-col">
+                <div class="group6 flex-col"></div>
+              </div>
+              <span class="word11">1</span>
+              <div class="main7 flex-col">
+                <div class="group7 flex-col"></div>
+              </div>
             </div>
-            <img class="pic1" referrerpolicy="no-referrer" src="images/floor_icon.png" />
+            <img class="pic1"
+                 referrerpolicy="no-referrer"
+                 src="images/floor_icon.png" />
             <span class="info11">Amount：</span>
           </div>
         </div>
@@ -144,6 +157,10 @@ export default {
   data () {
     // initial data
     return {
+      // 兼容以前的名字
+      myContract: this.$Dapp.Bridges.writer,
+      ethers: this.$Dapp.Bridges.ethers,
+
       // 基础配置
       baseConfig: {
         lang_001: 'Total Floor',
@@ -204,6 +221,7 @@ export default {
       // 添加关闭倒计时
     },
     mint () {
+      console.log('mint start.....')
       const _that = this
       if (_that.showInfo.mint) {
         _that.showInfo.mint = false
@@ -211,8 +229,14 @@ export default {
         _that.showInfo.mint = true
       }
       // 添加关闭倒计时
+    },
+    realMint () {
+      console.log('real mint start...')
+      const floorNum = 1
+      const floorPrice = ethers.utils.parseUnits(0.1, 'gwei').toString()
+      console.log('realmint:::', floorNum, floorPrice)
+      // myContract.methods.mint(fl)
     }
-
   },
   created () {
     console.log('[navigator] created start!')
