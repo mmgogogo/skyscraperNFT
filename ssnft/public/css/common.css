@@ -17,6 +17,12 @@ button {
 button:active {
     opacity: 0.6;
 }
+.flex-container {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
 .flex-col {
     display: flex;
     display: -webkit-flex;
