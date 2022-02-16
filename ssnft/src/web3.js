@@ -97,21 +97,21 @@ const Dapp = {
         } catch (switchError) {
           // This error code indicates that the chain has not been added to MetaMask.
           if (switchError.code === 4902) {
-            try {
-              await window.ethereum.request({
-                method: 'wallet_addEthereumChain',
-                params: [{ chainId: targetChainId, rpcUrl: 'https://testnet.bscscan.com/' }]
-              })
-              // let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
-              // $('#id_span_wallet').innerHTML = '钱包地址：' + accounts[0]
-              Dapp.Bridges.ethereum = window.ethereum
-              Dapp.Bridges.local = new ethers.providers.Web3Provider(window.ethereum, 'any')
-              Dapp.Bridges.reader = new ethers.Contract(contractAddress, contractAbi, Dapp.Bridges.local)
-              Dapp.Bridges.signer = Dapp.Bridges.local.getSigner() // 钱包签名
-              Dapp.Bridges.writer = Dapp.Bridges.reader.connect(Dapp.Bridges.signer)
-            } catch (addError) {
-              console.log('addError ', addError)
-            }
+            // try {
+            //   await window.ethereum.request({
+            //     method: 'wallet_addEthereumChain',
+            //     params: [{ chainId: targetChainId, rpcUrl: 'https://testnet.bscscan.com/' }]
+            //   })
+            //   await window.ethereum.request({ method: 'eth_requestAccounts' })
+            //   Dapp.Bridges.ethereum = window.ethereum
+            //   Dapp.Bridges.local = new ethers.providers.Web3Provider(window.ethereum)
+            //   Dapp.Bridges.reader = new ethers.Contract(contractAddress, contractAbi, Dapp.Bridges.local)
+            //   Dapp.Bridges.signer = Dapp.Bridges.local.getSigner() // 钱包签名
+            //   Dapp.Bridges.writer = Dapp.Bridges.reader.connect(Dapp.Bridges.signer)
+            // } catch (addError) {
+            //   console.log('addError ', addError)
+            // }
+            this.connect()
           }
           // handle other "switch" errors
           console.log('switchError ', switchError)

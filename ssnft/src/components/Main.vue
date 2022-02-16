@@ -43,40 +43,39 @@
               </div>
             </div>
             <div class="section4 flex-col align-center">
-              <span class="txt2">{{ baseConfig.lang_003 }}</span>
+              <span class="txt2 btn-hand">{{ baseConfig.lang_003 }}</span>
             </div>
           </div>
           <div class="bd3 flex-row justify-between">
             <div class="layer1 flex-col"></div>
             <span
-              class="text tbox1 tline tprop tfont_m tfont_s24 tshadow ttop tcolor_gray0"
-              >{{ baseConfig.lang_004 }}</span
-            >
+              class="text tbox1 tline tprop tfont_m tfont_s24 tshadow ttop tcolor_gray0 btn-hand">
+              {{ baseConfig.lang_004 }}</span>
           </div>
           <div class="bd4 flex-row justify-between">
             <div class="bd5 flex-col"></div>
             <span
-              class="text tbox1 tline tprop tfont_m tfont_s24 tshadow ttop tcolor"
+              class="text tbox1 tline tprop tfont_m tfont_s24 tshadow ttop tcolor btn-hand"
               >{{ baseConfig.lang_005 }}</span
             >
           </div>
           <div class="bd4 flex-row justify-between">
             <div class="group0 flex-col"></div>
             <span
-              class="text tbox1 tline tprop tfont_m tfont_s24 tshadow tcolor"
+              class="text tbox1 tline tprop tfont_m tfont_s24 tshadow tcolor btn-hand"
               >{{ baseConfig.lang_006 }}</span
             >
           </div>
           <div class="bd4 flex-row justify-between">
             <div class="group1 flex-col"></div>
             <span
-              class="text tbox1 tline tprop tfont_m tfont_s24 tshadow tcolor tleft"
+              class="text tbox1 tline tprop tfont_m tfont_s24 tshadow tcolor tleft btn-hand"
               @click="hot()"
               >{{ baseConfig.lang_007 }}</span
             >
           </div>
           <div class="bd8 flex-row justify-between">
-            <div class="layer2 flex-col align-center">
+            <div class="layer2 flex-col align-center btn-hand">
               <div class="layer3 flex-col justify-between">
                 <div class="layer4 flex-col"></div>
                 <span class="txt3" @click="mint()">
@@ -84,7 +83,7 @@
                 </span>
               </div>
             </div>
-            <div class="layer5 flex-col align-center">
+            <div class="layer5 flex-col align-center btn-hand">
               <div class="group2 flex-col justify-between">
                 <img
                   class="label2"
@@ -96,13 +95,13 @@
             </div>
           </div>
           <div class="bd9 flex-row justify-between">
-            <div class="group3 flex-col">
+            <div class="group3 flex-col btn-hand">
               <div class="box2 flex-col justify-between">
                 <div class="mod1 flex-col"></div>
                 <span class="word5">{{ baseConfig.lang_010 }}</span>
               </div>
             </div>
-            <div class="group4 flex-col">
+            <div class="group4 flex-col btn-hand">
               <span class="paragraph1">{{ baseConfig.lang_011 }}</span>
             </div>
           </div>
@@ -114,7 +113,7 @@
       <div class="hot flex-col" v-show="showInfo.hot">
         <div class="group1 flex-col justify-between">
           <div class="main5 flex-col justify-center">
-            <span class="txt5">Hot&nbsp;Floor</span>
+            <span class="txt5 btn-hand">Hot&nbsp;Floor</span>
           </div>
           <div class="main6 flex-row">
             <div class="group10 flex-col">
@@ -145,7 +144,7 @@
                 Phanta&nbsp;Bear&nbsp;is&nbsp;a&nbsp;collection&nbsp;of&nbsp;10,000&nbsp;algorithmically&nbsp;generated&nbsp;digital&nbsp;collectibles&nbsp;that&nbsp;double&nbsp;as&nbsp;memebership&nbsp;cards&nbsp;for&nbsp;the&nbsp;Ezek&nbsp;Club.&nbsp;Each&nbsp;Phanta&nbsp;Bear&nbsp;has&nbsp;a&nbsp;unique&nbsp;set&nbsp;of&nbsp;traits&nbsp;and&nbsp;unlocks&nbsp;varying,&nbsp;unique&nbsp;levels&nbsp;of&nbsp;access&nbsp;and&nbsp;perks&nbsp;for&nbsp;its&nbsp;owner.&nbsp;Phanta&nbsp;Bear&nbsp;project&nbsp;was&nbsp;jointly&nbsp;launched&nbsp;by&nbsp;PHANTACi&nbsp;and&nbsp;Ezek
               </span>
               <div class="mod2 flex-col justify-center">
-                <span class="info7" @click="realMint()">MINT</span>
+                <span class="info7 btn-hand" @click="realMint()">MINT</span>
               </div>
             </div>
           </div>
@@ -168,11 +167,7 @@
                 <div class="group7 flex-col"></div>
               </div>
             </div>
-            <img
-              class="pic1"
-              referrerpolicy="no-referrer"
-              src="images/floor_icon.png"
-            />
+            <img class="pic1" referrerpolicy="no-referrer" src="images/floor_icon.png"/>
             <span class="info11">Amount：</span>
           </div>
         </div>
@@ -224,12 +219,18 @@
         </div>
       </div>
     </div>
+    <!-- profile end -->
+    <!-- game info start https://elevenzhou.github.io/Space/ -->
+    <Game :show="showInfo.game" :url="gameConfig.gameUrl" @click="click()" />
+    <!-- game info end -->
   </main>
 </template>
 
 <script>
 import * as ethers from 'ethers'
 import axios from 'axios'
+import Game from '@/components/Game.vue'
+import sendMessage from '@/utils/Utils.js'
 
 // 服务器地址
 const serverUrl = '127.0.0.1:9990'
@@ -238,11 +239,15 @@ const apiServer = 'http://' + serverUrl
 
 export default {
   name: 'Navigator',
+  components: {
+    Game
+  },
   data () {
     // initial data
     return {
       // 合约函数
-      myContract: this.$Dapp.Bridges.writer,
+      appContractWriter: this.$Dapp.Bridges.writer,
+      appContractReader: this.$Dapp.Bridges.read,
 
       // 基础配置
       baseConfig: {
@@ -259,7 +264,8 @@ export default {
         lang_011: 'Not \n open'
       },
       gameConfig: {
-        total: 10000
+        total: 10000,
+        gameUrl: 'https://dontil.github.io/test/'
       },
       url: window.location.href ? window.location.href : '',
       lang: 'en',
@@ -271,7 +277,8 @@ export default {
       showInfo: {
         mint: false,
         hot: false,
-        profile: false
+        profile: false,
+        game: true
       },
       playerInfo: {
         metamask: '',
@@ -301,6 +308,11 @@ export default {
         _that.playerInfo.isLogin = true
         _that.playerInfo.status = 1
       }
+      const message = {
+        source: 'web',
+        type: 'updateTitle'
+      }
+      sendMessage(message)
     },
     hot () {
       const _that = this
@@ -324,6 +336,8 @@ export default {
       _that.getAllNfts()
     },
     mint () {
+      this.login()
+
       const _that = this
       if (_that.showInfo.mint) {
         _that.showInfo.mint = false
@@ -332,43 +346,33 @@ export default {
       }
       // 添加关闭倒计时
     },
-    realMint () {
+    async realMint () {
       console.log('real mint start...')
       const floorNum = 1
       const floorPrice = ethers.utils.parseUnits('0.1', 'gwei').toString()
       console.log('realmint:::', floorNum, floorPrice)
+      console.log('this.writer', this.$Dapp.Bridges.writer)
+      console.log('this.read', this.$Dapp.Bridges.read)
 
-      this.myContract.mint(floorNum, { value: floorPrice }).then(function (ret) {
+      await this.$Dapp.Bridges.writer.mint(floorNum).then(function (ret) {
         console.log(ret)
-      // myContractReader.on('MintToken', (from, tokenId, artworkId) => {
-      //   console.log(
-      //     `mint tokenId ${tokenId} artworkId${artworkId} from ${from} successful`
-      //   )
-        // if (
-        //   ethers.utils.getAddress(from) ==
-        //   ethers.utils.getAddress(ethereum.selectedAddress)
-        // ) {
-        //   console.log('tokenId', tokenId)
-        // }
-      // })
       })
     },
-    // 关闭个人信息窗口操作
+    // closedd
     close () {
       const _that = this
       _that.showInfo.profile = false
     },
     getAllNfts () {
-      // 获取我的全部nft
+      // get all my nft list
       const url = apiServer + '/user/getallnft?address=' + window.ethereum.selectedAddress
       axios.post(url).then(response => {
-        console.log('get_all_nfts:', url, response)
         const data = response.data.Data
 
-        // todo 没考虑分页超过100个nft
-        console.log('返回nft配置:', data.data)
+        // TODO not support more then 100 nft
+        console.log('response:', data.data)
         if (data.code !== 200) {
-          alert('获取nft失败，请重新获取')
+          alert('get error, please try again')
         } else {
           for (var v in data.data.content) {
             const image = JSON.parse(data.data.content[v].nft_json).image
@@ -383,6 +387,13 @@ export default {
           }
         }
       })
+    },
+    click () {
+      const message = {
+        source: 'web',
+        type: 'updateTitle'
+      }
+      sendMessage(message)
     }
   },
   created () {
@@ -395,4 +406,28 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.game {
+  z-index: 200;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0px;
+  left: 0px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: inherit;
+  background-color: rgb(4 4 4 / 90%);
+}
+.close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 30px;
+  height: 30px;
+  background: url(/images/close.png) -2px -2px no-repeat;
+  background-size: 30px 30px;
+}
 </style>
