@@ -136,7 +136,6 @@
       </div>
       <!-- mint end -->
     </div>
-
     <!-- profile start -->
     <div class="pcontent flex-col" v-show="showInfo.profile">
       <div class="player5 flex-col">
@@ -191,12 +190,20 @@
         </div>
       </div>
     </div>
+    <!-- profile end -->
+    <!-- game info start https://elevenzhou.github.io/Space/ -->
+    <Game :url="gameConfig.gameUrl" />
+    <!-- game info end -->
   </main>
 </template>
 
 <script>
+import Game from '@/components/Game.vue'
 export default {
   name: 'Navigator',
+  components: {
+    Game
+  },
   data () {
     // initial data
     return {
@@ -215,7 +222,8 @@ export default {
         lang_011: 'Not \n open'
       },
       gameConfig: {
-        total: 10000
+        total: 10000,
+        gameUrl: 'https://elevenzhou.github.io/Space/'
       },
       url: window.location.href ? window.location.href : '',
       lang: 'en',
@@ -289,4 +297,28 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.game {
+  z-index: 200;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0px;
+  left: 0px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: inherit;
+  background-color: rgb(4 4 4 / 90%);
+}
+.close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 30px;
+  height: 30px;
+  background: url(/images/close.png) -2px -2px no-repeat;
+  background-size: 30px 30px;
+}
 </style>
