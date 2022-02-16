@@ -291,10 +291,10 @@ export default {
     navi () {
       console.log('[navigator] navi ', this.$Dapp)
     },
-    login () {
+    async login () {
       const _that = this
       console.log('[Main] login ', _that.$Dapp)
-      _that.$Dapp.connect()
+      await _that.$Dapp.connect()
       _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
       console.log('address ', _that.playerInfo.address)
     },
