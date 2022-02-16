@@ -49,22 +49,20 @@ const isMetaMaskInstalled = () => {
 
 const Dapp = {
   Bridges: {},
-  connect: () => {
+  connect: async () => {
     try {
       if (isMetaMaskInstalled()) {
         if (window.ethereum.chainId !== targetChainId) {
           alert('链ID ' + targetChainId + ' 不是 主网！请在钱包中切换')
           return Dapp
         }
+
+        await window.ethereum.request({ method: 'eth_requestAccounts' })
         Dapp.Bridges.ethereum = window.ethereum
         Dapp.Bridges.local = new ethers.providers.Web3Provider(window.ethereum)
-        // Dapp.Bridges.local = new ethers.providers.Web3Provider(web3HttpProvider)
-        console.log('Dapp - 11 ==>', Dapp)
         Dapp.Bridges.reader = new ethers.Contract(contractAddress, contractAbi, Dapp.Bridges.local)
-        console.log('Dapp - 22 ==>', Dapp)
         Dapp.Bridges.signer = Dapp.Bridges.local.getSigner() // 钱包签名
         Dapp.Bridges.writer = Dapp.Bridges.reader.connect(Dapp.Bridges.signer)
-        console.log('Dapp - 33 ==>', Dapp)
 
         return Dapp
       }
