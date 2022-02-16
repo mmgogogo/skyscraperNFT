@@ -3,8 +3,8 @@
     <div class="header flex-col justify-center">
       <div class="navigation flex-row">
         <div class="logo flex-col"></div>
-        <div class="wallet flex-col" @click="login()"></div>
-        <div class="profile flex-col" @click="displayProfileInfo()"></div>
+        <div class="wallet flex-col btn-hand" @click="login(1)"></div>
+        <div class="profile flex-col btn-hand" @click="displayProfileInfo()"></div>
       </div>
     </div>
     <div class="container flex-row">
@@ -75,16 +75,16 @@
             >
           </div>
           <div class="bd8 flex-row justify-between">
-            <div class="layer2 flex-col align-center btn-hand">
+            <div class="layer2 flex-col align-center btn-hand" @click="mint()">
               <div class="layer3 flex-col justify-between">
                 <div class="layer4 flex-col"></div>
-                <span class="txt3" @click="mint()">
+                <span class="txt3">
                   {{ baseConfig.lang_008 }}
                 </span>
               </div>
             </div>
-            <div class="layer5 flex-col align-center btn-hand">
-              <div class="group2 flex-col justify-between">
+            <div class="layer5 flex-col align-center">
+              <div class="group2 flex-col justify-between btn-hand" @click="room()">
                 <img
                   class="label2"
                   referrerpolicy="no-referrer"
@@ -95,15 +95,16 @@
             </div>
           </div>
           <div class="bd9 flex-row justify-between">
-            <div class="group3 flex-col btn-hand">
+            <div class="group3 flex-col btn-hand" @click="avatar()">
               <div class="box2 flex-col justify-between">
                 <div class="mod1 flex-col"></div>
                 <span class="word5">{{ baseConfig.lang_010 }}</span>
               </div>
             </div>
-            <div class="group4 flex-col btn-hand">
+            <!--<div class="group4 flex-col btn-hand">
               <span class="paragraph1">{{ baseConfig.lang_011 }}</span>
             </div>
+            -->
           </div>
         </div>
       </div>
@@ -296,7 +297,7 @@ export default {
     navi () {
       console.log('[navigator] navi ', this.$Dapp)
     },
-    async login () {
+    async login (isInit) {
       const _that = this
       console.log('[Main] login ', _that.$Dapp)
       await _that.$Dapp.connect()
@@ -307,6 +308,10 @@ export default {
       if (_that.playerInfo.address !== '') {
         _that.playerInfo.isLogin = true
         _that.playerInfo.status = 1
+
+        if (isInit) {
+          alert('Metamask had connect success')
+        }
       }
       const message = {
         source: 'web',
@@ -394,6 +399,12 @@ export default {
         type: 'updateTitle'
       }
       sendMessage(message)
+    },
+    room () {
+      alert('coming soon')
+    },
+    avatar () {
+      alert('coming soon')
     }
   },
   created () {
