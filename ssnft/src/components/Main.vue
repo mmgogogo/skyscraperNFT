@@ -4,7 +4,7 @@
       <div class="navigation flex-row">
         <div class="logo flex-col"></div>
         <div class="wallet flex-col" @click="login()"></div>
-        <div class="profile flex-col" @click="displayProfile()"></div>
+        <div class="profile flex-col" @click="displayProfileInfo()"></div>
       </div>
     </div>
     <div class="container flex-row">
@@ -213,8 +213,11 @@
           <div class="player14 flex-container" v-for="item in playerInfo.allNfts" :key="item.id">
             <div class="pblock4">
               <div class="player17 flex-col">
+                {{item.tokenId}}
                 {{item.name}}
-                <img class="pimg1" referrerpolicy="no-referrer" src="images/nft_example001.png" alt="" />
+                <p v-if="item.image">
+                  <img class="pimg1" referrerpolicy="no-referrer" :src="item.image" alt="" />
+                </p>
               </div>
           </div>
           </div>
@@ -308,6 +311,18 @@ export default {
       }
       // 添加关闭倒计时
     },
+    displayProfileInfo () {
+      // show the profile
+      const _that = this
+
+      // common login
+      _that.login()
+
+      _that.showInfo.profile = true
+
+      // read my nft list
+      _that.getAllNfts()
+    },
     mint () {
       const _that = this
       if (_that.showInfo.mint) {
@@ -342,46 +357,38 @@ export default {
     close () {
       const _that = this
       _that.showInfo.profile = false
+    },
+    getAllNfts () {
+      // 获取我的全部nft
+      const url = apiServer + '/user/getallnft?address=' + window.ethereum.selectedAddress
+      axios.post(url).then(response => {
+        console.log('get_all_nfts:', url, response)
+        const data = response.data.Data
+
+        // todo 没考虑分页超过100个nft
+        console.log('返回nft配置:', data.data)
+        if (data.code !== 200) {
+          alert('获取nft失败，请重新获取')
+        } else {
+          for (var v in data.data.content) {
+            const image = JSON.parse(data.data.content[v].nft_json).image
+            this.playerInfo.allNfts.push({
+              token_id: data.data.content[v].token_id,
+              nft_name: data.data.content[v].nft_name,
+
+              // ipfs://QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
+              // https://ipfs.io/ipfs/QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
+              image: image.replace('ipfs://', 'https://ipfs.io/ipfs/')
+            })
+          }
+        }
+      })
     }
   },
   created () {
     console.log('[navigator] created start!')
     const _that = this
     console.log('[navigator] that ', _that.$Dapp)
-  },
-  getAllNfts () {
-    // 获取我的全部nft
-    const url = apiServer + '/user/getallnft?address=' + window.ethereum.selectedAddress
-    axios.post(url).then(response => {
-      console.log('get_all_nfts:', url, response)
-      const data = response.data.Data
-
-      // todo 没考虑分页超过100个nft
-      console.log('返回nft配置:', data.data)
-      if (data.code !== 200) {
-        alert('获取nft失败，请重新获取')
-      } else {
-        for (var v in data.data.content) {
-          this.playerInfo.allNfts.push({
-            token_id: data.data.content[v].token_id,
-            nft_name: data.data.content[v].nft_name,
-            image: JSON.parse(data.data.content[v].nft_json).image
-          })
-        }
-      }
-    })
-  },
-  displayProfile () {
-    // show the profile
-    const _that = this
-
-    // common login
-    _that.login()
-
-    _that.showInfo.profile = true
-
-    // read my nft list
-    _that.getAllNfts()
   }
 }
 </script>
