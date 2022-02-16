@@ -193,6 +193,7 @@
               </div>
             </div>
           </div>
+          <div>address: {{ playerInfo.address }}</div>
           <div class="player10 flex-row">
             <img class="picon2" referrerpolicy="no-referrer" src="images/collected.png" alt="" />
             <!-- <div class="pgroup3 flex-col"></div> -->
@@ -209,27 +210,13 @@
           </div>
           <div class="player12 flex-col"></div>
           <div class="player13 flex-col"></div>
-          <div class="player14 flex-container">
+          <div class="player14 flex-container" v-for="item in playerInfo.allNfts" :key="item.id">
             <div class="pblock4">
               <div class="player17 flex-col">
+                {{item.name}}
                 <img class="pimg1" referrerpolicy="no-referrer" src="images/nft_example001.png" alt="" />
               </div>
-            </div>
-            <div class="pblock4">
-              <div class="player17 flex-col">
-                <img class="pimg1" referrerpolicy="no-referrer" src="images/nft_example002.png" alt="" />
-              </div>
-            </div>
-            <div class="pblock4">
-              <div class="player17 flex-col">
-                <img class="pimg1" referrerpolicy="no-referrer" src="images/nft_example003.png" alt="" />
-              </div>
-            </div>
-            <div class="pblock4">
-              <div class="player17 flex-col">
-                <img class="pimg1" referrerpolicy="no-referrer" src="images/nft_example004.png" alt="" />
-              </div>
-            </div>
+          </div>
           </div>
         </div>
       </div>
@@ -239,12 +226,19 @@
 
 <script>
 import * as ethers from 'ethers'
+import axios from 'axios'
+
+// 服务器地址
+const serverUrl = '127.0.0.1:9990'
+// const wsServer = 'ws://' + serverUrl + '/ws'
+const apiServer = 'http://' + serverUrl
+
 export default {
   name: 'Navigator',
   data () {
     // initial data
     return {
-      // 兼容以前的名字
+      // 合约函数
       myContract: this.$Dapp.Bridges.writer,
 
       // 基础配置
@@ -280,7 +274,8 @@ export default {
         metamask: '',
         address: '',
         isLogin: false, // 是否登录
-        status: 0 // 登录状态值 0: metamask未登录, 1: 获得钱包账号，但游戏数据未返回, 2: 已获取游戏数据 3:已成功注册
+        status: 0, // 登录状态值 0: metamask未登录, 1: 获得钱包账号，但游戏数据未返回, 2: 已获取游戏数据 3:已成功注册
+        allNfts: [] // 玩家的全部nft
       }
     }
   },
@@ -297,6 +292,12 @@ export default {
       await _that.$Dapp.connect()
       _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
       console.log('address ', _that.playerInfo.address)
+
+      // set profile
+      if (_that.playerInfo.address !== '') {
+        _that.playerInfo.isLogin = true
+        _that.playerInfo.status = 1
+      }
     },
     hot () {
       const _that = this
@@ -337,10 +338,6 @@ export default {
       // })
       })
     },
-    displayProfile () {
-      const _that = this
-      _that.showInfo.profile = true
-    },
     // 关闭个人信息窗口操作
     close () {
       const _that = this
@@ -351,6 +348,40 @@ export default {
     console.log('[navigator] created start!')
     const _that = this
     console.log('[navigator] that ', _that.$Dapp)
+  },
+  getAllNfts () {
+    // 获取我的全部nft
+    const url = apiServer + '/user/getallnft?address=' + window.ethereum.selectedAddress
+    axios.post(url).then(response => {
+      console.log('get_all_nfts:', url, response)
+      const data = response.data.Data
+
+      // todo 没考虑分页超过100个nft
+      console.log('返回nft配置:', data.data)
+      if (data.code !== 200) {
+        alert('获取nft失败，请重新获取')
+      } else {
+        for (var v in data.data.content) {
+          this.playerInfo.allNfts.push({
+            token_id: data.data.content[v].token_id,
+            nft_name: data.data.content[v].nft_name,
+            image: JSON.parse(data.data.content[v].nft_json).image
+          })
+        }
+      }
+    })
+  },
+  displayProfile () {
+    // show the profile
+    const _that = this
+
+    // common login
+    _that.login()
+
+    _that.showInfo.profile = true
+
+    // read my nft list
+    _that.getAllNfts()
   }
 }
 </script>
