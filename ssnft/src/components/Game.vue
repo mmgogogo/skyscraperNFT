@@ -1,8 +1,8 @@
 <template>
   <!-- game info start https://elevenzhou.github.io/Space/ -->
-  <div class="game">
-    <div class="close"></div>
-    <iframe id="game" title="game" sandbox="allow-scripts" :src="url"
+  <div class="game" v-show="show || game">
+    <div class="close" @click="close()"></div>
+    <iframe id="game" title="game" :src="url"
     style="min-height:500px;height:768px;width:1080px;"
     allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
     ></iframe>
@@ -16,12 +16,17 @@ export default {
   data () {
     // initial data
     return {
+      game: true
     }
   },
   props: {
     url: String
   },
   methods: {
+    close () {
+      const _that = this
+      _that.game = false
+    }
   },
   created () {
     console.log('[Game] created start!')

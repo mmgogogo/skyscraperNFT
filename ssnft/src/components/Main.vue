@@ -192,13 +192,15 @@
     </div>
     <!-- profile end -->
     <!-- game info start https://elevenzhou.github.io/Space/ -->
-    <Game :url="gameConfig.gameUrl" />
+    <Game :show="showInfo.game" :url="gameConfig.gameUrl" @click="click()" />
     <!-- game info end -->
   </main>
 </template>
 
 <script>
 import Game from '@/components/Game.vue'
+import sendMessage from '@/utils/Utils.js'
+
 export default {
   name: 'Navigator',
   components: {
@@ -223,7 +225,7 @@ export default {
       },
       gameConfig: {
         total: 10000,
-        gameUrl: 'https://elevenzhou.github.io/Space/'
+        gameUrl: 'https://dontil.github.io/test/'
       },
       url: window.location.href ? window.location.href : '',
       lang: 'en',
@@ -235,7 +237,8 @@ export default {
       showInfo: {
         mint: false,
         hot: false,
-        profile: false
+        profile: false,
+        game: true
       },
       playerInfo: {
         metamask: '',
@@ -258,6 +261,12 @@ export default {
       _that.$Dapp.connect()
       _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
       console.log('address ', _that.playerInfo.address)
+
+      const message = {
+        source: 'web',
+        type: 'updateTitle'
+      }
+      sendMessage(message)
     },
     hot () {
       const _that = this
@@ -285,6 +294,13 @@ export default {
     close () {
       const _that = this
       _that.showInfo.profile = false
+    },
+    click () {
+      const message = {
+        source: 'web',
+        type: 'updateTitle'
+      }
+      sendMessage(message)
     }
   },
   created () {
