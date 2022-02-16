@@ -34,28 +34,28 @@
               <div class="section3 flex-row justify-between">
                 <div class="outer3 flex-col"></div>
                 <div class="outer4">
-                  <span class="info2">{{ baseConfig.lang_002 }}</span>
-                  <span
-                    class="tbox1 tline tcolor_gray0 tprop tfont_m tfont_s24 tshadow ttop"
-                    >…</span
-                  >
+                  <span class="info2">
+                    <input type="text" class="" placeholder="Search" v-model="gotoNum"/>
+                  </span>
                 </div>
               </div>
             </div>
             <div class="section4 flex-col align-center">
-              <span class="txt2 btn-hand">{{ baseConfig.lang_003 }}</span>
+              <span class="txt2 btn-hand" @click="goto()">{{ baseConfig.lang_003 }}</span>
             </div>
           </div>
           <div class="bd3 flex-row justify-between">
             <div class="layer1 flex-col"></div>
             <span
-              class="text tbox1 tline tprop tfont_m tfont_s24 tshadow ttop tcolor_gray0 btn-hand">
+              class="text tbox1 tline tprop tfont_m tfont_s24 tshadow ttop tcolor_gray0 btn-hand"
+              @click="myFloor()">
               {{ baseConfig.lang_004 }}</span>
           </div>
           <div class="bd4 flex-row justify-between">
             <div class="bd5 flex-col"></div>
             <span
               class="text tbox1 tline tprop tfont_m tfont_s24 tshadow ttop tcolor btn-hand"
+              @click="myFollowing()"
               >{{ baseConfig.lang_005 }}</span
             >
           </div>
@@ -63,6 +63,7 @@
             <div class="group0 flex-col"></div>
             <span
               class="text tbox1 tline tprop tfont_m tfont_s24 tshadow tcolor btn-hand"
+              @click="myFollowed()"
               >{{ baseConfig.lang_006 }}</span
             >
           </div>
@@ -110,6 +111,72 @@
       </div>
       <!-- nav end -->
 
+      <!-- my floor start -->
+      <div class="hot flex-col" v-show="showInfo.myFloor">
+        <div class="group1 flex-col justify-between">
+          <div class="main5 flex-col justify-center">
+            <span class="txt5 btn-hand">Floor</span>
+          </div>
+          <div class="main6 flex-row">
+            <div class="group10 flex-col">
+              <div class="layer flex-col justify-center" v-for="item in playerInfo.mintFloorNumId" :key="item">
+                <span class="txt6">楼层：{{item}}</span>
+              </div>
+            </div>
+            <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
+          </div>
+        </div>
+      </div>
+      <!-- my floor end -->
+
+      <!-- myFollowing start -->
+      <div class="hot flex-col" v-show="showInfo.myFollowing">
+        <div class="group1 flex-col justify-between">
+          <div class="main5 flex-col justify-center">
+            <span class="txt5 btn-hand">Following</span>
+          </div>
+          <div class="main6 flex-row">
+            <div class="group10 flex-col">
+              <div class="layer flex-col justify-center">
+                <span class="txt6">Jack&nbsp;Chow</span>
+              </div>
+              <div class="layer flex-col justify-center">
+                <span class="txt6">Jack&nbsp;Chow</span>
+              </div>
+              <div class="layer flex-col justify-center">
+                <span class="txt6">Jack&nbsp;Chow</span>
+              </div>
+            </div>
+            <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
+          </div>
+        </div>
+      </div>
+      <!-- myFollowing end -->
+
+      <!-- myFollowed start -->
+      <div class="hot flex-col" v-show="showInfo.myFollowed">
+        <div class="group1 flex-col justify-between">
+          <div class="main5 flex-col justify-center">
+            <span class="txt5 btn-hand">Followed</span>
+          </div>
+          <div class="main6 flex-row">
+            <div class="group10 flex-col">
+              <div class="layer flex-col justify-center">
+                <span class="txt6">Jack&nbsp;Chow</span>
+              </div>
+              <div class="layer flex-col justify-center">
+                <span class="txt6">Jack&nbsp;Chow</span>
+              </div>
+              <div class="layer flex-col justify-center">
+                <span class="txt6">Jack&nbsp;Chow</span>
+              </div>
+            </div>
+            <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
+          </div>
+        </div>
+      </div>
+      <!-- myFollowed end -->
+
       <!-- hot start -->
       <div class="hot flex-col" v-show="showInfo.hot">
         <div class="group1 flex-col justify-between">
@@ -144,8 +211,8 @@
               <span class="txt4">
                 Phanta&nbsp;Bear&nbsp;is&nbsp;a&nbsp;collection&nbsp;of&nbsp;10,000&nbsp;algorithmically&nbsp;generated&nbsp;digital&nbsp;collectibles&nbsp;that&nbsp;double&nbsp;as&nbsp;memebership&nbsp;cards&nbsp;for&nbsp;the&nbsp;Ezek&nbsp;Club.&nbsp;Each&nbsp;Phanta&nbsp;Bear&nbsp;has&nbsp;a&nbsp;unique&nbsp;set&nbsp;of&nbsp;traits&nbsp;and&nbsp;unlocks&nbsp;varying,&nbsp;unique&nbsp;levels&nbsp;of&nbsp;access&nbsp;and&nbsp;perks&nbsp;for&nbsp;its&nbsp;owner.&nbsp;Phanta&nbsp;Bear&nbsp;project&nbsp;was&nbsp;jointly&nbsp;launched&nbsp;by&nbsp;PHANTACi&nbsp;and&nbsp;Ezek
               </span>
-              <div class="mod2 flex-col justify-center">
-                <span class="info7 btn-hand" @click="realMint()">MINT</span>
+              <div class="mod2 flex-col justify-center btn-hand">
+                <span class="info7" @click="realMint()">MINT</span>
               </div>
             </div>
           </div>
@@ -232,6 +299,7 @@ import * as ethers from 'ethers'
 import axios from 'axios'
 import Game from '@/components/Game.vue'
 import sendMessage from '@/utils/Utils.js'
+// import { showFullScreenLoading, hideFullScreenLoading } from '@/utils/loading.js'
 
 // 服务器地址
 const serverUrl = '127.0.0.1:9990'
@@ -279,15 +347,21 @@ export default {
         mint: false,
         hot: false,
         profile: false,
-        game: true
+        game: false,
+        myFloor: false, // my nft
+        myFollowing: false, // i see
+        myFollowed: false // see i
       },
       playerInfo: {
         metamask: '',
         address: '',
-        isLogin: false, // 是否登录
+        isLogin: false,
         status: 0, // 登录状态值 0: metamask未登录, 1: 获得钱包账号，但游戏数据未返回, 2: 已获取游戏数据 3:已成功注册
-        allNfts: [] // 玩家的全部nft
-      }
+        allNfts: [], // all nft
+        mintFloorNumId: [], // mint
+        mintFloorTokenId: [] // mint
+      },
+      gotoNum: ''
     }
   },
   props: {
@@ -352,15 +426,19 @@ export default {
       // 添加关闭倒计时
     },
     async realMint () {
-      console.log('real mint start...')
       const floorNum = 1
-      const floorPrice = ethers.utils.parseUnits('0.1', 'gwei').toString()
+      const floorPrice = ethers.utils.parseEther('0.1')
       console.log('realmint:::', floorNum, floorPrice)
-      console.log('this.writer', this.$Dapp.Bridges.writer)
-      console.log('this.read', this.$Dapp.Bridges.read)
 
-      await this.$Dapp.Bridges.writer.mint(floorNum).then(function (ret) {
+      // All overrides are optional
+      const overrides = {
+        gasLimit: 23000, // default
+        gasPrice: ethers.utils.parseUnits('9.0', 'gwei'), // default
+        value: floorPrice
+      }
+      await this.appContractWriter.mint(floorNum, overrides).then(function (ret) {
         console.log(ret)
+        alert('你得到 NFT 的tokenID是：' + ret.events.MintToken.returnValues.tokenId)
       })
     },
     // closedd
@@ -400,10 +478,72 @@ export default {
       }
       sendMessage(message)
     },
+    myFloor () {
+      console.log('click myFloor')
+      this.login()
+
+      const _that = this
+      if (_that.showInfo.myFloor) {
+        _that.showInfo.myFloor = false
+      } else {
+        _that.showInfo.myFloor = true
+      }
+
+      _that.appContractWriter.balanceOf(window.ethereum.selectedAddress).then(function (ret) {
+        const len = parseInt(ret)
+        if (len === 0) {
+          alert('你目前未拥有任何NFT')
+          return
+        }
+
+        for (let i = 0; i < len; i++) {
+          _that.appContractWriter.tokenOfOwnerByIndex(window.ethereum.selectedAddress, i).then(function (tokenId) {
+            _that.appContractWriter.getTokenInfo(tokenId).then(function (ret) {
+              console.log(ret)
+              // alert('TokenID: ' + ret.tokenId + ', floorNo: ' + ret.floorNo)
+              // 填充
+              _that.playerInfo.mintFloorTokenId.push(ret.tokenId)
+              _that.playerInfo.mintFloorNumId.push(ret.floorNo)
+              // 刷新楼层
+              // refresh_floor();
+              console.log('我的楼层:', _that.playerInfo.mintFloorTokenId, _that.playerInfo.mintFloorNumId)
+              // 拉取关注指定tokenID的地址
+              // get_follower_my(ret.floorNo)
+            })
+          })
+        }
+      })
+    },
+    myFollowing () {
+      console.log('click myFollowing')
+      this.login()
+
+      const _that = this
+      if (_that.showInfo.myFollowing) {
+        _that.showInfo.myFollowing = false
+      } else {
+        _that.showInfo.myFollowing = true
+      }
+    },
+    myFollowed () {
+      console.log('click myFollowed')
+      this.login()
+
+      const _that = this
+      if (_that.showInfo.myFollowed) {
+        _that.showInfo.myFollowed = false
+      } else {
+        _that.showInfo.myFollowed = true
+      }
+    },
     room () {
-      alert('coming soon')
+      alert('room coming soon')
     },
     avatar () {
+      alert('avatar coming soon')
+    },
+    goto () {
+      alert('goto follor:' + this.gotoNum)
       alert('coming soon')
     }
   },

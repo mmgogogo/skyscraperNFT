@@ -7,14 +7,15 @@ import contractNFTTest from './contractAbi'
 /**
  * 目标链ID
  */
-const targetChainId = '0x2a' // Kovan测试链
+// const targetChainId = '0x2a' // Kovan测试链
+const targetChainId = '0x3' // Ropster测试链
 
 _.assign(1, 1)
 
 /**
  * 合约地址
  */
-const contractAddress = '0x93893eB7a1eBB90ED99b0FcEE48b5171aADc2b06' // Kovan
+// const contractAddress = '0x93893eB7a1eBB90ED99b0FcEE48b5171aADc2b06' // Kovan
 // const contractUrl = 'https://kovan.etherscan.io/address/0x93893eb7a1ebb90ed99b0fcee48b5171aadc2b06'
 
 /**
@@ -30,7 +31,7 @@ const contractAddress = '0x93893eB7a1eBB90ED99b0FcEE48b5171aADc2b06' // Kovan
 // const networkHttpProvider = 'https://kovan.infura.io/v3/' + providerToken
 
 // alchemy
-// const contractAddress = '0xFD0B9c88DF4A884Eee463B7DBb46d97c53fa757B'
+const contractAddress = '0xFD0B9c88DF4A884Eee463B7DBb46d97c53fa757B'
 // const web3HttpProvider = 'https://eth-ropsten.alchemyapi.io/v2/Po-F6eE3SaJQ9R74LUWLa1gOW36CTh7J'
 
 /**
@@ -53,8 +54,8 @@ const Dapp = {
     try {
       if (isMetaMaskInstalled()) {
         if (window.ethereum.chainId !== targetChainId) {
-          alert('链ID ' + targetChainId + ' 不是 主网！请在钱包中切换')
-          return Dapp
+          // alert('链ID ' + targetChainId + ' 不是 主网！请在钱包中切换')
+          // return Dapp
         }
 
         await window.ethereum.request({ method: 'eth_requestAccounts' })
