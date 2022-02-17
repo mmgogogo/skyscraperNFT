@@ -115,12 +115,12 @@
       <div class="hot flex-col" v-show="showInfo.myFloor">
         <div class="group1 flex-col justify-between">
           <div class="main5 flex-col justify-center">
-            <span class="txt5 btn-hand">Floor</span>
+            <span class="txt5">Floor</span>
           </div>
           <div class="main6 flex-row">
             <div class="group10 flex-col">
-              <div class="layer flex-col justify-center" v-for="item in playerInfo.mintFloorNumId" :key="item">
-                <span class="txt6">楼层：{{item}}</span>
+              <div class="layer flex-col justify-center" v-for="v in playerInfo.mintFloorNumId" :key="v">
+                <span class="txt6">Floor Id:{{v}}</span>
               </div>
             </div>
             <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
@@ -133,18 +133,12 @@
       <div class="hot flex-col" v-show="showInfo.myFollowing">
         <div class="group1 flex-col justify-between">
           <div class="main5 flex-col justify-center">
-            <span class="txt5 btn-hand">Following</span>
+            <span class="txt5">Following</span>
           </div>
           <div class="main6 flex-row">
             <div class="group10 flex-col">
-              <div class="layer flex-col justify-center">
-                <span class="txt6">Jack&nbsp;Chow</span>
-              </div>
-              <div class="layer flex-col justify-center">
-                <span class="txt6">Jack&nbsp;Chow</span>
-              </div>
-              <div class="layer flex-col justify-center">
-                <span class="txt6">Jack&nbsp;Chow</span>
+              <div class="layer flex-col justify-center" v-for="v in playerInfo.myFollowing" :key="v.AddressTo">
+                <span class="txt6">玩家地址:{{v.AddressTo}}</span>
               </div>
             </div>
             <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
@@ -157,18 +151,12 @@
       <div class="hot flex-col" v-show="showInfo.myFollowed">
         <div class="group1 flex-col justify-between">
           <div class="main5 flex-col justify-center">
-            <span class="txt5 btn-hand">Followed</span>
+            <span class="txt5">Followed</span>
           </div>
           <div class="main6 flex-row">
             <div class="group10 flex-col">
-              <div class="layer flex-col justify-center">
-                <span class="txt6">Jack&nbsp;Chow</span>
-              </div>
-              <div class="layer flex-col justify-center">
-                <span class="txt6">Jack&nbsp;Chow</span>
-              </div>
-              <div class="layer flex-col justify-center">
-                <span class="txt6">Jack&nbsp;Chow</span>
+              <div class="layer flex-col justify-center" v-for="v in playerInfo.myFollowed" :key="v.AddressTo">
+                <span class="txt6">玩家地址:{{v.AddressFrom}}</span>
               </div>
             </div>
             <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
@@ -181,7 +169,7 @@
       <div class="hot flex-col" v-show="showInfo.hot">
         <div class="group1 flex-col justify-between">
           <div class="main5 flex-col justify-center">
-            <span class="txt5 btn-hand">Hot&nbsp;Floor</span>
+            <span class="txt5 btn-hand">Hot</span>
           </div>
           <div class="main6 flex-row">
             <div class="group10 flex-col">
@@ -296,13 +284,14 @@
 
 <script>
 import * as ethers from 'ethers'
-import axios from 'axios'
 import Game from '@/components/Game.vue'
 import sendMessage from '@/utils/Utils.js'
-// import { showFullScreenLoading, hideFullScreenLoading } from '@/utils/loading.js'
+// import { ajaxGetMyFollower, ajaxGetAllNfts } from '@/utils/AjaxData.js'
+// import { showFullScreenLoading, hideFullScreenLoading } from '@/utils/Loading.js'
+import axios from 'axios'
 
 // 服务器地址
-const serverUrl = '127.0.0.1:9990'
+const serverUrl = '127.0.0.1:9950'
 // const wsServer = 'ws://' + serverUrl + '/ws'
 const apiServer = 'http://' + serverUrl
 
@@ -359,7 +348,9 @@ export default {
         status: 0, // 登录状态值 0: metamask未登录, 1: 获得钱包账号，但游戏数据未返回, 2: 已获取游戏数据 3:已成功注册
         allNfts: [], // all nft
         mintFloorNumId: [], // mint
-        mintFloorTokenId: [] // mint
+        mintFloorTokenId: [], // mint
+        myFollowing: [],
+        myFollowed: []
       },
       gotoNum: ''
     }
@@ -393,7 +384,15 @@ export default {
       }
       sendMessage(message)
     },
+    resetPopWindow () {
+      // reset all pop
+      for (var item in this.showInfo) {
+        this.showInfo[item] = false
+      }
+    },
     hot () {
+      this.resetPopWindow() // reset
+
       const _that = this
       if (_that.showInfo.hot) {
         _that.showInfo.hot = false
@@ -402,7 +401,7 @@ export default {
       }
       // 添加关闭倒计时
     },
-    displayProfileInfo () {
+    async displayProfileInfo () {
       // show the profile
       const _that = this
 
@@ -411,8 +410,45 @@ export default {
 
       _that.showInfo.profile = true
 
-      // read my nft list
-      _that.getAllNfts()
+      // 独立出去
+      // ajaxGetAllNfts(window.ethereum.selectedAddress).then(response => {
+      //   console.log('ajaxGetAllNfts:', response)
+      //   for (var v in response.content) {
+      //     const image = JSON.parse(response.content[v].nft_json).image
+      //     this.playerInfo.allNfts.push({
+      //       token_id: response.content[v].token_id,
+      //       nft_name: response.content[v].nft_name,
+
+      //       // ipfs://QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
+      //       // https://ipfs.io/ipfs/QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
+      //       image: image.replace('ipfs://', 'https://ipfs.io/ipfs/')
+      //     })
+      //   }
+      // })
+      // get all my nft list
+      const url = apiServer + '/user/getallnft?address=' + window.ethereum.selectedAddress
+      await axios.post(url).then(response => {
+        const data = response.data.Data
+
+        // TODO not support more then 100 nft
+        console.log('response:', data.data)
+        if (data.code !== 200) {
+          alert('get error, please try again')
+        } else {
+          const result = data.data.content
+          for (var v in result) {
+            const image = JSON.parse(result[v].nft_json).image
+            this.playerInfo.allNfts.push({
+              token_id: result[v].token_id,
+              nft_name: result[v].nft_name,
+
+              // ipfs://QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
+              // https://ipfs.io/ipfs/QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
+              image: image.replace('ipfs://', 'https://ipfs.io/ipfs/')
+            })
+          }
+        }
+      })
     },
     mint () {
       this.login()
@@ -436,7 +472,7 @@ export default {
         gasPrice: ethers.utils.parseUnits('9.0', 'gwei'), // default
         value: floorPrice
       }
-      await this.appContractWriter.mint(floorNum, overrides).then(function (ret) {
+      await this.$Dapp.Bridges.writer.mint(floorNum, overrides).then(function (ret) {
         console.log(ret)
         alert('你得到 NFT 的tokenID是：' + ret.events.MintToken.returnValues.tokenId)
       })
@@ -446,31 +482,6 @@ export default {
       const _that = this
       _that.showInfo.profile = false
     },
-    getAllNfts () {
-      // get all my nft list
-      const url = apiServer + '/user/getallnft?address=' + window.ethereum.selectedAddress
-      axios.post(url).then(response => {
-        const data = response.data.Data
-
-        // TODO not support more then 100 nft
-        console.log('response:', data.data)
-        if (data.code !== 200) {
-          alert('get error, please try again')
-        } else {
-          for (var v in data.data.content) {
-            const image = JSON.parse(data.data.content[v].nft_json).image
-            this.playerInfo.allNfts.push({
-              token_id: data.data.content[v].token_id,
-              nft_name: data.data.content[v].nft_name,
-
-              // ipfs://QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
-              // https://ipfs.io/ipfs/QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
-              image: image.replace('ipfs://', 'https://ipfs.io/ipfs/')
-            })
-          }
-        }
-      })
-    },
     click () {
       const message = {
         source: 'web',
@@ -478,43 +489,51 @@ export default {
       }
       sendMessage(message)
     },
-    myFloor () {
+    async myFloor () {
+      this.resetPopWindow() // reset
       console.log('click myFloor')
       this.login()
 
-      const _that = this
-      if (_that.showInfo.myFloor) {
-        _that.showInfo.myFloor = false
+      // const _that = this
+      if (this.showInfo.myFloor) {
+        this.showInfo.myFloor = false
       } else {
-        _that.showInfo.myFloor = true
+        this.showInfo.myFloor = true
       }
 
-      _that.appContractWriter.balanceOf(window.ethereum.selectedAddress).then(function (ret) {
+      const address = window.ethereum.selectedAddress
+      const contractWriter = this.$Dapp.Bridges.writer
+      const mintFloorTokenId = []
+      const mintFloorNumId = []
+      await contractWriter.balanceOf(address).then(function (ret) {
         const len = parseInt(ret)
+        console.log('balanceOf:', ret, len)
         if (len === 0) {
-          alert('你目前未拥有任何NFT')
+          alert('Your have nothing nft')
           return
         }
 
         for (let i = 0; i < len; i++) {
-          _that.appContractWriter.tokenOfOwnerByIndex(window.ethereum.selectedAddress, i).then(function (tokenId) {
-            _that.appContractWriter.getTokenInfo(tokenId).then(function (ret) {
-              console.log(ret)
+          contractWriter.tokenOfOwnerByIndex(address, i).then(function (tokenId) {
+            contractWriter.getTokenInfo(tokenId).then(function (ret) {
+              console.log('token info:', ret)
               // alert('TokenID: ' + ret.tokenId + ', floorNo: ' + ret.floorNo)
               // 填充
-              _that.playerInfo.mintFloorTokenId.push(ret.tokenId)
-              _that.playerInfo.mintFloorNumId.push(ret.floorNo)
+              mintFloorTokenId.push(parseInt(ret.tokenId))
+              mintFloorNumId.push(parseInt(ret.floorNo))
               // 刷新楼层
               // refresh_floor();
-              console.log('我的楼层:', _that.playerInfo.mintFloorTokenId, _that.playerInfo.mintFloorNumId)
-              // 拉取关注指定tokenID的地址
-              // get_follower_my(ret.floorNo)
+              console.log('my floor infomation:', mintFloorTokenId, mintFloorNumId)
             })
           })
         }
       })
+
+      this.playerInfo.mintFloorTokenId = mintFloorTokenId
+      this.playerInfo.mintFloorNumId = mintFloorNumId
     },
-    myFollowing () {
+    async myFollowing () {
+      this.resetPopWindow() // reset
       console.log('click myFollowing')
       this.login()
 
@@ -524,8 +543,30 @@ export default {
       } else {
         _that.showInfo.myFollowing = true
       }
+
+      // 独立出去
+      // const result = ajaxGetMyFollower(window.ethereum.selectedAddress)
+      // console.log('return result:', result)
+      // get all my followering list
+      const url = apiServer + '/followerpeople/listbyaddress?from=' + window.ethereum.selectedAddress
+      await axios.post(url).then(response => {
+        const data = response.data
+
+        // TODO not support more then 100 nft
+        console.log('response-2:', data)
+        if (data.Code !== 0) {
+          console.log('get error, please try again')
+        } else {
+          for (var v in data.Data) {
+            console.log('获取我的关注列表', data.Data[v])
+          }
+
+          this.playerInfo.myFollowing = data.Data
+        }
+      })
     },
     myFollowed () {
+      this.resetPopWindow() // reset
       console.log('click myFollowed')
       this.login()
 

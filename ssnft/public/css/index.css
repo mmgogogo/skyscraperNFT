@@ -875,7 +875,7 @@
   width: 300px;
   max-height: 400px;
   height:min-content;
-  background-color: rgba(107, 109, 113, 1);
+  background-color: #fff;
   border-radius: 1.25px 1.25px 1.25px 1.25px;
   overflow-y: auto;
 }
