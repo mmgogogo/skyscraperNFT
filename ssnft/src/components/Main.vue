@@ -115,7 +115,7 @@
       <div class="hot flex-col" v-show="showInfo.myFloor">
         <div class="group1 flex-col justify-between">
           <div class="main5 flex-col justify-center">
-            <span class="txt5">Floor</span>
+            <span class="txt5">My Floor</span>
           </div>
           <div class="main6 flex-row">
             <div class="group10 flex-col">
@@ -174,13 +174,7 @@
           <div class="main6 flex-row">
             <div class="group10 flex-col">
               <div class="layer flex-col justify-center">
-                <span class="txt6">Jack&nbsp;Chow</span>
-              </div>
-              <div class="layer flex-col justify-center">
-                <span class="txt6">Jack&nbsp;Chow</span>
-              </div>
-              <div class="layer flex-col justify-center">
-                <span class="txt6">Jack&nbsp;Chow</span>
+                <span class="txt6">come soon</span>
               </div>
             </div>
             <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
@@ -390,6 +384,11 @@ export default {
         this.showInfo[item] = false
       }
     },
+    resetMintFloor () {
+      // reset all pop
+      this.playerInfo.mintFloorNumId = []
+      this.playerInfo.mintFloorTokenId = []
+    },
     hot () {
       this.resetPopWindow() // reset
 
@@ -491,10 +490,10 @@ export default {
     },
     async myFloor () {
       this.resetPopWindow() // reset
+      this.resetMintFloor() // reset
       console.log('click myFloor')
       this.login()
 
-      // const _that = this
       if (this.showInfo.myFloor) {
         this.showInfo.myFloor = false
       } else {
@@ -503,11 +502,11 @@ export default {
 
       const address = window.ethereum.selectedAddress
       const contractWriter = this.$Dapp.Bridges.writer
-      const mintFloorTokenId = []
-      const mintFloorNumId = []
+      const playerInfo = this.playerInfo
+      console.log('contractWriter:', contractWriter)
       await contractWriter.balanceOf(address).then(function (ret) {
         const len = parseInt(ret)
-        console.log('balanceOf:', ret, len)
+        console.log('call balanceOf:', ret, len)
         if (len === 0) {
           alert('Your have nothing nft')
           return
@@ -515,22 +514,19 @@ export default {
 
         for (let i = 0; i < len; i++) {
           contractWriter.tokenOfOwnerByIndex(address, i).then(function (tokenId) {
+            console.log('call tokenOfOwnerByIndex:', tokenId)
+
             contractWriter.getTokenInfo(tokenId).then(function (ret) {
-              console.log('token info:', ret)
-              // alert('TokenID: ' + ret.tokenId + ', floorNo: ' + ret.floorNo)
-              // 填充
-              mintFloorTokenId.push(parseInt(ret.tokenId))
-              mintFloorNumId.push(parseInt(ret.floorNo))
-              // 刷新楼层
-              // refresh_floor();
-              console.log('my floor infomation:', mintFloorTokenId, mintFloorNumId)
+              console.log('call getTokenInfo:', ret)
+              playerInfo.mintFloorTokenId.push(parseInt(ret.tokenId))
+              playerInfo.mintFloorNumId.push(parseInt(ret.floorNo))
             })
           })
         }
       })
 
-      this.playerInfo.mintFloorTokenId = mintFloorTokenId
-      this.playerInfo.mintFloorNumId = mintFloorNumId
+      // this.playerInfo.mintFloorTokenId = mintFloorTokenId
+      // this.playerInfo.mintFloorNumId = mintFloorNumId
     },
     async myFollowing () {
       this.resetPopWindow() // reset
@@ -548,11 +544,9 @@ export default {
       // const result = ajaxGetMyFollower(window.ethereum.selectedAddress)
       // console.log('return result:', result)
       // get all my followering list
-      const url = apiServer + '/followerpeople/listbyaddress?from=' + window.ethereum.selectedAddress
+      const url = apiServer + '/followerpeople/listbymefollower?from=' + window.ethereum.selectedAddress
       await axios.post(url).then(response => {
         const data = response.data
-
-        // TODO not support more then 100 nft
         console.log('response-2:', data)
         if (data.Code !== 0) {
           console.log('get error, please try again')
@@ -565,7 +559,7 @@ export default {
         }
       })
     },
-    myFollowed () {
+    async myFollowed () {
       this.resetPopWindow() // reset
       console.log('click myFollowed')
       this.login()
@@ -576,6 +570,25 @@ export default {
       } else {
         _that.showInfo.myFollowed = true
       }
+
+      // 独立出去
+      // const result = ajaxGetMyFollower(window.ethereum.selectedAddress)
+      // console.log('return result:', result)
+      // get all my followering list
+      const url = apiServer + '/followerpeople/listbyfollowerme?from=' + window.ethereum.selectedAddress
+      await axios.post(url).then(response => {
+        const data = response.data
+        console.log('response-2:', data)
+        if (data.Code !== 0) {
+          console.log('get error, please try again')
+        } else {
+          for (var v in data.Data) {
+            console.log('获取关注我的列表', data.Data[v])
+          }
+
+          this.playerInfo.myFollowed = data.Data
+        }
+      })
     },
     room () {
       alert('room coming soon')
