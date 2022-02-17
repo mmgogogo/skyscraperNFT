@@ -35,7 +35,7 @@
                 <div class="outer3 flex-col"></div>
                 <div class="outer4">
                   <span class="info2">
-                    <input type="text" class="" placeholder="Search" v-model="gotoNum"/>
+                    <input type="number" class="" placeholder="Search" v-model.number="gotoNum"/>
                   </span>
                 </div>
               </div>
@@ -449,8 +449,8 @@ export default {
         }
       })
     },
-    mint () {
-      this.login()
+    async mint () {
+      await this.login()
 
       const _that = this
       if (_that.showInfo.mint) {
@@ -492,7 +492,7 @@ export default {
       this.resetPopWindow() // reset
       this.resetMintFloor() // reset
       console.log('click myFloor')
-      this.login()
+      await this.login()
 
       if (this.showInfo.myFloor) {
         this.showInfo.myFloor = false
@@ -503,7 +503,7 @@ export default {
       const address = window.ethereum.selectedAddress
       const contractWriter = this.$Dapp.Bridges.writer
       const playerInfo = this.playerInfo
-      console.log('contractWriter:', contractWriter)
+
       await contractWriter.balanceOf(address).then(function (ret) {
         const len = parseInt(ret)
         console.log('call balanceOf:', ret, len)
@@ -531,7 +531,7 @@ export default {
     async myFollowing () {
       this.resetPopWindow() // reset
       console.log('click myFollowing')
-      this.login()
+      await this.login()
 
       const _that = this
       if (_that.showInfo.myFollowing) {
@@ -562,7 +562,7 @@ export default {
     async myFollowed () {
       this.resetPopWindow() // reset
       console.log('click myFollowed')
-      this.login()
+      await this.login()
 
       const _that = this
       if (_that.showInfo.myFollowed) {
@@ -596,9 +596,18 @@ export default {
     avatar () {
       alert('avatar coming soon')
     },
-    goto () {
-      alert('goto follor:' + this.gotoNum)
-      alert('coming soon')
+    async goto () {
+      await this.appContractWriter.getTokenInfo(this.gotoNum).then(function (ret) {
+        console.log('call getTokenInfo:', ret)
+        const tokenId = parseInt(ret.tokenId)
+        console.log('token id:', tokenId)
+        if (tokenId === 0) {
+          alert('this floor not available(may be you want to mint?), please input the right number')
+        } else {
+          alert('going to the floor[' + tokenId + '] ...')
+          alert('coming soon :)')
+        }
+      })
     }
   },
   created () {

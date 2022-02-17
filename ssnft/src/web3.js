@@ -54,8 +54,8 @@ const Dapp = {
     try {
       if (isMetaMaskInstalled()) {
         if (window.ethereum.chainId !== targetChainId) {
-          // alert('链ID ' + targetChainId + ' 不是 主网！请在钱包中切换')
-          // return Dapp
+          alert('链ID ' + targetChainId + ' 不是 主网！请在钱包中切换')
+          return Dapp
         }
 
         await window.ethereum.request({ method: 'eth_requestAccounts' })
