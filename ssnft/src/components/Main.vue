@@ -328,7 +328,7 @@
 import * as ethers from 'ethers'
 import Game from '@/components/Game.vue'
 import sendMessage from '@/utils/Utils.js'
-import { ajaxAddFollowerPeople, ajaxAddFollowerToken, ajaxAddTokenInfo, ajaxGetHotToken } from '@/utils/AjaxData.js'
+import { ajaxAddFollowerPeople, ajaxAddFollowerToken, ajaxAddTokenInfo, ajaxGetHotToken, ajaxGetMyFollower } from '@/utils/AjaxData.js'
 // import { showFullScreenLoading, hideFullScreenLoading } from '@/utils/Loading.js'
 import axios from 'axios'
 
@@ -598,24 +598,8 @@ export default {
         _that.showInfo.myFollowing = true
       }
 
-      // 独立出去
-      // const result = ajaxGetMyFollower(window.ethereum.selectedAddress)
-      // console.log('return result:', result)
-      // get all my followering list
-      const url = apiServer + '/followerpeople/listbymefollower?from=' + window.ethereum.selectedAddress
-      await axios.post(url).then(response => {
-        const data = response.data
-        console.log('response-2:', data)
-        if (data.Code !== 0) {
-          console.log('get error, please try again')
-        } else {
-          for (var v in data.Data) {
-            console.log('获取我的关注列表', data.Data[v])
-          }
-
-          this.playerInfo.myFollowing = data.Data
-        }
-      })
+      // call
+      this.playerInfo.myFollowing = await ajaxGetMyFollower('listbymefollower', window.ethereum.selectedAddress)
     },
     async myFollowed () {
       this.resetPopWindow() // reset
@@ -629,24 +613,8 @@ export default {
         _that.showInfo.myFollowed = true
       }
 
-      // 独立出去
-      // const result = ajaxGetMyFollower(window.ethereum.selectedAddress)
-      // console.log('return result:', result)
-      // get all my followering list
-      const url = apiServer + '/followerpeople/listbyfollowerme?from=' + window.ethereum.selectedAddress
-      await axios.post(url).then(response => {
-        const data = response.data
-        console.log('response-2:', data)
-        if (data.Code !== 0) {
-          console.log('get error, please try again')
-        } else {
-          for (var v in data.Data) {
-            console.log('获取关注我的列表', data.Data[v])
-          }
-
-          this.playerInfo.myFollowed = data.Data
-        }
-      })
+      // call
+      this.playerInfo.myFollowed = await ajaxGetMyFollower('listbyfollowerme', window.ethereum.selectedAddress)
     },
     room () {
       alert('room coming soon ')

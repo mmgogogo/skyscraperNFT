@@ -91,10 +91,13 @@ export async function ajaxAddTokenInfo (tokenId, remark) {
 }
 
 // 获取我的关注列表
-export function ajaxGetMyFollower (address) {
-  console.log('call ajaxGetMyFollower:', address)
-  const url = apiServer + '/followerpeople/listbyaddress?from=' + address
-  axios.post(url).then(response => {
+export async function ajaxGetMyFollower (type, address) {
+  console.log('call ajaxGetMyFollower:', type, address)
+
+  const url = apiServer + '/followerpeople/' + type + '?from=' + address
+  let result = []
+
+  await axios.post(url).then(response => {
     const data = response.data
 
     console.log('ajaxGetMyFollower response-2:', data)
@@ -105,11 +108,11 @@ export function ajaxGetMyFollower (address) {
         console.log('获取我的关注列表', data.Data[v])
       }
 
-      return data.Data
+      result = data.Data
     }
   })
 
-  return []
+  return result
 }
 
 // 获取个人nft列表
