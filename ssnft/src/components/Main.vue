@@ -219,8 +219,8 @@
             </div>
             <div class="main6 flex-row">
               <div class="group10 flex-col">
-                <div class="layer flex-col justify-center">
-                  <span class="txt6">come soon</span>
+                <div class="layer flex-col justify-center" v-for="v in floorInfo.hotList" :key="v.TokenId">
+                  <span class="txt6">楼层ID:{{v.TokenId}}， 热度:{{v.Num}}</span>
                 </div>
               </div>
               <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
@@ -328,7 +328,7 @@
 import * as ethers from 'ethers'
 import Game from '@/components/Game.vue'
 import sendMessage from '@/utils/Utils.js'
-// import { ajaxGetMyFollower, ajaxGetAllNfts } from '@/utils/AjaxData.js'
+import { ajaxAddFollowerPeople, ajaxAddFollowerToken, ajaxAddTokenInfo, ajaxGetHotToken } from '@/utils/AjaxData.js'
 // import { showFullScreenLoading, hideFullScreenLoading } from '@/utils/Loading.js'
 import axios from 'axios'
 
@@ -394,6 +394,9 @@ export default {
         myFollowing: [],
         myFollowed: []
       },
+      floorInfo: {
+        hotList: [] // hot
+      },
       gotoNum: ''
     }
   },
@@ -437,7 +440,7 @@ export default {
       this.playerInfo.mintFloorNumId = []
       this.playerInfo.mintFloorTokenId = []
     },
-    hot () {
+    async hot () {
       this.resetPopWindow() // reset
 
       const _that = this
@@ -446,7 +449,10 @@ export default {
       } else {
         _that.showInfo.hot = true
       }
-      // 添加关闭倒计时
+
+      const result = await ajaxGetHotToken()
+      console.log('hot list:', result)
+      this.floorInfo.hotList = result
     },
     async displayProfileInfo () {
       // show the profile
@@ -484,7 +490,11 @@ export default {
         } else {
           const result = data.data.content
           for (var v in result) {
-            let image = JSON.parse(result[v].nft_json).image
+            const imageInfo = JSON.parse(result[v].nft_json)
+            let image = imageInfo.image // erc721
+            if (image !== '') {
+              image = image.image_url // ens
+            }
             if (image !== '') {
               image = image.replace('ipfs://', 'https://ipfs.io/ipfs/')
             }
@@ -575,9 +585,6 @@ export default {
           })
         }
       })
-
-      // this.playerInfo.mintFloorTokenId = mintFloorTokenId
-      // this.playerInfo.mintFloorNumId = mintFloorNumId
     },
     async myFollowing () {
       this.resetPopWindow() // reset
@@ -642,10 +649,15 @@ export default {
       })
     },
     room () {
-      alert('room coming soon')
+      alert('room coming soon ')
     },
-    avatar () {
-      alert('avatar coming soon')
+    async avatar () {
+      // alert('avatar coming soon')
+
+      alert('插入测试数据.....')
+      await ajaxAddFollowerPeople(window.ethereum.selectedAddress, parseInt(Math.random() * 10000))
+      await ajaxAddFollowerToken(window.ethereum.selectedAddress, parseInt(Math.random() * 10000))
+      await ajaxAddTokenInfo(parseInt(Math.random() * 10000), parseInt(Math.random() * 10000))
     },
     async goto () {
       await this.appContractWriter.getTokenInfo(this.gotoNum).then(function (ret) {
