@@ -832,6 +832,7 @@
   box-shadow: -3px 3px 6px 0px rgb(0 0 0 / 15%);
   margin-top: 340px;
   width: 500px;
+  position: absolute;
 }
 
 .hot .group1 {
