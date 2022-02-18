@@ -157,81 +157,80 @@
           <div class="clayer5 flex-col"></div>
         </div>
         <!-- chat end -->
+
+        <!-- my floor start -->
+        <div class="hot flex-col" v-show="showInfo.myFloor">
+          <div class="group1 flex-col justify-between">
+            <div class="main5 flex-col justify-center">
+              <span class="txt5">My Floor</span>
+            </div>
+            <div class="main6 flex-row">
+              <div class="group10 flex-col">
+                <div class="layer flex-col justify-center" v-for="v in playerInfo.mintFloorNumId" :key="v">
+                  <span class="txt6">Floor Id:{{v}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- my floor end -->
+
+        <!-- myFollowing start -->
+        <div class="hot flex-col" v-show="showInfo.myFollowing">
+          <div class="group1 flex-col justify-between">
+            <div class="main5 flex-col justify-center">
+              <span class="txt5">Following</span>
+            </div>
+            <div class="main6 flex-row">
+              <div class="group10 flex-col">
+                <div class="layer flex-col justify-center" v-for="v in playerInfo.myFollowing" :key="v.AddressTo">
+                  <span class="txt6">玩家地址:{{v.AddressTo}}</span>
+                </div>
+              </div>
+              <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
+            </div>
+          </div>
+        </div>
+        <!-- myFollowing end -->
+
+        <!-- myFollowed start -->
+        <div class="hot flex-col" v-show="showInfo.myFollowed">
+          <div class="group1 flex-col justify-between">
+            <div class="main5 flex-col justify-center">
+              <span class="txt5">Followed</span>
+            </div>
+            <div class="main6 flex-row">
+              <div class="group10 flex-col">
+                <div class="layer flex-col justify-center" v-for="v in playerInfo.myFollowed" :key="v.AddressTo">
+                  <span class="txt6">玩家地址:{{v.AddressFrom}}</span>
+                </div>
+              </div>
+              <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
+            </div>
+          </div>
+        </div>
+        <!-- myFollowed end -->
+
+        <!-- hot start -->
+        <div class="hot flex-col" v-if="showInfo.hot">
+          <div class="group1 flex-col justify-between">
+            <div class="main5 flex-col justify-center">
+              <span class="txt5 btn-hand">Hot</span>
+            </div>
+            <div class="main6 flex-row">
+              <div class="group10 flex-col">
+                <div class="layer flex-col justify-center">
+                  <span class="txt6">come soon</span>
+                </div>
+              </div>
+              <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
+            </div>
+          </div>
+        </div>
+        <!-- hot end -->
+
       </div>
       <!-- content end -->
-
-      <!-- my floor start -->
-      <div class="hot flex-col" v-show="showInfo.myFloor">
-        <div class="group1 flex-col justify-between">
-          <div class="main5 flex-col justify-center">
-            <span class="txt5">My Floor</span>
-          </div>
-          <div class="main6 flex-row">
-            <div class="group10 flex-col">
-              <div class="layer flex-col justify-center" v-for="v in playerInfo.mintFloorNumId" :key="v">
-                <span class="txt6">Floor Id:{{v}}</span>
-              </div>
-            </div>
-            <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
-          </div>
-        </div>
-      </div>
-      <!-- my floor end -->
-
-      <!-- myFollowing start -->
-      <div class="hot flex-col" v-show="showInfo.myFollowing">
-        <div class="group1 flex-col justify-between">
-          <div class="main5 flex-col justify-center">
-            <span class="txt5">Following</span>
-          </div>
-          <div class="main6 flex-row">
-            <div class="group10 flex-col">
-              <div class="layer flex-col justify-center" v-for="v in playerInfo.myFollowing" :key="v.AddressTo">
-                <span class="txt6">玩家地址:{{v.AddressTo}}</span>
-              </div>
-            </div>
-            <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
-          </div>
-        </div>
-      </div>
-      <!-- myFollowing end -->
-
-      <!-- myFollowed start -->
-      <div class="hot flex-col" v-show="showInfo.myFollowed">
-        <div class="group1 flex-col justify-between">
-          <div class="main5 flex-col justify-center">
-            <span class="txt5">Followed</span>
-          </div>
-          <div class="main6 flex-row">
-            <div class="group10 flex-col">
-              <div class="layer flex-col justify-center" v-for="v in playerInfo.myFollowed" :key="v.AddressTo">
-                <span class="txt6">玩家地址:{{v.AddressFrom}}</span>
-              </div>
-            </div>
-            <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
-          </div>
-        </div>
-      </div>
-      <!-- myFollowed end -->
-
-      <!-- hot start -->
-      <div class="hot flex-col" v-if="showInfo.hot">
-        <div class="group1 flex-col justify-between">
-          <div class="main5 flex-col justify-center">
-            <span class="txt5 btn-hand">Hot</span>
-          </div>
-          <div class="main6 flex-row">
-            <div class="group10 flex-col">
-              <div class="layer flex-col justify-center">
-                <span class="txt6">come soon</span>
-              </div>
-            </div>
-            <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
-          </div>
-        </div>
-      </div>
-      <!-- hot end -->
-
       <!-- mint start -->
       <div class="shadow" v-if="showInfo.mint">
         <div id="mint" class="mint flex-col">
