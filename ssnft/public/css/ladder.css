@@ -1,0 +1,104 @@
+.ladder {
+    z-index: 16;
+    height: 100%;
+    /* background: url(../images/ladder/background.png) 100% no-repeat; */
+    width: 17.3vw;
+    position: absolute;
+    right: 0px;
+    /* top: 0; */
+    padding: 7.29vw 0 0 5.46vw;
+}
+
+.lmain6 {
+    width: 8.49vw;
+    height: 32.35vw;
+}
+
+.llabel2 {
+    width: 0.84vw;
+    height: 0.84vw;
+    margin-top: 25.99vw;
+}
+
+.lbox10 {
+    height: 32.35vw;
+    background: url(../images/ladder/banner_bg.png) -0.27vw -0.27vw no-repeat;
+    background-size: 3.17vw 32.86vw;
+    width: 2.66vw;
+}
+
+.lwrap1 {
+    width: 2.66vw;
+    height: 32.35vw;
+}
+
+.lmod5 {
+    height: 2.66vw;
+    border-radius: 5px;
+    border: 1px solid rgba(238, 238, 238, 1);
+    background-color: rgba(43, 46, 53, 1);
+    box-shadow: inset 2px 2px 1px 0px rgba(0, 0, 0, 0.2);
+    width: 2.66vw;
+    padding: 0.52vw 0 0 0.52vw;
+}
+
+.lmain7 {
+    width: 1.57vw;
+    height: 1.57vw;
+    background: url(../images/ladder/increment.png) -0.11vw -0.11vw
+        no-repeat;
+    background-size: 1.82vw 1.82vw;
+}
+
+.lmod6 {
+    height: 25.79vw;
+    background: url(../images/ladder/banner_bg2.png) -0.16vw -0.16vw no-repeat;
+    background-size: 2.44vw 26.04vw;
+    padding-top: 1.93vw;
+    width: 2.14vw;
+    margin: 0.67vw 0 0 0.26vw;
+}
+
+.lsection4 {
+    height: 22.71vw;
+    background: url(../images/ladder/ladder_front.png)
+        100% no-repeat;
+    padding-top: 8.03vw;
+    width: 1.41vw;
+}
+
+.lmain8 {
+    height: 0.94vw;
+    border-radius: 2px;
+    background-color: rgba(252, 132, 76, 1);
+    box-shadow: inset 1px 1px 1px 0px rgba(0, 0, 0, 0.05);
+    padding-top: 0.16vw;
+    width: 1.41vw;
+}
+
+.lwrap2 {
+    width: 0.58vw;
+    height: 0.68vw;
+    background: url(../images/ladder/person.png) -0.11vw -0.11vw
+        no-repeat;
+    background-size: 0.78vw 0.88vw;
+}
+
+.lmod7 {
+    height: 2.66vw;
+    border-radius: 5px;
+    border: 1px solid rgba(238, 238, 238, 1);
+    background-color: rgba(43, 46, 53, 1);
+    box-shadow: inset 2px 2px 1px 0px rgba(0, 0, 0, 0.2);
+    margin-top: 0.58vw;
+    padding-top: 1.15vw;
+    width: 2.66vw;
+}
+
+.lmod8 {
+    width: 1.52vw;
+    height: 0.32vw;
+    border-radius: 2px;
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.6);
+}

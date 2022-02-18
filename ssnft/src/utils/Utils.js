@@ -22,15 +22,15 @@ window.addEventListener('message', function (event) {
   //     source: "web",
   //     data: [{"img":"...", "type":"eth"},{}]
   // }
-  console.log('[Main] exception is ', event)
+  console.log('[Main] event is ', event)
   if (event.data && 'type' in event.data && 'source' in event.data && event.type === 'message') {
-    const data = event.data
-    console.log('[Main] data ', data)
-    try {
-      // 这里写处理方法
-      // 例如：如果是nft消息，通过nft处理方法来处理
-    } catch (e) {
-      console.log('[Main] exception is ', e)
-    }
+    // const data = event.data
+    // console.log('[Main] event data ', data)
+    // try {
+    //   // 这里写处理方法
+    //   // 例如：如果是nft消息，通过nft处理方法来处理
+    // } catch (e) {
+    //   console.log('[Main] exception is ', e)
+    // }
   }
 }, false)

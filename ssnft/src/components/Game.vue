@@ -1,6 +1,6 @@
 <template>
   <!-- game info start https://elevenzhou.github.io/Space/ -->
-  <div class="game" v-show="show || game">
+  <div class="game" v-if="show || game">
     <div class="close" @click="close()"></div>
     <iframe id="game" title="game" :src="url"
     style="min-height:500px;height:768px;width:1080px;"
@@ -16,7 +16,7 @@ export default {
   data () {
     // initial data
     return {
-      game: true
+      game: false
     }
   },
   props: {

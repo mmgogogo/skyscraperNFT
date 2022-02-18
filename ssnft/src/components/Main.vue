@@ -85,8 +85,337 @@
       </div>
       <!-- nav end -->
 
+      <!-- content start -->
+      <div class="content flex-col">
+        <div class="building flex-container">
+          <div class="floor flex-row justify-between">
+            <div class="owner flex-col">
+              <span class="message">this is a message too</span>
+            </div>
+            <div class="room flex-col align-center">
+              <div class="decoration flex-row align-center">
+                <img class="floor-img flex-col" referrerpolicy="no-referrer" src="/images/walls/03.png" alt="" />
+              </div>
+              <!-- <div class="section3 flex-row justify-between">
+                <div class="outer3 flex-col"></div>
+                <div class="outer4">
+                  <span class="info2">{{ baseConfig.lang_002 }}</span>
+                  <span class="tbox1 tline tcolor_gray0 tprop tfont_m tfont_s24 tshadow ttop">…</span>
+                </div>
+              </div> -->
+            </div>
+            <div class="others flex-col">
+              <span class="message">this is a message</span>
+            </div>
+          </div>
+          <div class="floor flex-row justify-between">
+            <div class="owner flex-col">
+              <span class="message">this is a message too</span>
+            </div>
+            <div class="room flex-col align-center">
+              <div class="decoration flex-row align-center">
+                <img class="floor-img flex-col" referrerpolicy="no-referrer" src="/images/walls/02.png" alt="" />
+              </div>
+              <!-- <div class="section3 flex-row justify-between">
+                <div class="outer3 flex-col"></div>
+                <div class="outer4">
+                  <span class="info2">{{ baseConfig.lang_002 }}</span>
+                  <span class="tbox1 tline tcolor_gray0 tprop tfont_m tfont_s24 tshadow ttop">…</span>
+                </div>
+              </div> -->
+            </div>
+            <div class="others flex-col">
+              <span class="message">this is a message</span>
+            </div>
+          </div>
+          <div class="floor flex-row justify-between">
+            <div class="owner flex-col">
+              <span class="message">this is a message too</span>
+            </div>
+            <div class="room flex-col align-center">
+              <div class="decoration flex-row align-center">
+                <img class="floor-img flex-col" referrerpolicy="no-referrer" src="/images/walls/01.png" alt="" />
+              </div>
+              <!-- <div class="section3 flex-row justify-between">
+                <div class="outer3 flex-col"></div>
+                <div class="outer4">
+                  <span class="info2">{{ baseConfig.lang_002 }}</span>
+                  <span class="tbox1 tline tcolor_gray0 tprop tfont_m tfont_s24 tshadow ttop">…</span>
+                </div>
+              </div> -->
+            </div>
+            <div class="others flex-col">
+              <span class="message">this is a message</span>
+            </div>
+          </div>
+          <div class="floor flex-row justify-between">
+            <div class="owner flex-col">
+              <span class="message">this is a message too</span>
+            </div>
+            <div class="room flex-col align-center">
+              <div class="decoration flex-row align-center">
+                <img class="floor-img flex-col" referrerpolicy="no-referrer" src="/images/walls/03.png" alt="" />
+              </div>
+              <!-- <div class="section3 flex-row justify-between">
+                <div class="outer3 flex-col"></div>
+                <div class="outer4">
+                  <span class="info2">{{ baseConfig.lang_002 }}</span>
+                  <span class="tbox1 tline tcolor_gray0 tprop tfont_m tfont_s24 tshadow ttop">…</span>
+                </div>
+              </div> -->
+            </div>
+            <div class="others flex-col">
+              <span class="message">this is a message</span>
+            </div>
+          </div>
+          <div class="floor flex-row justify-between">
+            <div class="owner flex-col">
+              <span class="message">this is a message too</span>
+            </div>
+            <div class="room flex-col align-center">
+              <div class="decoration flex-row align-center">
+                <img class="floor-img flex-col" referrerpolicy="no-referrer" src="/images/walls/02.png" alt="" />
+              </div>
+              <!-- <div class="section3 flex-row justify-between">
+                <div class="outer3 flex-col"></div>
+                <div class="outer4">
+                  <span class="info2">{{ baseConfig.lang_002 }}</span>
+                  <span class="tbox1 tline tcolor_gray0 tprop tfont_m tfont_s24 tshadow ttop">…</span>
+                </div>
+              </div> -->
+            </div>
+            <div class="others flex-col">
+              <span class="message">this is a message</span>
+            </div>
+          </div>
+          <div class="floor flex-row justify-between">
+            <div class="owner flex-col">
+              <span class="message">this is a message too</span>
+            </div>
+            <div class="room flex-col align-center">
+              <div class="decoration flex-row align-center">
+                <img class="floor-img flex-col" referrerpolicy="no-referrer" src="/images/walls/01.png" alt="" />
+              </div>
+              <!-- <div class="section3 flex-row justify-between">
+                <div class="outer3 flex-col"></div>
+                <div class="outer4">
+                  <span class="info2">{{ baseConfig.lang_002 }}</span>
+                  <span class="tbox1 tline tcolor_gray0 tprop tfont_m tfont_s24 tshadow ttop">…</span>
+                </div>
+              </div> -->
+            </div>
+            <div class="others flex-col">
+              <span class="message">this is a message</span>
+            </div>
+          </div>
+          <div class="floor flex-row justify-between">
+            <div class="owner flex-col">
+              <span class="message">this is a message too</span>
+            </div>
+            <div class="room flex-col align-center">
+              <div class="decoration flex-row align-center">
+                <img class="floor-img flex-col" referrerpolicy="no-referrer" src="/images/walls/03.png" alt="" />
+              </div>
+              <!-- <div class="section3 flex-row justify-between">
+                <div class="outer3 flex-col"></div>
+                <div class="outer4">
+                  <span class="info2">{{ baseConfig.lang_002 }}</span>
+                  <span class="tbox1 tline tcolor_gray0 tprop tfont_m tfont_s24 tshadow ttop">…</span>
+                </div>
+              </div> -->
+            </div>
+            <div class="others flex-col">
+              <span class="message">this is a message</span>
+            </div>
+          </div>
+          <div class="floor flex-row justify-between">
+            <div class="owner flex-col">
+              <span class="message">this is a message too</span>
+            </div>
+            <div class="room flex-col align-center">
+              <div class="decoration flex-row align-center">
+                <img class="floor-img flex-col" referrerpolicy="no-referrer" src="/images/walls/02.png" alt="" />
+              </div>
+              <!-- <div class="section3 flex-row justify-between">
+                <div class="outer3 flex-col"></div>
+                <div class="outer4">
+                  <span class="info2">{{ baseConfig.lang_002 }}</span>
+                  <span class="tbox1 tline tcolor_gray0 tprop tfont_m tfont_s24 tshadow ttop">…</span>
+                </div>
+              </div> -->
+            </div>
+            <div class="others flex-col">
+              <span class="message">this is a message</span>
+            </div>
+          </div>
+          <div class="floor flex-row justify-between">
+            <div class="owner flex-col">
+              <span class="message">this is a message too</span>
+            </div>
+            <div class="room flex-col align-center">
+              <div class="decoration flex-row align-center">
+                <img class="floor-img flex-col" referrerpolicy="no-referrer" src="/images/walls/01.png" alt="" />
+              </div>
+              <!-- <div class="section3 flex-row justify-between">
+                <div class="outer3 flex-col"></div>
+                <div class="outer4">
+                  <span class="info2">{{ baseConfig.lang_002 }}</span>
+                  <span class="tbox1 tline tcolor_gray0 tprop tfont_m tfont_s24 tshadow ttop">…</span>
+                </div>
+              </div> -->
+            </div>
+            <div class="others flex-col">
+              <span class="message">this is a message</span>
+            </div>
+          </div>
+          <div class="floor flex-row justify-between">
+            <div class="owner flex-col">
+              <span class="message">this is a message too</span>
+            </div>
+            <div class="room flex-col align-center">
+              <div class="decoration flex-row align-center">
+                <img class="floor-img flex-col" referrerpolicy="no-referrer" src="/images/walls/03.png" alt="" />
+              </div>
+              <!-- <div class="section3 flex-row justify-between">
+                <div class="outer3 flex-col"></div>
+                <div class="outer4">
+                  <span class="info2">{{ baseConfig.lang_002 }}</span>
+                  <span class="tbox1 tline tcolor_gray0 tprop tfont_m tfont_s24 tshadow ttop">…</span>
+                </div>
+              </div> -->
+            </div>
+            <div class="others flex-col">
+              <span class="message">this is a message</span>
+            </div>
+          </div>
+          <div class="floor flex-row justify-between">
+            <div class="owner flex-col">
+              <span class="message">this is a message too</span>
+            </div>
+            <div class="room flex-col align-center">
+              <div class="decoration flex-row align-center">
+                <img class="floor-img flex-col" referrerpolicy="no-referrer" src="/images/walls/02.png" alt="" />
+              </div>
+              <!-- <div class="section3 flex-row justify-between">
+                <div class="outer3 flex-col"></div>
+                <div class="outer4">
+                  <span class="info2">{{ baseConfig.lang_002 }}</span>
+                  <span class="tbox1 tline tcolor_gray0 tprop tfont_m tfont_s24 tshadow ttop">…</span>
+                </div>
+              </div> -->
+            </div>
+            <div class="others flex-col">
+              <span class="message">this is a message</span>
+            </div>
+          </div>
+          <div class="floor flex-row justify-between">
+            <div class="owner flex-col">
+              <span class="message">this is a message too</span>
+            </div>
+            <div class="room flex-col align-center">
+              <div class="decoration flex-row align-center">
+                <img class="floor-img flex-col" referrerpolicy="no-referrer" src="/images/walls/01.png" alt="" />
+              </div>
+              <!-- <div class="section3 flex-row justify-between">
+                <div class="outer3 flex-col"></div>
+                <div class="outer4">
+                  <span class="info2">{{ baseConfig.lang_002 }}</span>
+                  <span class="tbox1 tline tcolor_gray0 tprop tfont_m tfont_s24 tshadow ttop">…</span>
+                </div>
+              </div> -->
+            </div>
+            <div class="others flex-col">
+              <span class="message">this is a message</span>
+            </div>
+          </div>
+          <div class="floor flex-row justify-between">
+            <div class="owner flex-col">
+              <span class="message">this is a message too</span>
+            </div>
+            <div class="room flex-col align-center">
+              <div class="decoration flex-row align-center">
+                <img class="floor-img flex-col" referrerpolicy="no-referrer" src="/images/walls/03.png" alt="" />
+              </div>
+              <!-- <div class="section3 flex-row justify-between">
+                <div class="outer3 flex-col"></div>
+                <div class="outer4">
+                  <span class="info2">{{ baseConfig.lang_002 }}</span>
+                  <span class="tbox1 tline tcolor_gray0 tprop tfont_m tfont_s24 tshadow ttop">…</span>
+                </div>
+              </div> -->
+            </div>
+            <div class="others flex-col">
+              <span class="message">this is a message</span>
+            </div>
+          </div>
+          <div class="floor flex-row justify-between">
+            <div class="owner flex-col">
+              <span class="message">this is a message too</span>
+            </div>
+            <div class="room flex-col align-center">
+              <div class="decoration flex-row align-center">
+                <img class="floor-img flex-col" referrerpolicy="no-referrer" src="/images/walls/02.png" alt="" />
+              </div>
+              <!-- <div class="section3 flex-row justify-between">
+                <div class="outer3 flex-col"></div>
+                <div class="outer4">
+                  <span class="info2">{{ baseConfig.lang_002 }}</span>
+                  <span class="tbox1 tline tcolor_gray0 tprop tfont_m tfont_s24 tshadow ttop">…</span>
+                </div>
+              </div> -->
+            </div>
+            <div class="others flex-col">
+              <span class="message">this is a message</span>
+            </div>
+          </div>
+          <div class="floor flex-row justify-between">
+            <div class="owner flex-col">
+              <span class="message">this is a message too</span>
+            </div>
+            <div class="room flex-col align-center">
+              <div class="decoration flex-row align-center">
+                <img class="floor-img flex-col" referrerpolicy="no-referrer" src="/images/walls/01.png" alt="" />
+              </div>
+              <!-- <div class="section3 flex-row justify-between">
+                <div class="outer3 flex-col"></div>
+                <div class="outer4">
+                  <span class="info2">{{ baseConfig.lang_002 }}</span>
+                  <span class="tbox1 tline tcolor_gray0 tprop tfont_m tfont_s24 tshadow ttop">…</span>
+                </div>
+              </div> -->
+            </div>
+            <div class="others flex-col">
+              <span class="message">this is a message</span>
+            </div>
+          </div>
+        </div>
+        <!-- ladder start -->
+        <div class="ladder flex-col">
+          <div class="lmain6 flex-row justify-between">
+            <img class="llabel2" referrerpolicy="no-referrer" src="/images/ladder/label.png" alt="" />
+            <div class="lbox10 flex-col">
+              <div class="lwrap1 flex-col">
+                <div class="lmod5 flex-col"><div class="lmain7 flex-col"></div></div>
+                <div class="lmod6 flex-col align-center">
+                  <div class="lsection4 flex-col">
+                    <div class="lmain8 flex-col align-center"><div class="lwrap2 flex-col"></div></div>
+                  </div>
+                </div>
+                <div class="lmod7 flex-col align-center"><div class="lmod8 flex-col"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ladder end -->
+        <div class="chat flex-col align-center">
+          <div class="clayer5 flex-col"></div>
+        </div>
+      </div>
+
+      <!-- content end -->
+
       <!-- hot start -->
-      <div class="hot flex-col" v-show="showInfo.hot">
+      <div class="hot flex-col" v-if="showInfo.hot">
         <div class="group1 flex-col justify-between">
           <div class="main5 flex-col justify-center"><span class="txt5">Hot&nbsp;Floor</span></div>
           <div class="main6 flex-row">
@@ -102,7 +431,7 @@
       <!-- hot end -->
 
       <!-- mint start -->
-      <div class="shadow" v-show="showInfo.mint">
+      <div class="shadow" v-if="showInfo.mint">
         <div id="mint" class="mint flex-col">
           <div class="block flex-row justify-between">
             <div class="main4 flex-col"></div>
@@ -137,7 +466,7 @@
       <!-- mint end -->
     </div>
     <!-- profile start -->
-    <div class="pcontent flex-col" v-show="showInfo.profile">
+    <div class="pcontent flex-col" v-if="showInfo.profile">
       <div class="player5 flex-col">
         <div class="player6 flex-col">
           <div class="player7 flex-col justify-center align-center">
@@ -238,7 +567,7 @@ export default {
         mint: false,
         hot: false,
         profile: false,
-        game: true
+        game: false
       },
       playerInfo: {
         metamask: '',
