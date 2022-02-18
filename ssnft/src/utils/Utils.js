@@ -3,9 +3,12 @@ export default function sendMessage (message, callback) {
   // iframe对象 TODO 这里可以再想想
   const iframe = window.frames[0]
   console.log('iframe is ', iframe)
-
-  // 向目标iframe发送message,"*"可以通过指定地址,限制发送的目标
-  iframe.postMessage(message, '*')
+  if (!iframe) {
+    console.log('[global] ifram not created')
+  } else {
+    // 向目标iframe发送message,"*"可以通过指定地址,限制发送的目标
+    iframe.postMessage(message, '*')
+  }
   if (callback) {
     // 100毫秒后用户可再次点击控制按钮发送请求
     setTimeout(callback, 100)
@@ -22,7 +25,7 @@ window.addEventListener('message', function (event) {
   //     source: "web",
   //     data: [{"img":"...", "type":"eth"},{}]
   // }
-  console.log('[Main] event is ', event)
+  // console.log('[Main] event is ', event)
   if (event.data && 'type' in event.data && 'source' in event.data && event.type === 'message') {
     // const data = event.data
     // console.log('[Main] event data ', data)
