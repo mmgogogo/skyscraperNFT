@@ -831,11 +831,11 @@
   background-color: rgba(107, 109, 113, 1);
   box-shadow: -3px 3px 6px 0px rgb(0 0 0 / 15%);
   margin-top: 340px;
-  width: 300px;
+  width: 500px;
 }
 
 .hot .group1 {
-  width: 300px;
+  width: 500px;
   /* height: 606px; */
 }
 
@@ -845,11 +845,11 @@
   background-color: rgba(43, 46, 53, 1);
   box-shadow: 0px 2px 2px 0px rgb(0 0 0 / 10%);
   padding-left: 95px;
-  width: 300px;
+  width: 500px;
 }
 
 .hot .txt5 {
-  width: 111px;
+  width: 211px;
   height: 34px;
   display: block;
   overflow-wrap: break-word;
@@ -863,7 +863,7 @@
 }
 
 .hot .main6 {
-  width: 300px;
+  width: 500px;
   /* height: 500px; */
   margin: 0px auto;
   border-radius: 1.25px 1.25px 1.25px 1.25px;
@@ -873,10 +873,10 @@
 }
 
 .hot .group10 {
-  width: 300px;
+  width: 500px;
   max-height: 400px;
   height:min-content;
-  background-color: rgba(107, 109, 113, 1);
+  background-color: #fff;
   border-radius: 1.25px 1.25px 1.25px 1.25px;
   overflow-y: auto;
 }
@@ -903,7 +903,7 @@
   border-radius: 3px;
   box-shadow: inset 1px 1px 1px 0px rgb(0 0 0 / 20%);
   padding-left: 83px;
-  width: 300px;
+  width: 500px;
 }
 
 .hot .info4 {
@@ -917,4 +917,9 @@
   line-height: 21px;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.btn-hand {
+  cursor: pointer;
+  /* border: 1 solid red; */
 }

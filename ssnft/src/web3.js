@@ -7,14 +7,15 @@ import contractNFTTest from './contractAbi'
 /**
  * 目标链ID
  */
-const targetChainId = '0x2a' // Kovan测试链
+// const targetChainId = '0x2a' // Kovan测试链
+const targetChainId = '0x3' // Ropster测试链
 
 _.assign(1, 1)
 
 /**
  * 合约地址
  */
-const contractAddress = '0x93893eB7a1eBB90ED99b0FcEE48b5171aADc2b06' // Kovan
+// const contractAddress = '0x93893eB7a1eBB90ED99b0FcEE48b5171aADc2b06' // Kovan
 // const contractUrl = 'https://kovan.etherscan.io/address/0x93893eb7a1ebb90ed99b0fcee48b5171aadc2b06'
 
 /**
@@ -28,6 +29,11 @@ const contractAddress = '0x93893eB7a1eBB90ED99b0FcEE48b5171aADc2b06' // Kovan
  * @testnet https://bsc-testnet.web3api.com/v1/
  */
 // const networkHttpProvider = 'https://kovan.infura.io/v3/' + providerToken
+
+// alchemy
+const contractAddress = '0xFD0B9c88DF4A884Eee463B7DBb46d97c53fa757B'
+// const web3HttpProvider = 'https://eth-ropsten.alchemyapi.io/v2/Po-F6eE3SaJQ9R74LUWLa1gOW36CTh7J'
+
 /**
  * ABI
  */
@@ -44,13 +50,15 @@ const isMetaMaskInstalled = () => {
 
 const Dapp = {
   Bridges: {},
-  connect: () => {
+  connect: async () => {
     try {
       if (isMetaMaskInstalled()) {
         if (window.ethereum.chainId !== targetChainId) {
-          // alert('链ID ' + targetChainId + ' 不是 主网！请在钱包中切换')
-          // return Dapp
+          alert('链ID ' + targetChainId + ' 不是 主网！请在钱包中切换')
+          return Dapp
         }
+
+        await window.ethereum.request({ method: 'eth_requestAccounts' })
         Dapp.Bridges.ethereum = window.ethereum
         Dapp.Bridges.local = new ethers.providers.Web3Provider(window.ethereum)
         Dapp.Bridges.reader = new ethers.Contract(contractAddress, contractAbi, Dapp.Bridges.local)
@@ -90,21 +98,21 @@ const Dapp = {
         } catch (switchError) {
           // This error code indicates that the chain has not been added to MetaMask.
           if (switchError.code === 4902) {
-            try {
-              await window.ethereum.request({
-                method: 'wallet_addEthereumChain',
-                params: [{ chainId: targetChainId, rpcUrl: 'https://testnet.bscscan.com/' }]
-              })
-              // let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
-              // $('#id_span_wallet').innerHTML = '钱包地址：' + accounts[0]
-              Dapp.Bridges.ethereum = window.ethereum
-              Dapp.Bridges.local = new ethers.providers.Web3Provider(window.ethereum, 'any')
-              Dapp.Bridges.reader = new ethers.Contract(contractAddress, contractAbi, Dapp.Bridges.local)
-              Dapp.Bridges.signer = Dapp.Bridges.local.getSigner() // 钱包签名
-              Dapp.Bridges.writer = Dapp.Bridges.reader.connect(Dapp.Bridges.signer)
-            } catch (addError) {
-              console.log('addError ', addError)
-            }
+            // try {
+            //   await window.ethereum.request({
+            //     method: 'wallet_addEthereumChain',
+            //     params: [{ chainId: targetChainId, rpcUrl: 'https://testnet.bscscan.com/' }]
+            //   })
+            //   await window.ethereum.request({ method: 'eth_requestAccounts' })
+            //   Dapp.Bridges.ethereum = window.ethereum
+            //   Dapp.Bridges.local = new ethers.providers.Web3Provider(window.ethereum)
+            //   Dapp.Bridges.reader = new ethers.Contract(contractAddress, contractAbi, Dapp.Bridges.local)
+            //   Dapp.Bridges.signer = Dapp.Bridges.local.getSigner() // 钱包签名
+            //   Dapp.Bridges.writer = Dapp.Bridges.reader.connect(Dapp.Bridges.signer)
+            // } catch (addError) {
+            //   console.log('addError ', addError)
+            // }
+            this.connect()
           }
           // handle other "switch" errors
           console.log('switchError ', switchError)

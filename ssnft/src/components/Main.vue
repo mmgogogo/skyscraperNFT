@@ -3,8 +3,8 @@
     <div class="header flex-col justify-center">
       <div class="navigation flex-row">
         <div class="logo flex-col"></div>
-        <div class="wallet flex-col" @click="login()"></div>
-        <div class="profile flex-col" @click="displayProfile()"></div>
+        <div class="wallet flex-col btn-hand" @click="login(1)"></div>
+        <div class="profile flex-col btn-hand" @click="displayProfileInfo()"></div>
       </div>
     </div>
     <div class="container flex-row">
@@ -13,10 +13,19 @@
         <div class="outer1 flex-col">
           <div class="bd1 flex-col">
             <div class="outer2 flex-col justify-between">
-              <span class="text tbox tline tcolor tprop tfont_m tfont_s26 tshadow">{{ baseConfig.lang_001 }}</span>
+              <span
+                class="text tbox tline tcolor tprop tfont_m tfont_s26 tshadow"
+                >{{ baseConfig.lang_001 }}</span
+              >
               <div class="box1 flex-row justify-between">
-                <img class="icon1" referrerpolicy="no-referrer" src="images/building_logo.png" />
-                <span class="box3 tfont_s30 tfont_m tleft tcolor tprop">{{ gameConfig.total }}</span>
+                <img
+                  class="icon1"
+                  referrerpolicy="no-referrer"
+                  src="images/building_logo.png"
+                />
+                <span class="box3 tfont_s30 tfont_m tleft tcolor tprop">{{
+                  gameConfig.total
+                }}</span>
               </div>
             </div>
           </div>
@@ -25,42 +34,58 @@
               <div class="section3 flex-row justify-between">
                 <div class="outer3 flex-col"></div>
                 <div class="outer4">
-                  <span class="info2">{{ baseConfig.lang_002 }}</span>
-                  <span class="tbox1 tline tcolor_gray0 tprop tfont_m tfont_s24 tshadow ttop">…</span>
+                  <span class="info2">
+                    <input type="number" class="" placeholder="Search" v-model.number="gotoNum"/>
+                  </span>
                 </div>
               </div>
             </div>
             <div class="section4 flex-col align-center">
-              <span class="txt2">{{ baseConfig.lang_003 }}</span>
+              <span class="txt2 btn-hand" @click="goto()">{{ baseConfig.lang_003 }}</span>
             </div>
           </div>
           <div class="bd3 flex-row justify-between">
             <div class="layer1 flex-col"></div>
-            <span class="text tbox1 tline tprop tfont_m tfont_s24 tshadow ttop tcolor_gray0">{{ baseConfig.lang_004 }}</span>
+            <span
+              class="text tbox1 tline tprop tfont_m tfont_s24 tshadow ttop tcolor_gray0 btn-hand"
+              @click="myFloor()">
+              {{ baseConfig.lang_004 }}</span>
           </div>
           <div class="bd4 flex-row justify-between">
             <div class="bd5 flex-col"></div>
-            <span class="text tbox1 tline tprop tfont_m tfont_s24 tshadow ttop tcolor">{{ baseConfig.lang_005 }}</span>
+            <span
+              class="text tbox1 tline tprop tfont_m tfont_s24 tshadow ttop tcolor btn-hand"
+              @click="myFollowing()"
+              >{{ baseConfig.lang_005 }}</span
+            >
           </div>
           <div class="bd4 flex-row justify-between">
             <div class="group0 flex-col"></div>
-            <span class="text tbox1 tline tprop tfont_m tfont_s24 tshadow tcolor">{{ baseConfig.lang_006 }}</span>
+            <span
+              class="text tbox1 tline tprop tfont_m tfont_s24 tshadow tcolor btn-hand"
+              @click="myFollowed()"
+              >{{ baseConfig.lang_006 }}</span
+            >
           </div>
           <div class="bd4 flex-row justify-between">
             <div class="group1 flex-col"></div>
-            <span class="text tbox1 tline tprop tfont_m tfont_s24 tshadow tcolor tleft" @click="hot()">{{ baseConfig.lang_007 }}</span>
+            <span
+              class="text tbox1 tline tprop tfont_m tfont_s24 tshadow tcolor tleft btn-hand"
+              @click="hot()"
+              >{{ baseConfig.lang_007 }}</span
+            >
           </div>
           <div class="bd8 flex-row justify-between">
-            <div class="layer2 flex-col align-center">
+            <div class="layer2 flex-col align-center btn-hand" @click="mint()">
               <div class="layer3 flex-col justify-between">
                 <div class="layer4 flex-col"></div>
-                <span class="txt3" @click="mint()">
+                <span class="txt3">
                   {{ baseConfig.lang_008 }}
                 </span>
               </div>
             </div>
             <div class="layer5 flex-col align-center">
-              <div class="group2 flex-col justify-between">
+              <div class="group2 flex-col justify-between btn-hand" @click="room()">
                 <img
                   class="label2"
                   referrerpolicy="no-referrer"
@@ -71,20 +96,20 @@
             </div>
           </div>
           <div class="bd9 flex-row justify-between">
-            <div class="group3 flex-col">
+            <div class="group3 flex-col btn-hand" @click="avatar()">
               <div class="box2 flex-col justify-between">
                 <div class="mod1 flex-col"></div>
                 <span class="word5">{{ baseConfig.lang_010 }}</span>
               </div>
             </div>
-            <div class="group4 flex-col">
+            <!--<div class="group4 flex-col btn-hand">
               <span class="paragraph1">{{ baseConfig.lang_011 }}</span>
             </div>
+            -->
           </div>
         </div>
       </div>
       <!-- nav end -->
-
       <!-- content start -->
       <div class="content flex-col">
         <div class="building flex-container">
@@ -411,18 +436,73 @@
           <div class="clayer5 flex-col"></div>
         </div>
       </div>
-
       <!-- content end -->
+
+      <!-- my floor start -->
+      <div class="hot flex-col" v-show="showInfo.myFloor">
+        <div class="group1 flex-col justify-between">
+          <div class="main5 flex-col justify-center">
+            <span class="txt5">My Floor</span>
+          </div>
+          <div class="main6 flex-row">
+            <div class="group10 flex-col">
+              <div class="layer flex-col justify-center" v-for="v in playerInfo.mintFloorNumId" :key="v">
+                <span class="txt6">Floor Id:{{v}}</span>
+              </div>
+            </div>
+            <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
+          </div>
+        </div>
+      </div>
+      <!-- my floor end -->
+
+      <!-- myFollowing start -->
+      <div class="hot flex-col" v-show="showInfo.myFollowing">
+        <div class="group1 flex-col justify-between">
+          <div class="main5 flex-col justify-center">
+            <span class="txt5">Following</span>
+          </div>
+          <div class="main6 flex-row">
+            <div class="group10 flex-col">
+              <div class="layer flex-col justify-center" v-for="v in playerInfo.myFollowing" :key="v.AddressTo">
+                <span class="txt6">玩家地址:{{v.AddressTo}}</span>
+              </div>
+            </div>
+            <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
+          </div>
+        </div>
+      </div>
+      <!-- myFollowing end -->
+
+      <!-- myFollowed start -->
+      <div class="hot flex-col" v-show="showInfo.myFollowed">
+        <div class="group1 flex-col justify-between">
+          <div class="main5 flex-col justify-center">
+            <span class="txt5">Followed</span>
+          </div>
+          <div class="main6 flex-row">
+            <div class="group10 flex-col">
+              <div class="layer flex-col justify-center" v-for="v in playerInfo.myFollowed" :key="v.AddressTo">
+                <span class="txt6">玩家地址:{{v.AddressFrom}}</span>
+              </div>
+            </div>
+            <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
+          </div>
+        </div>
+      </div>
+      <!-- myFollowed end -->
 
       <!-- hot start -->
       <div class="hot flex-col" v-if="showInfo.hot">
         <div class="group1 flex-col justify-between">
-          <div class="main5 flex-col justify-center"><span class="txt5">Hot&nbsp;Floor</span></div>
+          <div class="main5 flex-col justify-center">
+            <span class="txt5 btn-hand">Hot</span>
+          </div>
           <div class="main6 flex-row">
             <div class="group10 flex-col">
-              <div class="layer flex-col justify-center"><span class="txt6">Jack&nbsp;Chow</span></div>
-              <div class="layer flex-col justify-center"><span class="txt6">Jack&nbsp;Chow</span></div>
-              <div class="layer flex-col justify-center"><span class="txt6">Jack&nbsp;Chow</span></div>
+              <div class="layer flex-col justify-center">
+                <span class="txt6">come soon</span>
+              </div>
             </div>
             <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
           </div>
@@ -438,9 +518,11 @@
             <div class="main5 flex-col justify-between">
               <span class="txt3">Skyscraper&nbsp;Floor</span>
               <span class="txt4">
-              Phanta&nbsp;Bear&nbsp;is&nbsp;a&nbsp;collection&nbsp;of&nbsp;10,000&nbsp;algorithmically&nbsp;generated&nbsp;digital&nbsp;collectibles&nbsp;that&nbsp;double&nbsp;as&nbsp;memebership&nbsp;cards&nbsp;for&nbsp;the&nbsp;Ezek&nbsp;Club.&nbsp;Each&nbsp;Phanta&nbsp;Bear&nbsp;has&nbsp;a&nbsp;unique&nbsp;set&nbsp;of&nbsp;traits&nbsp;and&nbsp;unlocks&nbsp;varying,&nbsp;unique&nbsp;levels&nbsp;of&nbsp;access&nbsp;and&nbsp;perks&nbsp;for&nbsp;its&nbsp;owner.&nbsp;Phanta&nbsp;Bear&nbsp;project&nbsp;was&nbsp;jointly&nbsp;launched&nbsp;by&nbsp;PHANTACi&nbsp;and&nbsp;Ezek
+                Phanta&nbsp;Bear&nbsp;is&nbsp;a&nbsp;collection&nbsp;of&nbsp;10,000&nbsp;algorithmically&nbsp;generated&nbsp;digital&nbsp;collectibles&nbsp;that&nbsp;double&nbsp;as&nbsp;memebership&nbsp;cards&nbsp;for&nbsp;the&nbsp;Ezek&nbsp;Club.&nbsp;Each&nbsp;Phanta&nbsp;Bear&nbsp;has&nbsp;a&nbsp;unique&nbsp;set&nbsp;of&nbsp;traits&nbsp;and&nbsp;unlocks&nbsp;varying,&nbsp;unique&nbsp;levels&nbsp;of&nbsp;access&nbsp;and&nbsp;perks&nbsp;for&nbsp;its&nbsp;owner.&nbsp;Phanta&nbsp;Bear&nbsp;project&nbsp;was&nbsp;jointly&nbsp;launched&nbsp;by&nbsp;PHANTACi&nbsp;and&nbsp;Ezek
               </span>
-              <div class="mod2 flex-col justify-center"><span class="info7">mint</span></div>
+              <div class="mod2 flex-col justify-center btn-hand">
+                <span class="info7" @click="realMint()">MINT</span>
+              </div>
             </div>
           </div>
           <div class="block2 flex-col">
@@ -454,17 +536,22 @@
               </div>
             </div>
             <div class="box15 flex-row justify-between">
-                <div class="main6 flex-col"><div class="group6 flex-col"></div></div>
-                <span class="word11">1</span>
-                <div class="main7 flex-col"><div class="group7 flex-col"></div></div>
+              <div class="main6 flex-col">
+                <div class="group6 flex-col"></div>
+              </div>
+              <span class="word11">1</span>
+              <div class="main7 flex-col">
+                <div class="group7 flex-col"></div>
+              </div>
             </div>
-            <img class="pic1" referrerpolicy="no-referrer" src="images/floor_icon.png" />
+            <img class="pic1" referrerpolicy="no-referrer" src="images/floor_icon.png"/>
             <span class="info11">Amount：</span>
           </div>
         </div>
       </div>
       <!-- mint end -->
     </div>
+
     <!-- profile start -->
     <div class="pcontent flex-col" v-if="showInfo.profile">
       <div class="player5 flex-col">
@@ -478,6 +565,7 @@
               </div>
             </div>
           </div>
+          <div>address: {{ playerInfo.address }}</div>
           <div class="player10 flex-row">
             <img class="picon2" referrerpolicy="no-referrer" src="images/collected.png" alt="" />
             <!-- <div class="pgroup3 flex-col"></div> -->
@@ -494,27 +582,16 @@
           </div>
           <div class="player12 flex-col"></div>
           <div class="player13 flex-col"></div>
-          <div class="player14 flex-container">
+          <div class="player14 flex-container" v-for="item in playerInfo.allNfts" :key="item.id">
             <div class="pblock4">
               <div class="player17 flex-col">
-                <img class="pimg1" referrerpolicy="no-referrer" src="images/nft_example001.png" alt="" />
+                {{item.tokenId}}
+                {{item.name}}
+                <p v-if="item.image">
+                  <img class="pimg1" referrerpolicy="no-referrer" :src="item.image" alt="" />
+                </p>
               </div>
-            </div>
-            <div class="pblock4">
-              <div class="player17 flex-col">
-                <img class="pimg1" referrerpolicy="no-referrer" src="images/nft_example002.png" alt="" />
-              </div>
-            </div>
-            <div class="pblock4">
-              <div class="player17 flex-col">
-                <img class="pimg1" referrerpolicy="no-referrer" src="images/nft_example003.png" alt="" />
-              </div>
-            </div>
-            <div class="pblock4">
-              <div class="player17 flex-col">
-                <img class="pimg1" referrerpolicy="no-referrer" src="images/nft_example004.png" alt="" />
-              </div>
-            </div>
+          </div>
           </div>
         </div>
       </div>
@@ -527,8 +604,17 @@
 </template>
 
 <script>
+import * as ethers from 'ethers'
 import Game from '@/components/Game.vue'
 import sendMessage from '@/utils/Utils.js'
+// import { ajaxGetMyFollower, ajaxGetAllNfts } from '@/utils/AjaxData.js'
+// import { showFullScreenLoading, hideFullScreenLoading } from '@/utils/Loading.js'
+import axios from 'axios'
+
+// 服务器地址
+const serverUrl = '127.0.0.1:9950'
+// const wsServer = 'ws://' + serverUrl + '/ws'
+const apiServer = 'http://' + serverUrl
 
 export default {
   name: 'Navigator',
@@ -538,6 +624,10 @@ export default {
   data () {
     // initial data
     return {
+      // 合约函数
+      appContractWriter: this.$Dapp.Bridges.writer,
+      appContractReader: this.$Dapp.Bridges.read,
+
       // 基础配置
       baseConfig: {
         lang_001: 'Total Floor',
@@ -567,14 +657,23 @@ export default {
         mint: false,
         hot: false,
         profile: false,
-        game: false
+        game: false,
+        myFloor: false, // my nft
+        myFollowing: false, // i see
+        myFollowed: false // see i
       },
       playerInfo: {
         metamask: '',
         address: '',
-        isLogin: false, // 是否登录
-        status: 0 // 登录状态值 0: metamask未登录, 1: 获得钱包账号，但游戏数据未返回, 2: 已获取游戏数据 3:已成功注册
-      }
+        isLogin: false,
+        status: 0, // 登录状态值 0: metamask未登录, 1: 获得钱包账号，但游戏数据未返回, 2: 已获取游戏数据 3:已成功注册
+        allNfts: [], // all nft
+        mintFloorNumId: [], // mint
+        mintFloorTokenId: [], // mint
+        myFollowing: [],
+        myFollowed: []
+      },
+      gotoNum: ''
     }
   },
   props: {
@@ -584,20 +683,42 @@ export default {
     navi () {
       console.log('[navigator] navi ', this.$Dapp)
     },
-    login () {
+    async login (isInit) {
       const _that = this
       console.log('[Main] login ', _that.$Dapp)
-      _that.$Dapp.connect()
+      await _that.$Dapp.connect()
       _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
       console.log('address ', _that.playerInfo.address)
 
+      // set profile
+      if (_that.playerInfo.address !== '') {
+        _that.playerInfo.isLogin = true
+        _that.playerInfo.status = 1
+
+        if (isInit) {
+          alert('Metamask had connect success')
+        }
+      }
       const message = {
         source: 'web',
         type: 'updateTitle'
       }
       sendMessage(message)
     },
+    resetPopWindow () {
+      // reset all pop
+      for (var item in this.showInfo) {
+        this.showInfo[item] = false
+      }
+    },
+    resetMintFloor () {
+      // reset all pop
+      this.playerInfo.mintFloorNumId = []
+      this.playerInfo.mintFloorTokenId = []
+    },
     hot () {
+      this.resetPopWindow() // reset
+
       const _that = this
       if (_that.showInfo.hot) {
         _that.showInfo.hot = false
@@ -606,7 +727,58 @@ export default {
       }
       // 添加关闭倒计时
     },
-    mint () {
+    async displayProfileInfo () {
+      // show the profile
+      const _that = this
+
+      // common login
+      _that.login()
+
+      _that.showInfo.profile = true
+
+      // 独立出去
+      // ajaxGetAllNfts(window.ethereum.selectedAddress).then(response => {
+      //   console.log('ajaxGetAllNfts:', response)
+      //   for (var v in response.content) {
+      //     const image = JSON.parse(response.content[v].nft_json).image
+      //     this.playerInfo.allNfts.push({
+      //       token_id: response.content[v].token_id,
+      //       nft_name: response.content[v].nft_name,
+
+      //       // ipfs://QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
+      //       // https://ipfs.io/ipfs/QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
+      //       image: image.replace('ipfs://', 'https://ipfs.io/ipfs/')
+      //     })
+      //   }
+      // })
+      // get all my nft list
+      const url = apiServer + '/user/getallnft?address=' + window.ethereum.selectedAddress
+      await axios.post(url).then(response => {
+        const data = response.data.Data
+
+        // TODO not support more then 100 nft
+        console.log('response:', data.data)
+        if (data.code !== 200) {
+          alert('get error, please try again')
+        } else {
+          const result = data.data.content
+          for (var v in result) {
+            const image = JSON.parse(result[v].nft_json).image
+            this.playerInfo.allNfts.push({
+              token_id: result[v].token_id,
+              nft_name: result[v].nft_name,
+
+              // ipfs://QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
+              // https://ipfs.io/ipfs/QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
+              image: image.replace('ipfs://', 'https://ipfs.io/ipfs/')
+            })
+          }
+        }
+      })
+    },
+    async mint () {
+      await this.login()
+
       const _that = this
       if (_that.showInfo.mint) {
         _that.showInfo.mint = false
@@ -615,11 +787,23 @@ export default {
       }
       // 添加关闭倒计时
     },
-    displayProfile () {
-      const _that = this
-      _that.showInfo.profile = true
+    async realMint () {
+      const floorNum = 1
+      const floorPrice = ethers.utils.parseEther('0.1')
+      console.log('realmint:::', floorNum, floorPrice)
+
+      // All overrides are optional
+      const overrides = {
+        gasLimit: 23000, // default
+        gasPrice: ethers.utils.parseUnits('9.0', 'gwei'), // default
+        value: floorPrice
+      }
+      await this.$Dapp.Bridges.writer.mint(floorNum, overrides).then(function (ret) {
+        console.log(ret)
+        alert('你得到 NFT 的tokenID是：' + ret.events.MintToken.returnValues.tokenId)
+      })
     },
-    // 关闭个人信息窗口操作
+    // closedd
     close () {
       const _that = this
       _that.showInfo.profile = false
@@ -630,6 +814,127 @@ export default {
         type: 'updateTitle'
       }
       sendMessage(message)
+    },
+    async myFloor () {
+      this.resetPopWindow() // reset
+      this.resetMintFloor() // reset
+      console.log('click myFloor')
+      await this.login()
+
+      if (this.showInfo.myFloor) {
+        this.showInfo.myFloor = false
+      } else {
+        this.showInfo.myFloor = true
+      }
+
+      const address = window.ethereum.selectedAddress
+      const contractWriter = this.$Dapp.Bridges.writer
+      const playerInfo = this.playerInfo
+
+      await contractWriter.balanceOf(address).then(function (ret) {
+        const len = parseInt(ret)
+        console.log('call balanceOf:', ret, len)
+        if (len === 0) {
+          alert('Your have nothing nft')
+          return
+        }
+
+        for (let i = 0; i < len; i++) {
+          contractWriter.tokenOfOwnerByIndex(address, i).then(function (tokenId) {
+            console.log('call tokenOfOwnerByIndex:', tokenId)
+
+            contractWriter.getTokenInfo(tokenId).then(function (ret) {
+              console.log('call getTokenInfo:', ret)
+              playerInfo.mintFloorTokenId.push(parseInt(ret.tokenId))
+              playerInfo.mintFloorNumId.push(parseInt(ret.floorNo))
+            })
+          })
+        }
+      })
+
+      // this.playerInfo.mintFloorTokenId = mintFloorTokenId
+      // this.playerInfo.mintFloorNumId = mintFloorNumId
+    },
+    async myFollowing () {
+      this.resetPopWindow() // reset
+      console.log('click myFollowing')
+      await this.login()
+
+      const _that = this
+      if (_that.showInfo.myFollowing) {
+        _that.showInfo.myFollowing = false
+      } else {
+        _that.showInfo.myFollowing = true
+      }
+
+      // 独立出去
+      // const result = ajaxGetMyFollower(window.ethereum.selectedAddress)
+      // console.log('return result:', result)
+      // get all my followering list
+      const url = apiServer + '/followerpeople/listbymefollower?from=' + window.ethereum.selectedAddress
+      await axios.post(url).then(response => {
+        const data = response.data
+        console.log('response-2:', data)
+        if (data.Code !== 0) {
+          console.log('get error, please try again')
+        } else {
+          for (var v in data.Data) {
+            console.log('获取我的关注列表', data.Data[v])
+          }
+
+          this.playerInfo.myFollowing = data.Data
+        }
+      })
+    },
+    async myFollowed () {
+      this.resetPopWindow() // reset
+      console.log('click myFollowed')
+      await this.login()
+
+      const _that = this
+      if (_that.showInfo.myFollowed) {
+        _that.showInfo.myFollowed = false
+      } else {
+        _that.showInfo.myFollowed = true
+      }
+
+      // 独立出去
+      // const result = ajaxGetMyFollower(window.ethereum.selectedAddress)
+      // console.log('return result:', result)
+      // get all my followering list
+      const url = apiServer + '/followerpeople/listbyfollowerme?from=' + window.ethereum.selectedAddress
+      await axios.post(url).then(response => {
+        const data = response.data
+        console.log('response-2:', data)
+        if (data.Code !== 0) {
+          console.log('get error, please try again')
+        } else {
+          for (var v in data.Data) {
+            console.log('获取关注我的列表', data.Data[v])
+          }
+
+          this.playerInfo.myFollowed = data.Data
+        }
+      })
+    },
+    room () {
+      alert('room coming soon')
+    },
+    avatar () {
+      alert('avatar coming soon')
+    },
+    async goto () {
+      await this.appContractWriter.getTokenInfo(this.gotoNum).then(function (ret) {
+        console.log('call getTokenInfo:', ret)
+        const tokenId = parseInt(ret.tokenId)
+        console.log('token id:', tokenId)
+        if (tokenId === 0) {
+          alert('this floor not available(may be you want to mint?), please input the right number')
+        } else {
+          alert('going to the floor[' + tokenId + '] ...')
+          alert('coming soon :)')
+        }
+      })
     }
   },
   created () {
@@ -642,28 +947,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.game {
-  z-index: 200;
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  top: 0px;
-  left: 0px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: inherit;
-  background-color: rgb(4 4 4 / 90%);
-}
-.close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 30px;
-  height: 30px;
-  background: url(/images/close.png) -2px -2px no-repeat;
-  background-size: 30px 30px;
-}
 </style>

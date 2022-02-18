@@ -4,6 +4,8 @@ contracts/examples
 frontend/orbitdb
 client_explore
 client/node_modules
-
 exchange
+ssnft/yarn.lock
+.gitignore
+.vscode/settings.json
 SpaceHuggers
