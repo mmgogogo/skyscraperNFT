@@ -1,9 +1,32 @@
 import axios from 'axios'
+import qs from 'Qs'
 
 // 服务器地址
 const serverUrl = '127.0.0.1:9950'
 // const wsServer = 'ws://' + serverUrl + '/ws'
 const apiServer = 'http://' + serverUrl
+
+// 获取我的关注列表
+export function ajaxAddFollower (from, to) {
+  console.log('call ajaxAddFollower:', from, to)
+
+  const url = apiServer + '/followerpeople/add'
+  const params = {
+    "from": from,
+    "to": to
+  }
+  axios.post(url, qs.stringify({params})).then(response => {
+    const data = response.data
+
+    // TODO not support more then 100 nft
+    console.log('response-2:', data)
+    if (data.Code !== 0) {
+      alert('bind error')
+    } else {
+      alert('bind success')
+    }
+  })
+}
 
 // 获取我的关注列表
 export function ajaxGetMyFollower (address) {

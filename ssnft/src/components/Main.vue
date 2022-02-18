@@ -485,14 +485,17 @@ export default {
         } else {
           const result = data.data.content
           for (var v in result) {
-            const image = JSON.parse(result[v].nft_json).image
+            let image = JSON.parse(result[v].nft_json).image
+            if (image !== '') {
+              image = image.replace('ipfs://', 'https://ipfs.io/ipfs/')
+            }
             this.playerInfo.allNfts.push({
               token_id: result[v].token_id,
               nft_name: result[v].nft_name,
 
               // ipfs://QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
               // https://ipfs.io/ipfs/QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
-              image: image.replace('ipfs://', 'https://ipfs.io/ipfs/')
+              image: image
             })
           }
         }
