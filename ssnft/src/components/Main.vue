@@ -166,6 +166,9 @@
             </div>
             <div class="main6 flex-row">
               <div class="group10 flex-col">
+                <div class="layer flex-col justify-center" v-if="setting.loading">
+                  <span class="txt6">Loading...</span>
+                </div>
                 <div class="layer flex-col justify-center" v-for="v in playerInfo.mintFloorNumId" :key="v">
                   <span class="txt6">Floor Id:{{v}}</span>
                 </div>
@@ -397,7 +400,10 @@ export default {
       floorInfo: {
         hotList: [] // hot
       },
-      gotoNum: ''
+      gotoNum: '',
+      setting: {
+        loading: false // loading
+      }
     }
   },
   props: {
@@ -550,9 +556,11 @@ export default {
       sendMessage(message)
     },
     async myFloor () {
+      console.log('click myFloor')
       this.resetPopWindow() // reset
       this.resetMintFloor() // reset
-      console.log('click myFloor')
+      this.setting.loading = true // loading open
+
       await this.login()
 
       if (this.showInfo.myFloor) {
@@ -585,6 +593,7 @@ export default {
           })
         }
       })
+      this.setting.loading = false // loading close
     },
     async myFollowing () {
       this.resetPopWindow() // reset
