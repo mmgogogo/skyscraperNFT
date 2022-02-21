@@ -12,10 +12,9 @@
     /* margin: 0 auto; */
     margin-left: 20px;
     background-color: #bf8e8e36;
-    overflow-y: overlay;
+    overflow-y: visible;
     overflow-x: hidden;
 }
-
 .floor {
     width: 100%;
     height: 5vw;
@@ -44,6 +43,12 @@
 }
 
 .floor-img {
+    width: 100%;
+    height: auto;
+    margin: 0px;
+    padding: 0px;
+}
+.floor-area {
     width: 100%;
     height: auto;
     margin: 0px;

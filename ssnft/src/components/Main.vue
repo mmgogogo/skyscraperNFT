@@ -35,7 +35,7 @@
                 <div class="outer3 flex-col"></div>
                 <div class="outer4">
                   <span class="info2">
-                    <input type="number" class="" placeholder="Search" v-model.number="gotoNum"/>
+                    <input type="number" class="number" placeholder="Search" v-model.number="gotoNum"/>
                   </span>
                 </div>
               </div>
@@ -110,30 +110,10 @@
         </div>
       </div>
       <!-- nav end -->
+
       <!-- content start -->
       <div class="content flex-col">
-        <div class="building flex-container align-end">
-          <div class="floor flex-row justify-between">
-            <div class="owner flex-col">
-              <span class="message">this is a message too</span>
-            </div>
-            <div class="room flex-col align-center">
-              <div class="decoration flex-row align-center">
-                <img class="floor-img flex-col" referrerpolicy="no-referrer" src="/images/walls/03.png" alt="" />
-              </div>
-              <!-- <div class="section3 flex-row justify-between">
-                <div class="outer3 flex-col"></div>
-                <div class="outer4">
-                  <span class="info2">{{ baseConfig.lang_002 }}</span>
-                  <span class="tbox1 tline tcolor_gray0 tprop tfont_m tfont_s24 tshadow ttop">…</span>
-                </div>
-              </div> -->
-            </div>
-            <div class="others flex-col">
-              <span class="message">this is a message</span>
-            </div>
-          </div>
-        </div>
+        <Building :floors="building.floors" />
         <!-- ladder start -->
         <div class="ladder flex-col">
           <div class="lmain6 flex-row justify-between">
@@ -159,7 +139,7 @@
         <!-- chat end -->
 
         <!-- my floor start -->
-        <div class="hot flex-col" v-show="showInfo.myFloor">
+        <div class="hot flex-col" v-if="showInfo.myFloor">
           <div class="group1 flex-col justify-between">
             <div class="main5 flex-col justify-center">
               <span class="txt5">My Floor</span>
@@ -176,7 +156,7 @@
         <!-- my floor end -->
 
         <!-- myFollowing start -->
-        <div class="hot flex-col" v-show="showInfo.myFollowing">
+        <div class="hot flex-col" v-if="showInfo.myFollowing">
           <div class="group1 flex-col justify-between">
             <div class="main5 flex-col justify-center">
               <span class="txt5">Following</span>
@@ -194,7 +174,7 @@
         <!-- myFollowing end -->
 
         <!-- myFollowed start -->
-        <div class="hot flex-col" v-show="showInfo.myFollowed">
+        <div class="hot flex-col" v-if="showInfo.myFollowed">
           <div class="group1 flex-col justify-between">
             <div class="main5 flex-col justify-center">
               <span class="txt5">Followed</span>
@@ -228,12 +208,12 @@
           </div>
         </div>
         <!-- hot end -->
-
       </div>
       <!-- content end -->
+
       <!-- mint start -->
-      <div class="shadow" v-if="showInfo.mint">
-        <div id="mint" class="mint flex-col">
+      <div class="shadow" v-if="showInfo.mint" @click="onClick($event)">
+        <div id="mint" class="mint flex-col" @click="onClickOutside($event)">
           <div class="block flex-row justify-between">
             <div class="main4 flex-col"></div>
             <div class="main5 flex-col justify-between">
@@ -327,6 +307,7 @@
 <script>
 import * as ethers from 'ethers'
 import Game from '@/components/Game.vue'
+import Building from '@/components/Building.vue'
 import sendMessage from '@/utils/Utils.js'
 // import { ajaxGetMyFollower, ajaxGetAllNfts } from '@/utils/AjaxData.js'
 // import { showFullScreenLoading, hideFullScreenLoading } from '@/utils/Loading.js'
@@ -340,7 +321,8 @@ const apiServer = 'http://' + serverUrl
 export default {
   name: 'Navigator',
   components: {
-    Game
+    Game: Game,
+    Building: Building
   },
   data () {
     // initial data
@@ -394,13 +376,28 @@ export default {
         myFollowing: [],
         myFollowed: []
       },
-      gotoNum: ''
+      gotoNum: '',
+      building: {
+        first: true,
+        scroll: 0,
+        height: 0,
+        floors: []
+      }
     }
   },
   props: {
     msg: String
   },
   methods: {
+    onClick (e) {
+      // console.log('[Main] outside click event', e)
+      const _that = this
+      _that.resetPopWindow()
+    },
+    onClickOutside (e) {
+      // console.log('[Main] onclick outside e ', e)
+      e.stopPropagation()
+    },
     navi () {
       console.log('[navigator] navi ', this.$Dapp)
     },
@@ -427,8 +424,9 @@ export default {
       sendMessage(message)
     },
     resetPopWindow () {
+      console.log('[resetPopWindow] start')
       // reset all pop
-      for (var item in this.showInfo) {
+      for (const item in this.showInfo) {
         this.showInfo[item] = false
       }
     },
@@ -454,7 +452,6 @@ export default {
 
       // common login
       _that.login()
-
       _that.showInfo.profile = true
 
       // 独立出去
@@ -498,6 +495,7 @@ export default {
       })
     },
     async mint () {
+      console.log('[mint] start')
       await this.login()
 
       const _that = this
@@ -657,6 +655,14 @@ export default {
         }
       })
     },
+    search (floorId) {
+      let start = 0
+      if (floorId > 0 && floorId <= 10000) {
+        // 显示10层
+        start = Math.ceil(floorId / 10) * 10
+      }
+      return [start, start + 10]
+    },
     loadMore () {
       this.loading = true
       setTimeout(() => {
@@ -666,12 +672,28 @@ export default {
         }
         this.loading = false
       }, 2500)
+    },
+    strPadLeft (str, chr = '0', len = 5) {
+      return chr.repeat(len - String(str).length) + str
     }
   },
   created () {
     console.log('[navigator] created start!')
     const _that = this
     console.log('[navigator] that ', _that.$Dapp)
+    _that.building.floors = []
+    for (let i = 0; i < 100; i++) {
+      let floorId = _that.strPadLeft(i + 1)
+      if (i > 10) {
+        let rand = 0
+        while (rand === 0) {
+          rand = Math.floor(Math.random(10) * 10)
+        }
+        floorId = _that.strPadLeft(rand)
+      }
+      _that.building.floors.push({ floorId: floorId, message: '', myFloor: '', order: 10 - i })
+    }
+    _that.building.first = true
   }
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <!-- game info start https://elevenzhou.github.io/Space/ -->
-  <div class="game" v-if="show || game">
+  <div class="game" v-if="game">
     <div class="close" @click="close()"></div>
     <iframe id="game" title="game" :src="url"
     style="min-height:500px;height:768px;width:1080px;"
@@ -20,6 +20,7 @@ export default {
     }
   },
   props: {
+    show: Boolean,
     url: String
   },
   methods: {
@@ -32,6 +33,7 @@ export default {
     console.log('[Game] created start!')
     const _that = this
     console.log('[Game] that ', _that.$Dapp)
+    _that.game = _that.show
   }
 }
 </script>
