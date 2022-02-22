@@ -237,3 +237,60 @@ border-radius: 5px;
 overflow: hidden;
 background: url(../images/card_shadow.png) 100% no-repeat;
 }
+
+.pwallet {
+    height: 60px;
+    /* background-color: rgba(43, 46, 53, 1); */
+    box-shadow: 0px 1px 3px 0px rgb(0 0 0 / 30%);
+    width: 400px;
+}
+
+.pwlayer8 {
+    width: 370px;
+    height: 38px;
+}
+
+.pwlogowrapper {
+    height: 38px;
+    width: 38px;
+    padding: 0;
+}
+
+.pwlogo {
+    width: 32px;
+    height: 32px;
+    background: url(../images/wallet.png) 0px 0px no-repeat;
+    background-size: 32px 32px;
+}
+
+.pwaddr {
+    width: 380px;
+    height: 21px;
+    display: block;
+    overflow-wrap: break-word;
+    /* color: rgba(255, 255, 255, 1); */
+    font-size: 14px;
+    /* font-family: SFProDisplay-Medium; */
+    white-space: normal;
+    line-height: 21px;
+    text-align: center;
+    text-shadow: 1px 1px 1px rgb(0 0 0 / 30%);
+    margin: 5px 0 0 -15px;
+}
+
+#msg {
+    width: 295px;
+    height: 20px;
+    color: #070012;
+    text-align: center;
+    font-size: 10px;
+    margin-right: 5px;
+}
+.copy {
+    height: 20px;
+    border-radius: 4px;
+    background-color: #ef4f4f;
+    color: #fff;
+    border: 0;
+    width: 40px;
+}

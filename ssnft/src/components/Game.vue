@@ -1,13 +1,11 @@
 <template>
-  <!-- game info start https://elevenzhou.github.io/Space/ -->
-  <div class="game" v-if="show || game">
+  <div class="game" v-if="game">
     <div class="close" @click="close()"></div>
     <iframe id="game" title="game" :src="url"
     style="min-height:500px;height:768px;width:1080px;"
     allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
     ></iframe>
   </div>
-  <!-- game info end -->
 </template>
 
 <script>
@@ -20,6 +18,7 @@ export default {
     }
   },
   props: {
+    show: Boolean,
     url: String
   },
   methods: {
@@ -28,10 +27,16 @@ export default {
       _that.game = false
     }
   },
+  mounted () {
+    console.log(`The initial count is ${this.count}.`)
+    const _that = this
+    _that.game = _that.show
+  },
   created () {
     console.log('[Game] created start!')
     const _that = this
     console.log('[Game] that ', _that.$Dapp)
+    _that.game = _that.show
   }
 }
 </script>
