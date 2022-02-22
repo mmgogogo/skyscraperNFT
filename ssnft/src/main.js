@@ -3,7 +3,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import Web3Component from './web3'
-// import { InfiniteScroll } from 'mint-ui'
+// import * as Toasted from 'mosha-vue-toastify'
+// import 'mosha-vue-toastify/dist/style.css'
 
 const app = createApp(<App />)
 

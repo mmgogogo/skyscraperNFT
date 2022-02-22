@@ -1,5 +1,4 @@
 <template>
-  <!-- game info start https://elevenzhou.github.io/Space/ -->
   <div class="game" v-if="game">
     <div class="close" @click="close()"></div>
     <iframe id="game" title="game" :src="url"
@@ -7,7 +6,6 @@
     allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
     ></iframe>
   </div>
-  <!-- game info end -->
 </template>
 
 <script>
@@ -28,6 +26,11 @@ export default {
       const _that = this
       _that.game = false
     }
+  },
+  mounted () {
+    console.log(`The initial count is ${this.count}.`)
+    const _that = this
+    _that.game = _that.show
   },
   created () {
     console.log('[Game] created start!')

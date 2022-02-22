@@ -26,7 +26,7 @@ window.addEventListener('message', function (event) {
   //     data: [{"img":"...", "type":"eth"},{}]
   // }
   // console.log('[Main] event is ', event)
-  if (typeof event === 'object' &&
+  if (typeof event.data === 'object' &&
       event.data &&
       'type' in event.data &&
       'source' in event.data &&

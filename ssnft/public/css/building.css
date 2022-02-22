@@ -1,6 +1,7 @@
 .content {
     height: 100%;
-    background-color: rgb(255, 255, 255);
+    /* background-color: rgb(255, 255, 255); */
+    background-color: rgb(114, 195, 240);
     /* box-shadow: 3px 0px 18px 0px rgba(0, 0, 0, 0.3); */
     width: 80%;
 }
@@ -9,9 +10,9 @@
     width: 45vw;
     height: 100%;
     padding: 0px;
-    /* margin: 0 auto; */
-    margin-left: 20px;
-    background-color: #bf8e8e36;
+    margin: 0 auto;
+    /* margin-left: 20px; */
+    /* background-color: #bf8e8e36; */
     overflow-y: visible;
     overflow-x: hidden;
 }
@@ -32,7 +33,8 @@
 
 .room {
     height: 5vw;
-    background-color: aliceblue;
+    /* background-color: aliceblue; */
+    background-color: rgb(26, 29, 30);
     padding: 0px;
     width: 60%;
 }
@@ -58,7 +60,7 @@
 .others {
     height: 5vw;
     padding-top: 12px;
-    background-color: #1adbdb4a;
+    /* background-color: #1adbdb4a; */
     width: 20%;
     padding: 22px 0 0 16px;
 }

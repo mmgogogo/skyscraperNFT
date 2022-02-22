@@ -5,7 +5,7 @@
       <span class="message">{{ floorInfo.myFloor || defaultMsg }}</span>
     </div>
     <div class="room flex-col align-center" v-bind:class="[floorInfo.isFirst?'first':'']">
-      <div class="decoration flex-container align-start">
+      <div class="decoration flex-container align-start" v-on:click="$emit('open-game', [floorInfo.id, true, 'abc'])">
         <img class="floor-area flex-row" referrerpolicy="no-referrer" src="/images/walls/floor_area.png" alt="" />
         <img class="floor-img flex-row" referrerpolicy="no-referrer" :src="'/images/walls/floor_'+floorInfo.floorId+'.png'" alt="" />
       </div>
@@ -19,6 +19,7 @@
 
 <script>
 // import { ref } from 'vue'
+// import $ from 'jquery'
 
 export default {
   name: 'Floor',
@@ -44,9 +45,9 @@ export default {
     handleScroll (event) {
       if (event) {
         const target = event.target
-        console.log('[Building] target ', target)
-        console.log('[Building] target offsetHeight offsetTop scrollHeight scrollTop clientHeight clientTop', target.offsetHeight, target.offsetTop, target.scrollHeight, target.scrollTop, target.clientHeight, target.clientTop)
-        console.log('[Building] target ', target.getBoundingClientRect())
+        // console.log('[Building] target ', target)
+        // console.log('[Building] target offsetHeight offsetTop scrollHeight scrollTop clientHeight clientTop', target.offsetHeight, target.offsetTop, target.scrollHeight, target.scrollTop, target.clientHeight, target.clientTop)
+        // console.log('[Building] target ', target.getBoundingClientRect())
         if (!this.scrolled) {
           // target.scrollTo(0, 0)
           target.scrollTop = target.scrollHeight
@@ -65,10 +66,10 @@ export default {
 
       // element.getBoundingClientRect().bottom
 
-      console.log('[Building] event ', event)
+      // console.log('[Building] event ', event)
       // Any code to be executed when the window is scrolled
       // this.isUserScrolling = (window.scrollY > 0)
-      console.log('[Building]  calling handleScroll', window.scoll, window.pageYOffset)
+      // console.log('[Building]  calling handleScroll', window.scoll, window.pageYOffset)
     }
   },
   created () {
@@ -110,12 +111,13 @@ export default {
 
 .scroll {
   scrollbar-width: thin;          /* "auto" or "thin" */
-  scrollbar-color: white white;   /* scroll thumb and track */
+  /* scrollbar-color: white white;   scroll thumb and track */
+  scrollbar-color: transparent transparent;
 }
 /* Works on Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: white white;
+  scrollbar-color: transparent;
 }
 
 /* Works on Chrome, Edge, and Safari */
@@ -124,12 +126,12 @@ export default {
 }
 
 *::-webkit-scrollbar-track {
-  background: white;
+  background: transparent;
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: white;
+  background-color: transparent;
   border-radius: 20px;
-  border: 3px solid white;
+  border: 3px solid transparent;
 }
 </style>
