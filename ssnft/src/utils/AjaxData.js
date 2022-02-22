@@ -2,7 +2,8 @@ import axios from 'axios'
 import qs from 'qs'
 
 // 服务器地址
-const serverUrl = '127.0.0.1:9950'
+// const serverUrl = '127.0.0.1:9950'
+const serverUrl = '47.75.51.251:9950'
 // const wsServer = 'ws://' + serverUrl + '/ws'
 const apiServer = 'http://' + serverUrl
 

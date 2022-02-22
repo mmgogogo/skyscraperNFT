@@ -242,7 +242,7 @@
             <div class="main5 flex-col justify-between">
               <span class="txt3">Skyscraper&nbsp;Floor</span>
               <span class="txt4">
-                Phanta&nbsp;Bear&nbsp;is&nbsp;a&nbsp;collection&nbsp;of&nbsp;10,000&nbsp;algorithmically&nbsp;generated&nbsp;digital&nbsp;collectibles&nbsp;that&nbsp;double&nbsp;as&nbsp;memebership&nbsp;cards&nbsp;for&nbsp;the&nbsp;Ezek&nbsp;Club.&nbsp;Each&nbsp;Phanta&nbsp;Bear&nbsp;has&nbsp;a&nbsp;unique&nbsp;set&nbsp;of&nbsp;traits&nbsp;and&nbsp;unlocks&nbsp;varying,&nbsp;unique&nbsp;levels&nbsp;of&nbsp;access&nbsp;and&nbsp;perks&nbsp;for&nbsp;its&nbsp;owner.&nbsp;Phanta&nbsp;Bear&nbsp;project&nbsp;was&nbsp;jointly&nbsp;launched&nbsp;by&nbsp;PHANTACi&nbsp;and&nbsp;Ezek
+                请输入你需要mint的楼层号
               </span>
               <div class="mod2 flex-col justify-center btn-hand">
                 <span class="info7" @click="realMint()">MINT</span>
@@ -252,14 +252,16 @@
           <div class="block2 flex-col">
             <div class="box13 flex-row">
               <div class="box14">
-                <span class="info10">Price</span>
+                <span class="info10">楼层ID</span>
                 <span class="word9">：</span>
-                <span class="word10">0.26</span>
-                <span class="txt5"></span>
-                <span class="txt6">ETH</span>
+                <span class="word10">
+                  <input type="number" class="" placeholder="输入mint的楼层" v-model.number="mint_floor_num">
+                </span>
+                <!-- <span class="txt5"></span>
+                <span class="txt6">ETH</span> -->
               </div>
             </div>
-            <div class="box15 flex-row justify-between">
+            <!-- <div class="box15 flex-row justify-between">
               <div class="main6 flex-col">
                 <div class="group6 flex-col"></div>
               </div>
@@ -267,9 +269,9 @@
               <div class="main7 flex-col">
                 <div class="group7 flex-col"></div>
               </div>
-            </div>
+            </div> -->
             <img class="pic1" referrerpolicy="no-referrer" src="images/floor_icon.png"/>
-            <span class="info11">Amount：</span>
+            <!-- <span class="info11">Amount：</span> -->
           </div>
         </div>
       </div>
@@ -336,7 +338,8 @@ import { ajaxAddFollowerPeople, ajaxAddFollowerToken, ajaxAddTokenInfo, ajaxGetH
 import axios from 'axios'
 
 // 服务器地址
-const serverUrl = '127.0.0.1:9950'
+// const serverUrl = '127.0.0.1:9950'
+const serverUrl = '47.75.51.251:9950'
 // const wsServer = 'ws://' + serverUrl + '/ws'
 const apiServer = 'http://' + serverUrl
 
@@ -403,7 +406,8 @@ export default {
       gotoNum: '',
       setting: {
         loading: false // loading
-      }
+      },
+      mint_floor_num: ''
     }
   },
   props: {
@@ -470,20 +474,6 @@ export default {
       _that.showInfo.profile = true
 
       // 独立出去
-      // ajaxGetAllNfts(window.ethereum.selectedAddress).then(response => {
-      //   console.log('ajaxGetAllNfts:', response)
-      //   for (var v in response.content) {
-      //     const image = JSON.parse(response.content[v].nft_json).image
-      //     this.playerInfo.allNfts.push({
-      //       token_id: response.content[v].token_id,
-      //       nft_name: response.content[v].nft_name,
-
-      //       // ipfs://QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
-      //       // https://ipfs.io/ipfs/QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
-      //       image: image.replace('ipfs://', 'https://ipfs.io/ipfs/')
-      //     })
-      //   }
-      // })
       // get all my nft list
       const url = apiServer + '/user/getallnft?address=' + window.ethereum.selectedAddress
       await axios.post(url).then(response => {
@@ -498,10 +488,11 @@ export default {
           for (var v in result) {
             const imageInfo = JSON.parse(result[v].nft_json)
             let image = imageInfo.image // erc721
-            if (image !== '') {
-              image = image.image_url // ens
+            if (image === undefined || image === '') {
+              image = imageInfo.image_url // ens
             }
-            if (image !== '') {
+
+            if (image !== undefined) {
               image = image.replace('ipfs://', 'https://ipfs.io/ipfs/')
             }
             this.playerInfo.allNfts.push({
@@ -528,7 +519,11 @@ export default {
       // 添加关闭倒计时
     },
     async realMint () {
-      const floorNum = 1
+      if (this.mint_floor_num <= 0) {
+        alert('请输入正确的楼层号')
+        return
+      }
+      const floorNum = this.mint_floor_num
       const floorPrice = ethers.utils.parseEther('0.1')
       console.log('realmint:::', floorNum, floorPrice)
 
@@ -540,8 +535,10 @@ export default {
       }
       await this.$Dapp.Bridges.writer.mint(floorNum, overrides).then(function (ret) {
         console.log(ret)
-        alert('你得到 NFT 的tokenID是：' + ret.events.MintToken.returnValues.tokenId)
+        // alert('你得到 NFT 的tokenID是：' + ret.events.MintToken.returnValues.tokenId)
       })
+
+      this.showInfo.mint = true
     },
     // closedd
     close () {
@@ -633,6 +630,7 @@ export default {
 
       alert('插入测试数据.....')
       await ajaxAddFollowerPeople(window.ethereum.selectedAddress, parseInt(Math.random() * 10000))
+      await ajaxAddFollowerPeople(parseInt(Math.random() * 10000), window.ethereum.selectedAddress)
       await ajaxAddFollowerToken(window.ethereum.selectedAddress, parseInt(Math.random() * 10000))
       await ajaxAddTokenInfo(parseInt(Math.random() * 10000), parseInt(Math.random() * 10000))
     },
