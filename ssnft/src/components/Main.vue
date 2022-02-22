@@ -1,6 +1,6 @@
 <template>
   <main class="main">
-    <div class="header flex-row justify-center">
+    <div class="header flex-col justify-center">
       <div class="navigation flex-row">
         <div class="logo flex-col"></div>
         <div class="wallet flex-col btn-hand" @click="login(1)"></div>
@@ -13,61 +13,67 @@
         <div class="outer1 flex-col">
           <div class="bd1 flex-col">
             <div class="outer2 flex-col justify-between">
-              <span class="text tbox tline tcolor tprop tfont_m tfont_s26 tshadow" >{{ baseConfig.lang_001 }}</span>
-              <div class="box1 flex-row">
-                <img class="icon1" referrerpolicy="no-referrer" src="images/building_logo.png" alt="" />
-                <span class="box3 tfont_s30 tfont_m tleft tcolor tprop">{{ gameConfig.total }}</span>
+              <span
+                class="text tbox tline tcolor tprop tfont_m tfont_s26 tshadow"
+                >{{ baseConfig.lang_001 }}</span
+              >
+              <div class="box1 flex-row justify-between">
+                <img
+                  class="icon1"
+                  referrerpolicy="no-referrer"
+                  src="images/building_logo.png"
+                />
+                <span class="box3 tfont_s30 tfont_m tleft tcolor tprop">{{
+                  gameConfig.total
+                }}</span>
               </div>
             </div>
           </div>
           <div class="bd2 flex-row justify-between">
             <div class="section2 flex-col">
-              <div class="section3 flex-row">
+              <div class="section3 flex-row justify-between">
                 <div class="outer3 flex-col"></div>
                 <div class="outer4">
                   <span class="info2">
-                    <input type="text" class="number" placeholder="Floor ID" v-model.number="gotoNum"  @keyup.enter="goto()"/>
+                    <input type="number" class="" placeholder="Search" v-model.number="gotoNum"/>
                   </span>
                 </div>
               </div>
             </div>
             <div class="section4 flex-col align-center">
-              <span class="txt2 btn-hand" @click="goto()" >{{ baseConfig.lang_003 }}</span>
+              <span class="txt2 btn-hand" @click="goto()">{{ baseConfig.lang_003 }}</span>
             </div>
           </div>
           <div class="bd3 flex-row justify-between">
-            <div v-bind:class="[!showInfo.myFloor ? 'layer1' : 'layer1_g', 'flex-col']"></div>
+            <div class="layer1 flex-col"></div>
             <span
-              class="text tbox1 tline tprop tfont_m tfont_s24 tshadow ttop btn-hand"
-              v-bind:class="[!showInfo.myFloor ? 'tcolor' : 'tcolor_gray0', 'flex-col']"
+              class="text tbox1 tline tprop tfont_m tfont_s24 tshadow ttop tcolor_gray0 btn-hand"
               @click="myFloor()">
               {{ baseConfig.lang_004 }}</span>
           </div>
           <div class="bd4 flex-row justify-between">
-            <div v-bind:class="[!showInfo.myFollowing ? 'bd5' : 'bd5_g', 'flex-col']"></div>
+            <div class="bd5 flex-col"></div>
             <span
-              class="text tbox1 tline tprop tfont_m tfont_s24 tshadow ttop btn-hand"
-              v-bind:class="[!showInfo.myFollowing ? 'tcolor' : 'tcolor_gray0', 'flex-col']"
+              class="text tbox1 tline tprop tfont_m tfont_s24 tshadow ttop tcolor btn-hand"
               @click="myFollowing()"
               >{{ baseConfig.lang_005 }}</span
             >
           </div>
           <div class="bd4 flex-row justify-between">
-            <div v-bind:class="[!showInfo.myFollowed ? 'group0' : 'group0_g', 'flex-col']"></div>
+            <div class="group0 flex-col"></div>
             <span
               class="text tbox1 tline tprop tfont_m tfont_s24 tshadow tcolor btn-hand"
-              v-bind:class="[!showInfo.myFollowed ? 'tcolor' : 'tcolor_gray0', 'flex-col']"
               @click="myFollowed()"
               >{{ baseConfig.lang_006 }}</span
             >
           </div>
           <div class="bd4 flex-row justify-between">
-            <div v-bind:class="[!showInfo.hot ? 'group1' : 'group1_g', 'flex-col']"></div>
+            <div class="group1 flex-col"></div>
             <span
               class="text tbox1 tline tprop tfont_m tfont_s24 tshadow tcolor tleft btn-hand"
-              v-bind:class="[!showInfo.hot ? 'tcolor' : 'tcolor_gray0', 'flex-col']"
               @click="hot()"
-              >{{ baseConfig.lang_007 }}</span>
+              >{{ baseConfig.lang_007 }}</span
+            >
           </div>
           <div class="bd8 flex-row justify-between">
             <div class="layer2 flex-col align-center btn-hand" @click="mint()">
@@ -80,8 +86,12 @@
             </div>
             <div class="layer5 flex-col align-center">
               <div class="group2 flex-col justify-between btn-hand" @click="room()">
-                <img class="label2" referrerpolicy="no-referrer" src="/images/room.png" alt="" />
-                <span class="word5">{{ baseConfig.lang_009 }}</span>
+                <img
+                  class="label2"
+                  referrerpolicy="no-referrer"
+                  src="https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPng761b6545dec0faf9196ceabe44734f37945c18d76dcd24495b1dfc2be778eb39"
+                />
+                <span class="word4">{{ baseConfig.lang_009 }}</span>
               </div>
             </div>
           </div>
@@ -100,29 +110,43 @@
         </div>
       </div>
       <!-- nav end -->
-
       <!-- content start -->
       <div class="content flex-col">
-        <Building :floors="building.floors" v-on:open-game="openGame"/>
+        <div class="building flex-container align-end">
+          <div class="floor flex-row justify-between">
+            <div class="owner flex-col">
+              <span class="message">this is a message too</span>
+            </div>
+            <div class="room flex-col align-center">
+              <div class="decoration flex-row align-center">
+                <img class="floor-img flex-col" referrerpolicy="no-referrer" src="/images/walls/03.png" alt="" />
+              </div>
+              <!-- <div class="section3 flex-row justify-between">
+                <div class="outer3 flex-col"></div>
+                <div class="outer4">
+                  <span class="info2">{{ baseConfig.lang_002 }}</span>
+                  <span class="tbox1 tline tcolor_gray0 tprop tfont_m tfont_s24 tshadow ttop">…</span>
+                </div>
+              </div> -->
+            </div>
+            <div class="others flex-col">
+              <span class="message">this is a message</span>
+            </div>
+          </div>
+        </div>
         <!-- ladder start -->
         <div class="ladder flex-col">
           <div class="lmain6 flex-row justify-between">
             <img class="llabel2" referrerpolicy="no-referrer" src="/images/ladder/label.png" alt="" />
             <div class="lbox10 flex-col">
               <div class="lwrap1 flex-col">
-                <div class="lmod5 flex-col" @click="increment()">
-                  <div class="lmain7 flex-col"></div>
-                </div>
+                <div class="lmod5 flex-col"><div class="lmain7 flex-col"></div></div>
                 <div class="lmod6 flex-col align-center">
-                  <div class="lsection4 flex-col"  :style="lift(building.start)">
-                    <div class="lmain8 flex-col align-center">
-                      <div class="lwrap2 flex-col"></div>
-                    </div>
+                  <div class="lsection4 flex-col">
+                    <div class="lmain8 flex-col align-center"><div class="lwrap2 flex-col"></div></div>
                   </div>
                 </div>
-                <div class="lmod7 flex-col align-center" @click="decrement()">
-                  <div class="lmod8 flex-col"></div>
-                </div>
+                <div class="lmod7 flex-col align-center"><div class="lmod8 flex-col"></div></div>
               </div>
             </div>
           </div>
@@ -135,13 +159,16 @@
         <!-- chat end -->
 
         <!-- my floor start -->
-        <div class="hot flex-col" v-if="showInfo.myFloor">
+        <div class="hot flex-col" v-show="showInfo.myFloor">
           <div class="group1 flex-col justify-between">
             <div class="main5 flex-col justify-center">
               <span class="txt5">My Floor</span>
             </div>
             <div class="main6 flex-row">
               <div class="group10 flex-col">
+                <div class="layer flex-col justify-center" v-if="setting.loading">
+                  <span class="txt6">Loading...</span>
+                </div>
                 <div class="layer flex-col justify-center" v-for="v in playerInfo.mintFloorNumId" :key="v">
                   <span class="txt6">Floor Id:{{v}}</span>
                 </div>
@@ -152,7 +179,7 @@
         <!-- my floor end -->
 
         <!-- myFollowing start -->
-        <div class="hot flex-col" v-if="showInfo.myFollowing">
+        <div class="hot flex-col" v-show="showInfo.myFollowing">
           <div class="group1 flex-col justify-between">
             <div class="main5 flex-col justify-center">
               <span class="txt5">Following</span>
@@ -170,7 +197,7 @@
         <!-- myFollowing end -->
 
         <!-- myFollowed start -->
-        <div class="hot flex-col" v-if="showInfo.myFollowed">
+        <div class="hot flex-col" v-show="showInfo.myFollowed">
           <div class="group1 flex-col justify-between">
             <div class="main5 flex-col justify-center">
               <span class="txt5">Followed</span>
@@ -195,8 +222,8 @@
             </div>
             <div class="main6 flex-row">
               <div class="group10 flex-col">
-                <div class="layer flex-col justify-center">
-                  <span class="txt6">come soon</span>
+                <div class="layer flex-col justify-center" v-for="v in floorInfo.hotList" :key="v.TokenId">
+                  <span class="txt6">楼层ID:{{v.TokenId}}， 热度:{{v.Num}}</span>
                 </div>
               </div>
               <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
@@ -204,12 +231,12 @@
           </div>
         </div>
         <!-- hot end -->
+
       </div>
       <!-- content end -->
-
       <!-- mint start -->
-      <div class="shadow" v-if="showInfo.mint" @click="onClick($event)">
-        <div id="mint" class="mint flex-col" @click="onClickOutside($event)">
+      <div class="shadow" v-if="showInfo.mint">
+        <div id="mint" class="mint flex-col">
           <div class="block flex-row justify-between">
             <div class="main4 flex-col"></div>
             <div class="main5 flex-col justify-between">
@@ -262,18 +289,7 @@
               </div>
             </div>
           </div>
-          <div class="pwallet flex-col justify-center align-center">
-            <div class="pwlayer8 flex-row">
-              <div class="pwlogowrapper flex-col">
-                <div class="pwlogo flex-col"></div>
-              </div>
-              <span class="pwaddr">
-                <!-- {{ playerInfo.address }} -->
-                <input type="text" name="address" id="msg" v-model="playerInfo.address" readonly>
-                <input type="button" class="copy" @click="copy" data-clipboard-target="#msg" :value="baseConfig.lang_028" />
-              </span>
-            </div>
-          </div>
+          <div>address: {{ playerInfo.address }}</div>
           <div class="player10 flex-row">
             <img class="picon2" referrerpolicy="no-referrer" src="images/collected.png" alt="" />
             <!-- <div class="pgroup3 flex-col"></div> -->
@@ -306,30 +322,18 @@
     </div>
     <!-- profile end -->
     <!-- game info start https://elevenzhou.github.io/Space/ -->
-    <!-- <Game :show="showInfo.game" :url="gameConfig.gameUrl" @click="click()" /> -->
-    <div class="game" v-if="showInfo.game && gameConfig.gameUrl" @click="click()">
-    <div class="close" @click="close()"></div>
-    <iframe id="game" title="game" :src="gameConfig.gameUrl"
-    style="min-height:500px;height:768px;width:1080px;"
-    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-    ></iframe>
-  </div>
+    <Game :show="showInfo.game" :url="gameConfig.gameUrl" @click="click()" />
     <!-- game info end -->
   </main>
 </template>
 
 <script>
 import * as ethers from 'ethers'
-// import { ajaxGetMyFollower, ajaxGetAllNfts } from '@/utils/AjaxData.js'
+import Game from '@/components/Game.vue'
+import sendMessage from '@/utils/Utils.js'
+import { ajaxAddFollowerPeople, ajaxAddFollowerToken, ajaxAddTokenInfo, ajaxGetHotToken, ajaxGetMyFollower } from '@/utils/AjaxData.js'
 // import { showFullScreenLoading, hideFullScreenLoading } from '@/utils/Loading.js'
 import axios from 'axios'
-import Toastify from 'toastify-js'
-import 'toastify-js/src/toastify.css'
-import Clipboard from 'clipboard'
-
-// import Game from '@/components/Game.vue'
-import Building from '@/components/Building.vue'
-import sendMessage from '@/utils/Utils.js'
 
 // 服务器地址
 const serverUrl = '127.0.0.1:9950'
@@ -338,8 +342,8 @@ const apiServer = 'http://' + serverUrl
 
 export default {
   name: 'Navigator',
-  components: { //
-    Building: Building
+  components: {
+    Game
   },
   data () {
     // initial data
@@ -360,15 +364,12 @@ export default {
         lang_008: 'Mint',
         lang_009: 'Room',
         lang_010: 'Avatar',
-        lang_011: 'Not \n open',
-        lang_028: '复制'
+        lang_011: 'Not \n open'
       },
       gameConfig: {
         total: 10000,
-        baseUrl: 'https://dontil.github.io/test/',
-        gameUrl: ''
+        gameUrl: 'https://dontil.github.io/test/'
       },
-      address: '',
       url: window.location.href ? window.location.href : '',
       lang: 'en',
       // 全局数据
@@ -396,14 +397,12 @@ export default {
         myFollowing: [],
         myFollowed: []
       },
+      floorInfo: {
+        hotList: [] // hot
+      },
       gotoNum: '',
-      building: {
-        first: true,
-        page: 12,
-        scroll: 0,
-        height: 0,
-        start: 6,
-        floors: []
+      setting: {
+        loading: false // loading
       }
     }
   },
@@ -411,15 +410,6 @@ export default {
     msg: String
   },
   methods: {
-    onClick (e) {
-      // console.log('[Main] outside click event', e)
-      const _that = this
-      _that.resetPopWindow()
-    },
-    onClickOutside (e) {
-      // console.log('[Main] onclick outside e ', e)
-      e.stopPropagation()
-    },
     navi () {
       console.log('[navigator] navi ', this.$Dapp)
     },
@@ -446,9 +436,8 @@ export default {
       sendMessage(message)
     },
     resetPopWindow () {
-      console.log('[resetPopWindow] start')
       // reset all pop
-      for (const item in this.showInfo) {
+      for (var item in this.showInfo) {
         this.showInfo[item] = false
       }
     },
@@ -457,7 +446,7 @@ export default {
       this.playerInfo.mintFloorNumId = []
       this.playerInfo.mintFloorTokenId = []
     },
-    hot () {
+    async hot () {
       this.resetPopWindow() // reset
 
       const _that = this
@@ -466,7 +455,10 @@ export default {
       } else {
         _that.showInfo.hot = true
       }
-      // 添加关闭倒计时
+
+      const result = await ajaxGetHotToken()
+      console.log('hot list:', result)
+      this.floorInfo.hotList = result
     },
     async displayProfileInfo () {
       // show the profile
@@ -474,6 +466,7 @@ export default {
 
       // common login
       _that.login()
+
       _that.showInfo.profile = true
 
       // 独立出去
@@ -503,21 +496,27 @@ export default {
         } else {
           const result = data.data.content
           for (var v in result) {
-            const image = JSON.parse(result[v].nft_json).image
+            const imageInfo = JSON.parse(result[v].nft_json)
+            let image = imageInfo.image // erc721
+            if (image !== '') {
+              image = image.image_url // ens
+            }
+            if (image !== '') {
+              image = image.replace('ipfs://', 'https://ipfs.io/ipfs/')
+            }
             this.playerInfo.allNfts.push({
               token_id: result[v].token_id,
               nft_name: result[v].nft_name,
 
               // ipfs://QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
               // https://ipfs.io/ipfs/QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
-              image: image.replace('ipfs://', 'https://ipfs.io/ipfs/')
+              image: image
             })
           }
         }
       })
     },
     async mint () {
-      console.log('[mint] start')
       await this.login()
 
       const _that = this
@@ -548,7 +547,6 @@ export default {
     close () {
       const _that = this
       _that.showInfo.profile = false
-      _that.showInfo.game = false
     },
     click () {
       const message = {
@@ -558,9 +556,11 @@ export default {
       sendMessage(message)
     },
     async myFloor () {
+      console.log('click myFloor')
       this.resetPopWindow() // reset
       this.resetMintFloor() // reset
-      console.log('click myFloor')
+      this.setting.loading = true // loading open
+
       await this.login()
 
       if (this.showInfo.myFloor) {
@@ -593,9 +593,7 @@ export default {
           })
         }
       })
-
-      // this.playerInfo.mintFloorTokenId = mintFloorTokenId
-      // this.playerInfo.mintFloorNumId = mintFloorNumId
+      this.setting.loading = false // loading close
     },
     async myFollowing () {
       this.resetPopWindow() // reset
@@ -609,24 +607,8 @@ export default {
         _that.showInfo.myFollowing = true
       }
 
-      // 独立出去
-      // const result = ajaxGetMyFollower(window.ethereum.selectedAddress)
-      // console.log('return result:', result)
-      // get all my followering list
-      const url = apiServer + '/followerpeople/listbymefollower?from=' + window.ethereum.selectedAddress
-      await axios.post(url).then(response => {
-        const data = response.data
-        console.log('response-2:', data)
-        if (data.Code !== 0) {
-          console.log('get error, please try again')
-        } else {
-          for (var v in data.Data) {
-            console.log('获取我的关注列表', data.Data[v])
-          }
-
-          this.playerInfo.myFollowing = data.Data
-        }
-      })
+      // call
+      this.playerInfo.myFollowing = await ajaxGetMyFollower('listbymefollower', window.ethereum.selectedAddress)
     },
     async myFollowed () {
       this.resetPopWindow() // reset
@@ -640,36 +622,21 @@ export default {
         _that.showInfo.myFollowed = true
       }
 
-      // 独立出去
-      // const result = ajaxGetMyFollower(window.ethereum.selectedAddress)
-      // console.log('return result:', result)
-      // get all my followering list
-      const url = apiServer + '/followerpeople/listbyfollowerme?from=' + window.ethereum.selectedAddress
-      await axios.post(url).then(response => {
-        const data = response.data
-        console.log('response-2:', data)
-        if (data.Code !== 0) {
-          console.log('get error, please try again')
-        } else {
-          for (var v in data.Data) {
-            console.log('获取关注我的列表', data.Data[v])
-          }
-
-          this.playerInfo.myFollowed = data.Data
-        }
-      })
+      // call
+      this.playerInfo.myFollowed = await ajaxGetMyFollower('listbyfollowerme', window.ethereum.selectedAddress)
     },
     room () {
-      alert('room coming soon')
+      alert('room coming soon ')
     },
-    avatar () {
-      alert('avatar coming soon')
+    async avatar () {
+      // alert('avatar coming soon')
+
+      alert('插入测试数据.....')
+      await ajaxAddFollowerPeople(window.ethereum.selectedAddress, parseInt(Math.random() * 10000))
+      await ajaxAddFollowerToken(window.ethereum.selectedAddress, parseInt(Math.random() * 10000))
+      await ajaxAddTokenInfo(parseInt(Math.random() * 10000), parseInt(Math.random() * 10000))
     },
     async goto () {
-      const _that = this
-      console.log('[Main] floor id is ', this.gotoNum)
-      _that.search(this.gotoNum)
-      // return
       await this.appContractWriter.getTokenInfo(this.gotoNum).then(function (ret) {
         console.log('call getTokenInfo:', ret)
         const tokenId = parseInt(ret.tokenId)
@@ -682,97 +649,6 @@ export default {
         }
       })
     },
-    search (floorId) {
-      const _that = this
-      let start = 0
-      if (floorId > 0 && floorId <= 10000) {
-        if (floorId <= _that.building.page / 2) {
-          // start = 0
-        } else if (floorId >= 9995) {
-          start = 10000 - _that.building.page
-        } else {
-          start = floorId - _that.building.page / 2
-        }
-        // start = Math.ceil(floorId / 10) * 10
-      }
-      _that.building.start = start
-      localStorage.setItem('buildingStart', start)
-      _that.updateBuilding(start)
-    },
-    increment () {
-      const _that = this
-      let start = _that.getStart()
-      // start = Math.ceil( start / 500 )
-      if (start + 500 >= 10000) {
-        start = 10000 - 11
-      } else {
-        start += 500
-      }
-      _that.building.start = start
-      localStorage.setItem('buildingStart', start)
-      _that.updateBuilding(start)
-    },
-    decrement () {
-      const _that = this
-      let start = _that.getStart()
-      if (start < 500) {
-        start = 1
-      } else {
-        start -= 500
-      }
-      _that.building.start = start
-      localStorage.setItem('buildingStart', start)
-
-      _that.updateBuilding(start)
-    },
-    getStart () {
-      let start = localStorage.getItem('buildingStart')
-      if (!start || parseInt(start) < 1) {
-        start = 1
-      } else {
-        start = parseInt(start)
-      }
-      return start
-    },
-    lift (start) {
-      // 23 - 0
-      return {
-        'padding-top': (22.71 - (22.71 * start) / 10000) + 'vw'
-      }
-    },
-    updateBuilding (start, first = false) {
-      const _that = this
-      _that.building.floors = []
-      _that.building.height = Math.ceil(start / 500) + 1
-      if (start <= 6) {
-        first = true
-      }
-      for (let i = start; i < start + 12; i++) {
-        let floorId = _that.strPadLeft(i + 1)
-        if (i >= 10) {
-          let rand = 0
-          while (rand === 0) {
-            rand = Math.floor(Math.random(10) * 10)
-          }
-          floorId = _that.strPadLeft(rand)
-        }
-        _that.building.floors.push({ id: i, floorId: floorId, message: '', myFloor: i, order: 10 - i })
-      }
-      if (first) {
-        _that.building.floors.push({ id: 0, floorId: 'x', message: '', myFloor: 'The Hall', order: 99999 })
-      }
-    },
-    openGame (param) {
-      const _that = this
-      console.log('[Main] openGame param ', param)
-      _that.showInfo.game = true
-      _that.gameConfig.gameUrl =
-        _that.gameConfig.baseUrl +
-        '?floorId=' + param[0] +
-        '&address=' + '0x8989ad8' +
-        '&owned=' + '0'
-      console.log('[Main] openGame result ', _that.showInfo.game, _that.gameConfig.gameUrl)
-    },
     loadMore () {
       this.loading = true
       setTimeout(() => {
@@ -782,74 +658,16 @@ export default {
         }
         this.loading = false
       }, 2500)
-    },
-    strPadLeft (str, chr = '0', len = 5) {
-      // console.log('[Main] strPadLeft str ', str)
-      return chr.repeat(len - String(str).length) + String(str)
-    },
-    popupMessage (message) {
-      Toastify({
-        text: message,
-        duration: 3000,
-        position: 'center' // `left`, `center` or `right`
-      }).showToast()
-    },
-    copy () {
-      const _that = this
-      const clipboard = new Clipboard('.copy')
-      clipboard.on('success', e => {
-        _that.popupMessage('copy successfully')
-      })
-      clipboard.on('error', e => {
-        _that.popupMessage('copy failed')
-      })
     }
   },
   created () {
-    console.log('[Main] created start!')
+    console.log('[navigator] created start!')
     const _that = this
-
-    // _that.$toast({ message: '[navigator] created start!', duration: 3000 })
-    // _that.createToast('hello billo')
-
-    console.log('[Main] that ', _that.$Dapp)
-    const start = _that.getStart()
-    if (start <= 6) {
-      _that.building.first = true
-    }
-    _that.building.start = start
-
-    console.log('[Main] building ', _that.building)
-    _that.updateBuilding(start, _that.building.first)
+    console.log('[navigator] that ', _that.$Dapp)
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
-.game {
-  z-index: 200;
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  top: 0px;
-  left: 0px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: inherit;
-  background-color: rgb(4 4 4 / 90%);
-}
-.close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 30px;
-  height: 30px;
-  background: url(/images/close.png) -2px -2px no-repeat;
-  background-size: 30px 30px;
-}
 </style>
