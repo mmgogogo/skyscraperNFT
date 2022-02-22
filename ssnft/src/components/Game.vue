@@ -64,7 +64,7 @@ export default {
   right: 12px;
   width: 30px;
   height: 30px;
-  background: url(/images/close.png) -2px -2px no-repeat;
+  background: url(../assets/images/close.png) -2px -2px no-repeat;
   background-size: 30px 30px;
 }
 </style>

@@ -5,10 +5,11 @@
   "scripts": {
     "dev": "vue-cli-service serve",
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --ss && cp -R dist/* remote/",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "deploy": "sh deploy.sh"
   },
   "dependencies": {
     "ant-design-vue": "^1.7.8",
@@ -43,13 +44,15 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^7.0.0",
+    "hot-hash-webpack-plugin": "^1.0.2",
     "typescript": "~3.9.3",
-    "vue-jest": "^5.0.0-0"
+    "vue-jest": "^5.0.0-0",
+    "webpackbar": "^5.0.2"
   },
   "eslintConfig": {
-    "root": false,
+    "root": true,
     "env": {
-      "node": false
+      "node": true
     },
     "extends": [
       "plugin:vue/vue3-essential",
@@ -66,7 +69,7 @@
           "**/tests/unit/**/*.spec.{j,t}s?(x)"
         ],
         "env": {
-          "jest": false
+          "jest": true
         }
       }
     ]

@@ -217,10 +217,9 @@
             <div class="main4 flex-col"></div>
             <div class="main5 flex-col justify-between">
               <span class="txt3">Skyscraper&nbsp;Floor</span>
-              <span class="txt4">请输入你需要mint的楼层号</span>
-              <!-- <span class="txt4">
+              <span class="txt4">
                 Phanta&nbsp;Bear&nbsp;is&nbsp;a&nbsp;collection&nbsp;of&nbsp;10,000&nbsp;algorithmically&nbsp;generated&nbsp;digital&nbsp;collectibles&nbsp;that&nbsp;double&nbsp;as&nbsp;memebership&nbsp;cards&nbsp;for&nbsp;the&nbsp;Ezek&nbsp;Club.&nbsp;Each&nbsp;Phanta&nbsp;Bear&nbsp;has&nbsp;a&nbsp;unique&nbsp;set&nbsp;of&nbsp;traits&nbsp;and&nbsp;unlocks&nbsp;varying,&nbsp;unique&nbsp;levels&nbsp;of&nbsp;access&nbsp;and&nbsp;perks&nbsp;for&nbsp;its&nbsp;owner.&nbsp;Phanta&nbsp;Bear&nbsp;project&nbsp;was&nbsp;jointly&nbsp;launched&nbsp;by&nbsp;PHANTACi&nbsp;and&nbsp;Ezek
-              </span> -->
+              </span>
               <div class="mod2 flex-col justify-center btn-hand">
                 <span class="info7" @click="realMint()">MINT</span>
               </div>
@@ -229,18 +228,14 @@
           <div class="block2 flex-col">
             <div class="box13 flex-row">
               <div class="box14">
-                <span class="info10">楼层ID</span>
                 <span class="info10">Price</span>
                 <span class="word9">：</span>
-                <span class="word10">
-                  <input type="number" class="" placeholder="输入mint的楼层" v-model.number="mint_floor_num">
-                </span>
-                <!-- <span class="word10">0.26</span>
+                <span class="word10">0.26</span>
                 <span class="txt5"></span>
-                <span class="txt6">ETH</span> -->
+                <span class="txt6">ETH</span>
               </div>
             </div>
-            <!-- <div class="box15 flex-row justify-between">
+            <div class="box15 flex-row justify-between">
               <div class="main6 flex-col">
                 <div class="group6 flex-col"></div>
               </div>
@@ -248,9 +243,9 @@
               <div class="main7 flex-col">
                 <div class="group7 flex-col"></div>
               </div>
-            </div>-->
+            </div>
             <img class="pic1" referrerpolicy="no-referrer" src="../assets/images/floor_icon.png" alt=""/>
-            <!-- <span class="info11">Amount：</span> -->
+            <span class="info11">Amount：</span>
           </div>
         </div>
       </div>
@@ -410,7 +405,6 @@ export default {
       setting: {
         loading: false // loading
       },
-      mint_floor_num: '',
       building: {
         first: true,
         page: 12,
@@ -524,10 +518,10 @@ export default {
             // const image = JSON.parse(result[v].nft_json).image
             const imageInfo = JSON.parse(result[v].nft_json)
             let image = imageInfo.image // erc721
-            if (image === undefined || image === '') {
-              image = imageInfo.image_url // ens
+            if (image !== '') {
+              image = image.image_url // ens
             }
-            if (image !== undefined) {
+            if (image !== '') {
               image = image.replace('ipfs://', 'https://ipfs.io/ipfs/')
             }
             this.playerInfo.allNfts.push({
@@ -555,27 +549,20 @@ export default {
       // 添加关闭倒计时
     },
     async realMint () {
-      if (this.mint_floor_num <= 0) {
-        this.popupMessage('请输入正确的楼层号')
-        return
-      }
-      const floorNum = this.mint_floor_num
+      const floorNum = 1
       const floorPrice = ethers.utils.parseEther('0.1')
       console.log('realmint:::', floorNum, floorPrice)
 
       // All overrides are optional
       const overrides = {
-        // gasLimit: 23000, // default
-        // gasPrice: ethers.utils.parseUnits('9.0', 'gwei'), // default
-        gasPrice: 20000000000, // default
+        gasLimit: 23000, // default
+        gasPrice: ethers.utils.parseUnits('9.0', 'gwei'), // default
         value: floorPrice
       }
       await this.$Dapp.Bridges.writer.mint(floorNum, overrides).then(function (ret) {
         console.log(ret)
-        alert('已成功mint，请查看my floor.')
+        alert('你得到 NFT 的tokenID是：' + ret.events.MintToken.returnValues.tokenId)
       })
-      this.showInfo.mint = true
-
     },
     // closedd
     close () {
@@ -667,7 +654,6 @@ export default {
     async avatar () {
       this.popupMessage('插入测试数据.....')
       await ajaxAddFollowerPeople(window.ethereum.selectedAddress, parseInt(Math.random() * 10000))
-      await ajaxAddFollowerPeople(parseInt(Math.random() * 10000), window.ethereum.selectedAddress)
       await ajaxAddFollowerToken(window.ethereum.selectedAddress, parseInt(Math.random() * 10000))
       await ajaxAddTokenInfo(parseInt(Math.random() * 10000), parseInt(Math.random() * 10000))
     },

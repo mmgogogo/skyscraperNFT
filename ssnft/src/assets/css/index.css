@@ -165,7 +165,7 @@ input:focus
 .outer3 {
   width: 25px;
   height: 25px;
-  background: url(https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPngb756842dfb0fc0b0ca8892b9df43770b6bb4a0ecf389cfcaeb9a5a0e3bbc73af) 0px 0px no-repeat;
+  background: url(../images/fangdajing.png) 0px 0px no-repeat;
   margin-top: 4px;
   background-size: 25px 25px;
 }
@@ -200,8 +200,7 @@ input:focus
 
 .section4 {
   height: 58px;
-  background: url(https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPng73988e349ea0563ab9d5f0e8bb857be43da6e4f071afadeadd5a859184aecdc9) -1px -1px
-    no-repeat;
+  background: url(../images/go_bg.png) -1px -1px no-repeat;
   padding-top: 12px;
   width: 69px;
 }
@@ -685,8 +684,7 @@ input:focus
 .mod1 {
   width: 26px;
   height: 21px;
-  background: url(https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPng746d8bebf885d0a55cbd0a35b9d744abb8dc7dfd62514bd16509d64319e5fd8d) -3px -3px
-    no-repeat;
+  background: url(../images/avatar.png) -3px -3px no-repeat;
   margin-left: 10px;
 }
 
@@ -854,8 +852,7 @@ input:focus
   top: 12px;
   width: 58px;
   height: 11px;
-  background: url(https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPngcc0a98057514d5ecec2ecd9d46644fcb92739d1126481ca598cf04b3bb8d7a60)
-    3px -2px no-repeat;
+  background: url(../images/down.png) 3px -2px no-repeat;
 }
 
 .bd13 {

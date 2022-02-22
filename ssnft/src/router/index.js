@@ -1,17 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// import Home from '../views/Home.vue'
 
 const routes = [
+  { path: '/', redirect: { name: 'Home' } }, // 重定向'
+  { path: '/skyscraper', redirect: { name: 'Home' } }, // 重定向
   {
-    path: '/',
+    path: '/skyscraper/home',
     name: 'Home',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Home.vue')
+    component: () => import('../views/Home.vue')
   }
 ]
 
 // process.env.BASE_URL
 const router = createRouter({
   history: createWebHistory(),
+  base: '/skyscraper',
   routes
 })
 

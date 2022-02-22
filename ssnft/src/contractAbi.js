@@ -1,1060 +1,1060 @@
 const contractNFTTest = [
   {
-    inputs:[],
-    stateMutability:'nonpayable',
-    type:'constructor',
+    inputs: [],
+    stateMutability: 'nonpayable',
+    type: 'constructor'
   },
   {
-    anonymous:false,
-    inputs:[
+    anonymous: false,
+    inputs: [
       {
-        indexed:true,
-        internalType:'address',
-        name:'owner',
-        type:'address',
+        indexed: true,
+        internalType: 'address',
+        name: 'owner',
+        type: 'address'
       },
       {
-        indexed:true,
-        internalType:'address',
-        name:'approved',
-        type:'address',
+        indexed: true,
+        internalType: 'address',
+        name: 'approved',
+        type: 'address'
       },
       {
-        indexed:true,
-        internalType:'uint256',
-        name:'tokenId',
-        type:'uint256',
-      },
+        indexed: true,
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256'
+      }
     ],
-    name:'Approval',
-    type:'event',
+    name: 'Approval',
+    type: 'event'
   },
   {
-    anonymous:false,
-    inputs:[
+    anonymous: false,
+    inputs: [
       {
-        indexed:true,
-        internalType:'address',
-        name:'owner',
-        type:'address',
+        indexed: true,
+        internalType: 'address',
+        name: 'owner',
+        type: 'address'
       },
       {
-        indexed:true,
-        internalType:'address',
-        name:'operator',
-        type:'address',
+        indexed: true,
+        internalType: 'address',
+        name: 'operator',
+        type: 'address'
       },
       {
-        indexed:false,
-        internalType:'bool',
-        name:'approved',
-        type:'bool',
-      },
+        indexed: false,
+        internalType: 'bool',
+        name: 'approved',
+        type: 'bool'
+      }
     ],
-    name:'ApprovalForAll',
-    type:'event',
+    name: 'ApprovalForAll',
+    type: 'event'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'address',
-        name:'to',
-        type:'address',
+        internalType: 'address',
+        name: 'to',
+        type: 'address'
       },
       {
-        internalType:'uint256',
-        name:'tokenId',
-        type:'uint256',
-      },
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256'
+      }
     ],
-    name:'approve',
-    outputs:[],
-    stateMutability:'nonpayable',
-    type:'function',
+    name: 'approve',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'uint256',
-        name:'tokenId',
-        type:'uint256',
-      },
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256'
+      }
     ],
-    name:'burn',
-    outputs:[],
-    stateMutability:'nonpayable',
-    type:'function',
+    name: 'burn',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
   },
   {
-    anonymous:false,
-    inputs:[
+    anonymous: false,
+    inputs: [
       {
-        indexed:true,
-        internalType:'address',
-        name:'from',
-        type:'address',
+        indexed: true,
+        internalType: 'address',
+        name: 'from',
+        type: 'address'
       },
       {
-        indexed:true,
-        internalType:'address',
-        name:'to',
-        type:'address',
+        indexed: true,
+        internalType: 'address',
+        name: 'to',
+        type: 'address'
       },
       {
-        indexed:true,
-        internalType:'uint256',
-        name:'tokenId',
-        type:'uint256',
-      },
+        indexed: true,
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256'
+      }
     ],
-    name:'DeleteTokenInfo',
-    type:'event',
+    name: 'DeleteTokenInfo',
+    type: 'event'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'bytes32',
-        name:'role',
-        type:'bytes32',
+        internalType: 'bytes32',
+        name: 'role',
+        type: 'bytes32'
       },
       {
-        internalType:'address',
-        name:'account',
-        type:'address',
-      },
+        internalType: 'address',
+        name: 'account',
+        type: 'address'
+      }
     ],
-    name:'grantRole',
-    outputs:[],
-    stateMutability:'nonpayable',
-    type:'function',
+    name: 'grantRole',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'uint256',
-        name:'floor',
-        type:'uint256',
-      },
+        internalType: 'uint256',
+        name: 'floor',
+        type: 'uint256'
+      }
     ],
-    name:'mint',
-    outputs:[],
-    stateMutability:'payable',
-    type:'function',
+    name: 'mint',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function'
   },
   {
-    anonymous:false,
-    inputs:[
+    anonymous: false,
+    inputs: [
       {
-        indexed:true,
-        internalType:'address',
-        name:'from',
-        type:'address',
+        indexed: true,
+        internalType: 'address',
+        name: 'from',
+        type: 'address'
       },
       {
-        indexed:true,
-        internalType:'address',
-        name:'to',
-        type:'address',
+        indexed: true,
+        internalType: 'address',
+        name: 'to',
+        type: 'address'
       },
       {
-        indexed:true,
-        internalType:'uint256',
-        name:'tokenId',
-        type:'uint256',
-      },
+        indexed: true,
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256'
+      }
     ],
-    name:'MintToken',
-    type:'event',
+    name: 'MintToken',
+    type: 'event'
   },
   {
-    inputs:[],
-    name:'pause',
-    outputs:[],
-    stateMutability:'nonpayable',
-    type:'function',
+    inputs: [],
+    name: 'pause',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
   },
   {
-    anonymous:false,
-    inputs:[
+    anonymous: false,
+    inputs: [
       {
-        indexed:false,
-        internalType:'address',
-        name:'account',
-        type:'address',
-      },
+        indexed: false,
+        internalType: 'address',
+        name: 'account',
+        type: 'address'
+      }
     ],
-    name:'Paused',
-    type:'event',
+    name: 'Paused',
+    type: 'event'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'bytes32',
-        name:'role',
-        type:'bytes32',
+        internalType: 'bytes32',
+        name: 'role',
+        type: 'bytes32'
       },
       {
-        internalType:'address',
-        name:'account',
-        type:'address',
-      },
+        internalType: 'address',
+        name: 'account',
+        type: 'address'
+      }
     ],
-    name:'renounceRole',
-    outputs:[],
-    stateMutability:'nonpayable',
-    type:'function',
+    name: 'renounceRole',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'bytes32',
-        name:'role',
-        type:'bytes32',
+        internalType: 'bytes32',
+        name: 'role',
+        type: 'bytes32'
       },
       {
-        internalType:'address',
-        name:'account',
-        type:'address',
-      },
+        internalType: 'address',
+        name: 'account',
+        type: 'address'
+      }
     ],
-    name:'revokeRole',
-    outputs:[],
-    stateMutability:'nonpayable',
-    type:'function',
+    name: 'revokeRole',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
   },
   {
-    anonymous:false,
-    inputs:[
+    anonymous: false,
+    inputs: [
       {
-        indexed:true,
-        internalType:'bytes32',
-        name:'role',
-        type:'bytes32',
+        indexed: true,
+        internalType: 'bytes32',
+        name: 'role',
+        type: 'bytes32'
       },
       {
-        indexed:true,
-        internalType:'bytes32',
-        name:'previousAdminRole',
-        type:'bytes32',
+        indexed: true,
+        internalType: 'bytes32',
+        name: 'previousAdminRole',
+        type: 'bytes32'
       },
       {
-        indexed:true,
-        internalType:'bytes32',
-        name:'newAdminRole',
-        type:'bytes32',
-      },
+        indexed: true,
+        internalType: 'bytes32',
+        name: 'newAdminRole',
+        type: 'bytes32'
+      }
     ],
-    name:'RoleAdminChanged',
-    type:'event',
+    name: 'RoleAdminChanged',
+    type: 'event'
   },
   {
-    anonymous:false,
-    inputs:[
+    anonymous: false,
+    inputs: [
       {
-        indexed:true,
-        internalType:'bytes32',
-        name:'role',
-        type:'bytes32',
+        indexed: true,
+        internalType: 'bytes32',
+        name: 'role',
+        type: 'bytes32'
       },
       {
-        indexed:true,
-        internalType:'address',
-        name:'account',
-        type:'address',
+        indexed: true,
+        internalType: 'address',
+        name: 'account',
+        type: 'address'
       },
       {
-        indexed:true,
-        internalType:'address',
-        name:'sender',
-        type:'address',
-      },
+        indexed: true,
+        internalType: 'address',
+        name: 'sender',
+        type: 'address'
+      }
     ],
-    name:'RoleGranted',
-    type:'event',
+    name: 'RoleGranted',
+    type: 'event'
   },
   {
-    anonymous:false,
-    inputs:[
+    anonymous: false,
+    inputs: [
       {
-        indexed:true,
-        internalType:'bytes32',
-        name:'role',
-        type:'bytes32',
+        indexed: true,
+        internalType: 'bytes32',
+        name: 'role',
+        type: 'bytes32'
       },
       {
-        indexed:true,
-        internalType:'address',
-        name:'account',
-        type:'address',
+        indexed: true,
+        internalType: 'address',
+        name: 'account',
+        type: 'address'
       },
       {
-        indexed:true,
-        internalType:'address',
-        name:'sender',
-        type:'address',
-      },
+        indexed: true,
+        internalType: 'address',
+        name: 'sender',
+        type: 'address'
+      }
     ],
-    name:'RoleRevoked',
-    type:'event',
+    name: 'RoleRevoked',
+    type: 'event'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'address',
-        name:'from',
-        type:'address',
+        internalType: 'address',
+        name: 'from',
+        type: 'address'
       },
       {
-        internalType:'address',
-        name:'to',
-        type:'address',
+        internalType: 'address',
+        name: 'to',
+        type: 'address'
       },
       {
-        internalType:'uint256',
-        name:'tokenId',
-        type:'uint256',
-      },
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256'
+      }
     ],
-    name:'safeTransferFrom',
-    outputs:[],
-    stateMutability:'nonpayable',
-    type:'function',
+    name: 'safeTransferFrom',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'address',
-        name:'from',
-        type:'address',
+        internalType: 'address',
+        name: 'from',
+        type: 'address'
       },
       {
-        internalType:'address',
-        name:'to',
-        type:'address',
+        internalType: 'address',
+        name: 'to',
+        type: 'address'
       },
       {
-        internalType:'uint256',
-        name:'tokenId',
-        type:'uint256',
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256'
       },
       {
-        internalType:'bytes',
-        name:'_data',
-        type:'bytes',
-      },
+        internalType: 'bytes',
+        name: '_data',
+        type: 'bytes'
+      }
     ],
-    name:'safeTransferFrom',
-    outputs:[],
-    stateMutability:'nonpayable',
-    type:'function',
+    name: 'safeTransferFrom',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'address',
-        name:'operator',
-        type:'address',
+        internalType: 'address',
+        name: 'operator',
+        type: 'address'
       },
       {
-        internalType:'bool',
-        name:'approved',
-        type:'bool',
-      },
+        internalType: 'bool',
+        name: 'approved',
+        type: 'bool'
+      }
     ],
-    name:'setApprovalForAll',
-    outputs:[],
-    stateMutability:'nonpayable',
-    type:'function',
+    name: 'setApprovalForAll',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
   },
   {
-    anonymous:false,
-    inputs:[
+    anonymous: false,
+    inputs: [
       {
-        indexed:true,
-        internalType:'address',
-        name:'from',
-        type:'address',
+        indexed: true,
+        internalType: 'address',
+        name: 'from',
+        type: 'address'
       },
       {
-        indexed:true,
-        internalType:'address',
-        name:'to',
-        type:'address',
+        indexed: true,
+        internalType: 'address',
+        name: 'to',
+        type: 'address'
       },
       {
-        indexed:true,
-        internalType:'uint256',
-        name:'tokenId',
-        type:'uint256',
-      },
+        indexed: true,
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256'
+      }
     ],
-    name:'Transfer',
-    type:'event',
+    name: 'Transfer',
+    type: 'event'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'address',
-        name:'from',
-        type:'address',
+        internalType: 'address',
+        name: 'from',
+        type: 'address'
       },
       {
-        internalType:'address',
-        name:'to',
-        type:'address',
+        internalType: 'address',
+        name: 'to',
+        type: 'address'
       },
       {
-        internalType:'uint256',
-        name:'tokenId',
-        type:'uint256',
-      },
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256'
+      }
     ],
-    name:'transferFrom',
-    outputs:[],
-    stateMutability:'nonpayable',
-    type:'function',
+    name: 'transferFrom',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
   },
   {
-    inputs:[],
-    name:'unpause',
-    outputs:[],
-    stateMutability:'nonpayable',
-    type:'function',
+    inputs: [],
+    name: 'unpause',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
   },
   {
-    anonymous:false,
-    inputs:[
+    anonymous: false,
+    inputs: [
       {
-        indexed:false,
-        internalType:'address',
-        name:'account',
-        type:'address',
-      },
+        indexed: false,
+        internalType: 'address',
+        name: 'account',
+        type: 'address'
+      }
     ],
-    name:'Unpaused',
-    type:'event',
+    name: 'Unpaused',
+    type: 'event'
   },
   {
-    inputs:[],
-    name:'withdraw',
-    outputs:[],
-    stateMutability:'nonpayable',
-    type:'function',
+    inputs: [],
+    name: 'withdraw',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'uint256',
-        name:'',
-        type:'uint256',
-      },
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
     ],
-    name:'_floorTokenMap',
-    outputs:[
+    name: '_floorTokenMap',
+    outputs: [
       {
-        internalType:'uint256',
-        name:'floorNo',
-        type:'uint256',
+        internalType: 'uint256',
+        name: 'floorNo',
+        type: 'uint256'
       },
       {
-        internalType:'address',
-        name:'owner',
-        type:'address',
+        internalType: 'address',
+        name: 'owner',
+        type: 'address'
       },
       {
-        internalType:'uint256',
-        name:'tokenId',
-        type:'uint256',
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256'
       },
       {
-        components:[
+        components: [
           {
-            internalType:'uint256',
-            name:'sittingRoom',
-            type:'uint256',
+            internalType: 'uint256',
+            name: 'sittingRoom',
+            type: 'uint256'
           },
           {
-            internalType:'uint256',
-            name:'bedroom',
-            type:'uint256',
+            internalType: 'uint256',
+            name: 'bedroom',
+            type: 'uint256'
           },
           {
-            internalType:'uint256',
-            name:'room2',
-            type:'uint256',
+            internalType: 'uint256',
+            name: 'room2',
+            type: 'uint256'
           },
           {
-            internalType:'uint256',
-            name:'room3',
-            type:'uint256',
+            internalType: 'uint256',
+            name: 'room3',
+            type: 'uint256'
           },
           {
-            internalType:'uint256',
-            name:'room4',
-            type:'uint256',
-          },
+            internalType: 'uint256',
+            name: 'room4',
+            type: 'uint256'
+          }
         ],
-        internalType:'struct IBuilding.HouseType',
-        name:'houseType',
-        type:'tuple',
+        internalType: 'struct IBuilding.HouseType',
+        name: 'houseType',
+        type: 'tuple'
       },
       {
-        internalType:'bytes',
-        name:'uri',
-        type:'bytes',
-      },
+        internalType: 'bytes',
+        name: 'uri',
+        type: 'bytes'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[],
-    name:'_mintPrice',
-    outputs:[
+    inputs: [],
+    name: '_mintPrice',
+    outputs: [
       {
-        internalType:'uint256',
-        name:'',
-        type:'uint256',
-      },
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'uint256',
-        name:'',
-        type:'uint256',
-      },
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
     ],
-    name:'_tokenFloorMap',
-    outputs:[
+    name: '_tokenFloorMap',
+    outputs: [
       {
-        internalType:'uint256',
-        name:'',
-        type:'uint256',
-      },
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'address',
-        name:'owner',
-        type:'address',
-      },
+        internalType: 'address',
+        name: 'owner',
+        type: 'address'
+      }
     ],
-    name:'balanceOf',
-    outputs:[
+    name: 'balanceOf',
+    outputs: [
       {
-        internalType:'uint256',
-        name:'',
-        type:'uint256',
-      },
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[],
-    name:'DEFAULT_ADMIN_ROLE',
-    outputs:[
+    inputs: [],
+    name: 'DEFAULT_ADMIN_ROLE',
+    outputs: [
       {
-        internalType:'bytes32',
-        name:'',
-        type:'bytes32',
-      },
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'uint256',
-        name:'tokenId',
-        type:'uint256',
-      },
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256'
+      }
     ],
-    name:'getApproved',
-    outputs:[
+    name: 'getApproved',
+    outputs: [
       {
-        internalType:'address',
-        name:'',
-        type:'address',
-      },
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'uint256',
-        name:'floor',
-        type:'uint256',
-      },
+        internalType: 'uint256',
+        name: 'floor',
+        type: 'uint256'
+      }
     ],
-    name:'getFloorInfo',
-    outputs:[
+    name: 'getFloorInfo',
+    outputs: [
       {
-        components:[
+        components: [
           {
-            internalType:'uint256',
-            name:'floorNo',
-            type:'uint256',
+            internalType: 'uint256',
+            name: 'floorNo',
+            type: 'uint256'
           },
           {
-            internalType:'address',
-            name:'owner',
-            type:'address',
+            internalType: 'address',
+            name: 'owner',
+            type: 'address'
           },
           {
-            internalType:'uint256',
-            name:'tokenId',
-            type:'uint256',
+            internalType: 'uint256',
+            name: 'tokenId',
+            type: 'uint256'
           },
           {
-            components:[
+            components: [
               {
-                internalType:'uint256',
-                name:'sittingRoom',
-                type:'uint256',
+                internalType: 'uint256',
+                name: 'sittingRoom',
+                type: 'uint256'
               },
               {
-                internalType:'uint256',
-                name:'bedroom',
-                type:'uint256',
+                internalType: 'uint256',
+                name: 'bedroom',
+                type: 'uint256'
               },
               {
-                internalType:'uint256',
-                name:'room2',
-                type:'uint256',
+                internalType: 'uint256',
+                name: 'room2',
+                type: 'uint256'
               },
               {
-                internalType:'uint256',
-                name:'room3',
-                type:'uint256',
+                internalType: 'uint256',
+                name: 'room3',
+                type: 'uint256'
               },
               {
-                internalType:'uint256',
-                name:'room4',
-                type:'uint256',
-              },
+                internalType: 'uint256',
+                name: 'room4',
+                type: 'uint256'
+              }
             ],
-            internalType:'struct IBuilding.HouseType',
-            name:'houseType',
-            type:'tuple',
+            internalType: 'struct IBuilding.HouseType',
+            name: 'houseType',
+            type: 'tuple'
           },
           {
-            internalType:'bytes',
-            name:'uri',
-            type:'bytes',
-          },
+            internalType: 'bytes',
+            name: 'uri',
+            type: 'bytes'
+          }
         ],
-        internalType:'struct IBuilding.Floor',
-        name:'',
-        type:'tuple',
-      },
+        internalType: 'struct IBuilding.Floor',
+        name: '',
+        type: 'tuple'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'bytes32',
-        name:'role',
-        type:'bytes32',
-      },
+        internalType: 'bytes32',
+        name: 'role',
+        type: 'bytes32'
+      }
     ],
-    name:'getRoleAdmin',
-    outputs:[
+    name: 'getRoleAdmin',
+    outputs: [
       {
-        internalType:'bytes32',
-        name:'',
-        type:'bytes32',
-      },
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'bytes32',
-        name:'role',
-        type:'bytes32',
+        internalType: 'bytes32',
+        name: 'role',
+        type: 'bytes32'
       },
       {
-        internalType:'uint256',
-        name:'index',
-        type:'uint256',
-      },
+        internalType: 'uint256',
+        name: 'index',
+        type: 'uint256'
+      }
     ],
-    name:'getRoleMember',
-    outputs:[
+    name: 'getRoleMember',
+    outputs: [
       {
-        internalType:'address',
-        name:'',
-        type:'address',
-      },
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'bytes32',
-        name:'role',
-        type:'bytes32',
-      },
+        internalType: 'bytes32',
+        name: 'role',
+        type: 'bytes32'
+      }
     ],
-    name:'getRoleMemberCount',
-    outputs:[
+    name: 'getRoleMemberCount',
+    outputs: [
       {
-        internalType:'uint256',
-        name:'',
-        type:'uint256',
-      },
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'uint256',
-        name:'tokenId',
-        type:'uint256',
-      },
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256'
+      }
     ],
-    name:'getTokenInfo',
-    outputs:[
+    name: 'getTokenInfo',
+    outputs: [
       {
-        components:[
+        components: [
           {
-            internalType:'uint256',
-            name:'floorNo',
-            type:'uint256',
+            internalType: 'uint256',
+            name: 'floorNo',
+            type: 'uint256'
           },
           {
-            internalType:'address',
-            name:'owner',
-            type:'address',
+            internalType: 'address',
+            name: 'owner',
+            type: 'address'
           },
           {
-            internalType:'uint256',
-            name:'tokenId',
-            type:'uint256',
+            internalType: 'uint256',
+            name: 'tokenId',
+            type: 'uint256'
           },
           {
-            components:[
+            components: [
               {
-                internalType:'uint256',
-                name:'sittingRoom',
-                type:'uint256',
+                internalType: 'uint256',
+                name: 'sittingRoom',
+                type: 'uint256'
               },
               {
-                internalType:'uint256',
-                name:'bedroom',
-                type:'uint256',
+                internalType: 'uint256',
+                name: 'bedroom',
+                type: 'uint256'
               },
               {
-                internalType:'uint256',
-                name:'room2',
-                type:'uint256',
+                internalType: 'uint256',
+                name: 'room2',
+                type: 'uint256'
               },
               {
-                internalType:'uint256',
-                name:'room3',
-                type:'uint256',
+                internalType: 'uint256',
+                name: 'room3',
+                type: 'uint256'
               },
               {
-                internalType:'uint256',
-                name:'room4',
-                type:'uint256',
-              },
+                internalType: 'uint256',
+                name: 'room4',
+                type: 'uint256'
+              }
             ],
-            internalType:'struct IBuilding.HouseType',
-            name:'houseType',
-            type:'tuple',
+            internalType: 'struct IBuilding.HouseType',
+            name: 'houseType',
+            type: 'tuple'
           },
           {
-            internalType:'bytes',
-            name:'uri',
-            type:'bytes',
-          },
+            internalType: 'bytes',
+            name: 'uri',
+            type: 'bytes'
+          }
         ],
-        internalType:'struct IBuilding.Floor',
-        name:'',
-        type:'tuple',
-      },
+        internalType: 'struct IBuilding.Floor',
+        name: '',
+        type: 'tuple'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'address',
-        name:'owner',
-        type:'address',
-      },
+        internalType: 'address',
+        name: 'owner',
+        type: 'address'
+      }
     ],
-    name:'getUserInfo',
-    outputs:[
+    name: 'getUserInfo',
+    outputs: [
       {
-        internalType:'uint256[]',
-        name:'',
-        type:'uint256[]',
-      },
+        internalType: 'uint256[]',
+        name: '',
+        type: 'uint256[]'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'bytes32',
-        name:'role',
-        type:'bytes32',
+        internalType: 'bytes32',
+        name: 'role',
+        type: 'bytes32'
       },
       {
-        internalType:'address',
-        name:'account',
-        type:'address',
-      },
+        internalType: 'address',
+        name: 'account',
+        type: 'address'
+      }
     ],
-    name:'hasRole',
-    outputs:[
+    name: 'hasRole',
+    outputs: [
       {
-        internalType:'bool',
-        name:'',
-        type:'bool',
-      },
+        internalType: 'bool',
+        name: '',
+        type: 'bool'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'address',
-        name:'owner',
-        type:'address',
+        internalType: 'address',
+        name: 'owner',
+        type: 'address'
       },
       {
-        internalType:'address',
-        name:'operator',
-        type:'address',
-      },
+        internalType: 'address',
+        name: 'operator',
+        type: 'address'
+      }
     ],
-    name:'isApprovedForAll',
-    outputs:[
+    name: 'isApprovedForAll',
+    outputs: [
       {
-        internalType:'bool',
-        name:'',
-        type:'bool',
-      },
+        internalType: 'bool',
+        name: '',
+        type: 'bool'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[],
-    name:'MINTER_ROLE',
-    outputs:[
+    inputs: [],
+    name: 'MINTER_ROLE',
+    outputs: [
       {
-        internalType:'bytes32',
-        name:'',
-        type:'bytes32',
-      },
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[],
-    name:'name',
-    outputs:[
+    inputs: [],
+    name: 'name',
+    outputs: [
       {
-        internalType:'string',
-        name:'',
-        type:'string',
-      },
+        internalType: 'string',
+        name: '',
+        type: 'string'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'uint256',
-        name:'tokenId',
-        type:'uint256',
-      },
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256'
+      }
     ],
-    name:'ownerOf',
-    outputs:[
+    name: 'ownerOf',
+    outputs: [
       {
-        internalType:'address',
-        name:'',
-        type:'address',
-      },
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[],
-    name:'paused',
-    outputs:[
+    inputs: [],
+    name: 'paused',
+    outputs: [
       {
-        internalType:'bool',
-        name:'',
-        type:'bool',
-      },
+        internalType: 'bool',
+        name: '',
+        type: 'bool'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[],
-    name:'PAUSER_ROLE',
-    outputs:[
+    inputs: [],
+    name: 'PAUSER_ROLE',
+    outputs: [
       {
-        internalType:'bytes32',
-        name:'',
-        type:'bytes32',
-      },
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[],
-    name:'receiver',
-    outputs:[
+    inputs: [],
+    name: 'receiver',
+    outputs: [
       {
-        internalType:'address payable',
-        name:'',
-        type:'address',
-      },
+        internalType: 'address payable',
+        name: '',
+        type: 'address'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'bytes4',
-        name:'interfaceId',
-        type:'bytes4',
-      },
+        internalType: 'bytes4',
+        name: 'interfaceId',
+        type: 'bytes4'
+      }
     ],
-    name:'supportsInterface',
-    outputs:[
+    name: 'supportsInterface',
+    outputs: [
       {
-        internalType:'bool',
-        name:'',
-        type:'bool',
-      },
+        internalType: 'bool',
+        name: '',
+        type: 'bool'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[],
-    name:'symbol',
-    outputs:[
+    inputs: [],
+    name: 'symbol',
+    outputs: [
       {
-        internalType:'string',
-        name:'',
-        type:'string',
-      },
+        internalType: 'string',
+        name: '',
+        type: 'string'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'uint256',
-        name:'index',
-        type:'uint256',
-      },
+        internalType: 'uint256',
+        name: 'index',
+        type: 'uint256'
+      }
     ],
-    name:'tokenByIndex',
-    outputs:[
+    name: 'tokenByIndex',
+    outputs: [
       {
-        internalType:'uint256',
-        name:'',
-        type:'uint256',
-      },
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'address',
-        name:'owner',
-        type:'address',
+        internalType: 'address',
+        name: 'owner',
+        type: 'address'
       },
       {
-        internalType:'uint256',
-        name:'index',
-        type:'uint256',
-      },
+        internalType: 'uint256',
+        name: 'index',
+        type: 'uint256'
+      }
     ],
-    name:'tokenOfOwnerByIndex',
-    outputs:[
+    name: 'tokenOfOwnerByIndex',
+    outputs: [
       {
-        internalType:'uint256',
-        name:'',
-        type:'uint256',
-      },
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[
+    inputs: [
       {
-        internalType:'uint256',
-        name:'tokenId',
-        type:'uint256',
-      },
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256'
+      }
     ],
-    name:'tokenURI',
-    outputs:[
+    name: 'tokenURI',
+    outputs: [
       {
-        internalType:'string',
-        name:'',
-        type:'string',
-      },
+        internalType: 'string',
+        name: '',
+        type: 'string'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
+    stateMutability: 'view',
+    type: 'function'
   },
   {
-    inputs:[],
-    name:'totalSupply',
-    outputs:[
+    inputs: [],
+    name: 'totalSupply',
+    outputs: [
       {
-        internalType:'uint256',
-        name:'',
-        type:'uint256',
-      },
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
     ],
-    stateMutability:'view',
-    type:'function',
-  },
+    stateMutability: 'view',
+    type: 'function'
+  }
 ]
 export default contractNFTTest
