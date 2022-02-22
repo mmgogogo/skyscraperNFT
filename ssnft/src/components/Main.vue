@@ -655,7 +655,7 @@ export default {
     room () {
       this.popupMessage('room coming soon')
     },
-    avatar () {
+    async vatar () {
       this.popupMessage('插入测试数据.....')
       await ajaxAddFollowerPeople(window.ethereum.selectedAddress, parseInt(Math.random() * 10000))
       await ajaxAddFollowerToken(window.ethereum.selectedAddress, parseInt(Math.random() * 10000))
