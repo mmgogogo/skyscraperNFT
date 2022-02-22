@@ -39,7 +39,7 @@
     background-color: rgba(43, 46, 53, 1);
     box-shadow: inset 2px 2px 1px 0px rgba(0, 0, 0, 0.2);
     width: 2.66vw;
-    padding: 0.52vw 0 0 0.52vw;
+    padding: 0.52vw 0 0 0.4vw;
 }
 
 .lmain7 {
@@ -57,22 +57,37 @@
     padding-top: 1.93vw;
     width: 2.14vw;
     margin: 0.67vw 0 0 0.26vw;
+    /* height: 27.1vw;
+    background: url(../images/ladder/banner_bg2.png) -0.15vw 0vw no-repeat;
+    background-size: 2.44vw 28vw;
+    padding-top: 2vw;
+    width: 2.14vw;
+    margin: 0.4vw 0 0 0.4vw; */
 }
 
 .lsection4 {
     height: 22.71vw;
     background: url(../images/ladder/ladder_front.png)
         100% no-repeat;
-    padding-top: 8.03vw;
+    /* padding-top: 8.03vw; */
+    background-size: 1.41vw 22.71vw;
     width: 1.41vw;
 }
 
 .lmain8 {
-    height: 0.94vw;
+    /* height: 0.94vw;
     border-radius: 2px;
     background-color: rgba(252, 132, 76, 1);
     box-shadow: inset 1px 1px 1px 0px rgba(0, 0, 0, 0.05);
     padding-top: 0.16vw;
+    width: 1.41vw; */
+    height: 0.94vw;
+    position: relative;
+    border-radius: 2px;
+    background-color: rgba(252, 132, 76, 1);
+    box-shadow: inset 1px 1px 1px 0px rgba(0, 0, 0, 0.05);
+    padding-top: 0.09vw;
+    padding-left: 0.06vw;
     width: 1.41vw;
 }
 
