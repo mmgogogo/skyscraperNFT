@@ -323,9 +323,6 @@
 
 <script>
 import * as ethers from 'ethers'
-
-// import Game from '@/components/Game.vue'
-import sendMessage from '@/utils/Utils.js'
 import axios from 'axios'
 import Toastify from 'toastify-js'
 import 'toastify-js/src/toastify.css'
@@ -337,7 +334,7 @@ import sendMessage from '@/utils/Utils.js'
 import { ajaxAddFollowerPeople, ajaxAddFollowerToken, ajaxAddTokenInfo, ajaxGetHotToken, ajaxGetMyFollower } from '@/utils/AjaxData.js'
 
 // 服务器地址
-const serverUrl = '127.0.0.1:9950'
+const serverUrl = '47.75.51.251:9950'
 // const wsServer = 'ws://' + serverUrl + '/ws'
 const apiServer = 'http://' + serverUrl
 
