@@ -1,10 +1,10 @@
-import { createRouter, createWebHistory } from 'vue-router'
-
+import { createRouter, createWebHashHistory } from 'vue-router'
+// createWebHistory
 const routes = [
   { path: '/', redirect: { name: 'Home' } }, // 重定向'
   { path: '/skyscraper', redirect: { name: 'Home' } }, // 重定向
   {
-    path: '/skyscraper/home',
+    path: '/skyscraper/',
     name: 'Home',
     component: () => import('../views/Home.vue')
   }
@@ -12,7 +12,8 @@ const routes = [
 
 // process.env.BASE_URL
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
+  // mode: 'hash',
   base: '/skyscraper',
   routes
 })

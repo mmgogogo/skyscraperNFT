@@ -372,7 +372,8 @@ export default {
       },
       gameConfig: {
         total: 10000,
-        baseUrl: 'https://dontil.github.io/test/',
+        // baseUrl: 'https://dontil.github.io/test/',
+        baseUrl: 'https://kokoya-game-1308188195.file.myqcloud.com/dress/game/nft/index.html',
         gameUrl: ''
       },
       address: '',
@@ -575,7 +576,6 @@ export default {
         alert('已成功mint，请查看my floor.')
       })
       this.showInfo.mint = true
-
     },
     // closedd
     close () {
@@ -771,11 +771,16 @@ export default {
     openGame (param) {
       const _that = this
       console.log('[Main] openGame param ', param)
+      const address = _that.playerInfo.address
+      if (!address) {
+        _that.popupMessage('Login first')
+        return
+      }
       _that.showInfo.game = true
       _that.gameConfig.gameUrl =
         _that.gameConfig.baseUrl +
-        '?floorId=' + param[0] +
-        '&address=' + '0x8989ad8' +
+        '?roomId=' + param[0] +
+        '&wallet=' + address +
         '&owned=' + '0'
       console.log('[Main] openGame result ', _that.showInfo.game, _that.gameConfig.gameUrl)
     },
