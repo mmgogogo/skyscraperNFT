@@ -126,9 +126,9 @@ export async function ajaxGetAllNfts (address) {
     const data = response.data.Data
 
     // TODO not support more then 100 nft
-    console.log('[ajaxData] ajaxGetAllNfts response:', data.data)
+    console.log('[AjaxData] ajaxGetAllNfts response:', data)
     if (data.code === 200) {
-      const items = data.content
+      const items = data.data.content
       for (var v in items) {
         // const image = JSON.parse(result[v].nft_json).image
         const imageInfo = JSON.parse(items[v].nft_json)
