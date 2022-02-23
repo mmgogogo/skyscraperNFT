@@ -328,7 +328,7 @@
 
 <script>
 import * as ethers from 'ethers'
-import axios from 'axios'
+// import axios from 'axios'
 import Toastify from 'toastify-js'
 import 'toastify-js/src/toastify.css'
 import Clipboard from 'clipboard'
@@ -336,12 +336,12 @@ import Clipboard from 'clipboard'
 // import Game from '@/components/Game.vue'
 import Building from '@/components/Building.vue'
 import sendMessage from '@/utils/Utils.js'
-import { ajaxAddFollowerPeople, ajaxAddFollowerToken, ajaxAddTokenInfo, ajaxGetHotToken, ajaxGetMyFollower } from '@/utils/AjaxData.js'
+import { ajaxAddFollowerPeople, ajaxAddFollowerToken, ajaxAddTokenInfo, ajaxGetHotToken, ajaxGetMyFollower, ajaxGetAllNfts } from '@/utils/AjaxData.js'
 
 // 服务器地址
-const serverUrl = '47.75.51.251:9950'
+// const serverUrl = '47.75.51.251:9950'
 // const wsServer = 'ws://' + serverUrl + '/ws'
-const apiServer = 'http://' + serverUrl
+// const apiServer = 'http://' + serverUrl
 
 export default {
   name: 'Navigator',
@@ -451,7 +451,7 @@ export default {
         _that.playerInfo.status = 1
 
         if (isInit) {
-          alert('Metamask had connect success')
+          this.popupMessage('Metamask had connect success')
         }
       }
       const message = {
@@ -496,52 +496,8 @@ export default {
       _that.showInfo.profile = true
 
       // 独立出去
-      // ajaxGetAllNfts(window.ethereum.selectedAddress).then(response => {
-      //   console.log('ajaxGetAllNfts:', response)
-      //   for (var v in response.content) {
-      //     const image = JSON.parse(response.content[v].nft_json).image
-      //     this.playerInfo.allNfts.push({
-      //       token_id: response.content[v].token_id,
-      //       nft_name: response.content[v].nft_name,
-
-      //       // ipfs://QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
-      //       // https://ipfs.io/ipfs/QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
-      //       image: image.replace('ipfs://', 'https://ipfs.io/ipfs/')
-      //     })
-      //   }
-      // })
-      // get all my nft list
-      const url = apiServer + '/user/getallnft?address=' + window.ethereum.selectedAddress
-      await axios.post(url).then(response => {
-        const data = response.data.Data
-
-        // TODO not support more then 100 nft
-        console.log('[main][displayProfileInfo] response:', data.data)
-        if (data.code !== 200) {
-          alert('get error, please try again')
-        } else {
-          const result = data.data.content
-          for (var v in result) {
-            // const image = JSON.parse(result[v].nft_json).image
-            const imageInfo = JSON.parse(result[v].nft_json)
-            let image = imageInfo.image // erc721
-            if (image === undefined || image === '') {
-              image = imageInfo.image_url // ens
-            }
-            if (image !== undefined) {
-              image = image.replace('ipfs://', 'https://ipfs.io/ipfs/')
-            }
-            this.playerInfo.allNfts.push({
-              token_id: result[v].token_id,
-              nft_name: result[v].nft_name,
-
-              // ipfs://QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
-              // https://ipfs.io/ipfs/QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
-              image: image
-            })
-          }
-        }
-      })
+      this.playerInfo.allNfts = await ajaxGetAllNfts(window.ethereum.selectedAddress)
+      console.log('[Main][displayProfileInfo]', this.playerInfo.allNfts)
     },
     async mint () {
       console.log('[mint] start')
@@ -573,7 +529,7 @@ export default {
       }
       await this.$Dapp.Bridges.writer.mint(floorNum, overrides).then(function (ret) {
         console.log(ret)
-        alert('已成功mint，请查看my floor.')
+        this.popupMessage('已成功mint，请查看my floor.')
       })
       this.showInfo.mint = true
     },
@@ -613,7 +569,7 @@ export default {
         const len = parseInt(ret)
         console.log('[Main][myFloor] call balanceOf:', ret, len)
         if (len === 0) {
-          alert('Your have nothing nft')
+          this.popupMessage('Your have nothing nft')
           return
         }
 
@@ -677,14 +633,14 @@ export default {
       _that.search(this.gotoNum)
       // return
       await this.appContractWriter.getTokenInfo(this.gotoNum).then(function (ret) {
-        console.log('call getTokenInfo:', ret)
+        console.log('[Main][goto] call getTokenInfo:', ret)
         const tokenId = parseInt(ret.tokenId)
-        console.log('token id:', tokenId)
+        console.log('[Main][goto] token id:', tokenId)
         if (tokenId === 0) {
-          alert('this floor not available(may be you want to mint?), please input the right number')
+          this.popupMessage('this floor not available(may be you want to mint?), please input the right number')
         } else {
-          alert('going to the floor[' + tokenId + '] ...')
-          alert('coming soon :)')
+          this.popupMessage('going to the floor[' + tokenId + '] ...')
+          this.popupMessage('coming soon :)')
         }
       })
     },
