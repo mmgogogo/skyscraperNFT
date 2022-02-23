@@ -436,14 +436,14 @@ export default {
       e.stopPropagation()
     },
     navi () {
-      console.log('[navigator] navi ', this.$Dapp)
+      console.log('[navigator]navi ', this.$Dapp)
     },
     async login (isInit) {
       const _that = this
-      console.log('[Main] login ', _that.$Dapp)
+      console.log('[Main]login ', _that.$Dapp)
       await _that.$Dapp.connect()
       _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
-      console.log('address ', _that.playerInfo.address)
+      console.log('[Main]address ', _that.playerInfo.address)
 
       // set profile
       if (_that.playerInfo.address !== '') {
@@ -461,7 +461,7 @@ export default {
       sendMessage(message)
     },
     resetPopWindow () {
-      console.log('[resetPopWindow] start')
+      console.log('[Main][resetPopWindow] start')
       // reset all pop
       for (const item in this.showInfo) {
         this.showInfo[item] = false
@@ -516,7 +516,7 @@ export default {
         const data = response.data.Data
 
         // TODO not support more then 100 nft
-        console.log('response:', data.data)
+        console.log('[main][displayProfileInfo] response:', data.data)
         if (data.code !== 200) {
           alert('get error, please try again')
         } else {
@@ -611,7 +611,7 @@ export default {
 
       await contractWriter.balanceOf(address).then(function (ret) {
         const len = parseInt(ret)
-        console.log('call balanceOf:', ret, len)
+        console.log('[Main][myFloor] call balanceOf:', ret, len)
         if (len === 0) {
           alert('Your have nothing nft')
           return
@@ -619,10 +619,10 @@ export default {
 
         for (let i = 0; i < len; i++) {
           contractWriter.tokenOfOwnerByIndex(address, i).then(function (tokenId) {
-            console.log('call tokenOfOwnerByIndex:', tokenId)
+            console.log('[Main][myFloor]call tokenOfOwnerByIndex:', tokenId)
 
             contractWriter.getTokenInfo(tokenId).then(function (ret) {
-              console.log('call getTokenInfo:', ret)
+              console.log('[Main][myFloor]call getTokenInfo:', ret)
               playerInfo.mintFloorTokenId.push(parseInt(ret.tokenId))
               playerInfo.mintFloorNumId.push(parseInt(ret.floorNo))
             })
@@ -633,7 +633,7 @@ export default {
     },
     async myFollowing () {
       this.resetPopWindow() // reset
-      console.log('click myFollowing')
+      console.log('[Main][myFollowing]click myFollowing')
       await this.login()
 
       const _that = this
@@ -648,7 +648,7 @@ export default {
     },
     async myFollowed () {
       this.resetPopWindow() // reset
-      console.log('click myFollowed')
+      console.log('[Main][myFollowed]click myFollowed')
       await this.login()
 
       const _that = this
@@ -662,7 +662,7 @@ export default {
       this.playerInfo.myFollowed = await ajaxGetMyFollower('listbyfollowerme', window.ethereum.selectedAddress)
     },
     room () {
-      this.popupMessage('room coming soon')
+      this.popupMessage('[Main][room]room coming soon')
     },
     async avatar () {
       this.popupMessage('插入测试数据.....')
@@ -770,7 +770,7 @@ export default {
     },
     openGame (param) {
       const _that = this
-      console.log('[Main] openGame param ', param)
+      console.log('[Main][openGame] openGame param ', param)
       const address = _that.playerInfo.address
       if (!address) {
         _that.popupMessage('Login first')
@@ -782,7 +782,7 @@ export default {
         '?roomId=' + param[0] +
         '&wallet=' + address +
         '&owned=' + '0'
-      console.log('[Main] openGame result ', _that.showInfo.game, _that.gameConfig.gameUrl)
+      console.log('[Main][openGame] openGame result ', _that.showInfo.game, _that.gameConfig.gameUrl)
     },
     loadMore () {
       this.loading = true
@@ -824,17 +824,17 @@ export default {
     }
   },
   created () {
-    console.log('[Main] created start!')
+    console.log('[Main][created] created start!')
     const _that = this
 
-    console.log('[Main] that ', _that.$Dapp)
+    console.log('[Main][created] that ', _that.$Dapp)
     const start = _that.getStart()
     if (start <= 6) {
       _that.building.first = true
     }
     _that.building.start = start
 
-    console.log('[Main] building ', _that.building)
+    console.log('[Main][created] building ', _that.building)
     _that.updateBuilding(start, _that.building.first)
   }
 }
