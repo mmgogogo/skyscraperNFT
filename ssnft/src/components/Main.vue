@@ -798,11 +798,18 @@ export default {
       // console.log('[Main] strPadLeft str ', str)
       return chr.repeat(len - String(str).length) + String(str)
     },
-    popupMessage (message) {
+    popupMessage (message, gravity = 'top', position = 'center') {
       Toastify({
         text: message,
         duration: 3000,
-        position: 'center' // `left`, `center` or `right`
+        newWindow: true,
+        close: true,
+        gravity: gravity, // `top` or `bottom`
+        position: position, // `left`, `center` or `right`
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+        style: {
+          background: 'linear-gradient(to right, #00b09b, #96c93d)'
+        }
       }).showToast()
     },
     copy () {
