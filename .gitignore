@@ -9,3 +9,5 @@ ssnft/yarn.lock
 .gitignore
 .vscode/settings.json
 SpaceHuggers
+workspace.code-workspace
+yarn.lock
