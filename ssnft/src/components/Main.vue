@@ -318,7 +318,7 @@
     <div class="game" v-if="showInfo.game && gameConfig.gameUrl" @click="click()">
     <div class="close" @click="close()"></div>
     <iframe id="game" title="game" :src="gameConfig.gameUrl"
-    style="min-height:500px;height:768px;width:1080px;"
+    style="min-height:500px;height:1080px;width:1920px;"
     allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
     ></iframe>
   </div>
@@ -735,27 +735,27 @@ export default {
       }
 
       // send nft to iframe game
-      this.playerInfo.allNfts = await ajaxGetAllNfts(window.ethereum.selectedAddress)
-      const message = {
-        source: 'web',
-        type: 'nftList',
-        data: []
-      }
+      // this.playerInfo.allNfts = await ajaxGetAllNfts(window.ethereum.selectedAddress)
+      // const message = {
+      //   source: 'web',
+      //   type: 'nftList',
+      //   data: []
+      // }
 
-      for (var i in this.playerInfo.allNfts) {
-        const tmp = this.playerInfo.allNfts[i]
-        // console.log(i, this.playerInfo.allNfts[i])
-        message.data.push({ token_id: tmp.token_id, nft_name: tmp.nft_name, image: tmp.image })
-      }
-      sendMessage(message)
+      // for (var i in this.playerInfo.allNfts) {
+      //   const tmp = this.playerInfo.allNfts[i]
+      //   // console.log(i, this.playerInfo.allNfts[i])
+      //   message.data.push({ token_id: tmp.token_id, nft_name: tmp.nft_name, image: tmp.image })
+      // }
+      // sendMessage(message)
 
-      // _that.showInfo.game = true
-      // _that.gameConfig.gameUrl =
-      //   _that.gameConfig.baseUrl +
-      //   '?roomId=' + param[0] +
-      //   '&wallet=' + address +
-      //   '&owned=' + '0'
-      // console.log('[Main][openGame] openGame result ', _that.showInfo.game, _that.gameConfig.gameUrl)
+      _that.showInfo.game = true
+      _that.gameConfig.gameUrl =
+        _that.gameConfig.baseUrl +
+        '?roomId=' + param[0] +
+        '&wallet=' + address +
+        '&owned=' + '0'
+      console.log('[Main][openGame] openGame result ', _that.showInfo.game, _that.gameConfig.gameUrl)
     },
     loadMore () {
       this.loading = true

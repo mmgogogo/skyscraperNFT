@@ -5,6 +5,8 @@ set -e
 # build
 yarn run build
 
+cp -R CNAME dist/
+
 # navigate into the build output directory
 cd dist
 
