@@ -328,7 +328,7 @@
 
 <script>
 import * as ethers from 'ethers'
-import axios from 'axios'
+// import axios from 'axios'
 import Toastify from 'toastify-js'
 import 'toastify-js/src/toastify.css'
 import Clipboard from 'clipboard'
@@ -336,12 +336,12 @@ import Clipboard from 'clipboard'
 // import Game from '@/components/Game.vue'
 import Building from '@/components/Building.vue'
 import sendMessage from '@/utils/Utils.js'
-import { ajaxAddFollowerPeople, ajaxAddFollowerToken, ajaxAddTokenInfo, ajaxGetHotToken, ajaxGetMyFollower } from '@/utils/AjaxData.js'
+import { ajaxAddFollowerPeople, ajaxAddFollowerToken, ajaxAddTokenInfo, ajaxGetHotToken, ajaxGetMyFollower, ajaxGetAllNfts } from '@/utils/AjaxData.js'
 
 // 服务器地址
-const serverUrl = '47.75.51.251:9950'
+// const serverUrl = '47.75.51.251:9950'
 // const wsServer = 'ws://' + serverUrl + '/ws'
-const apiServer = 'http://' + serverUrl
+// const apiServer = 'http://' + serverUrl
 
 export default {
   name: 'Navigator',
@@ -436,14 +436,14 @@ export default {
       e.stopPropagation()
     },
     navi () {
-      console.log('[navigator] navi ', this.$Dapp)
+      console.log('[navigator]navi ', this.$Dapp)
     },
     async login (isInit) {
       const _that = this
-      console.log('[Main] login ', _that.$Dapp)
+      console.log('[Main]login ', _that.$Dapp)
       await _that.$Dapp.connect()
       _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
-      console.log('address ', _that.playerInfo.address)
+      console.log('[Main]address ', _that.playerInfo.address)
 
       // set profile
       if (_that.playerInfo.address !== '') {
@@ -451,7 +451,7 @@ export default {
         _that.playerInfo.status = 1
 
         if (isInit) {
-          alert('Metamask had connect success')
+          this.popupMessage('Metamask had connect success')
         }
       }
       const message = {
@@ -461,7 +461,7 @@ export default {
       sendMessage(message)
     },
     resetPopWindow () {
-      console.log('[resetPopWindow] start')
+      console.log('[Main][resetPopWindow] start')
       // reset all pop
       for (const item in this.showInfo) {
         this.showInfo[item] = false
@@ -496,52 +496,8 @@ export default {
       _that.showInfo.profile = true
 
       // 独立出去
-      // ajaxGetAllNfts(window.ethereum.selectedAddress).then(response => {
-      //   console.log('ajaxGetAllNfts:', response)
-      //   for (var v in response.content) {
-      //     const image = JSON.parse(response.content[v].nft_json).image
-      //     this.playerInfo.allNfts.push({
-      //       token_id: response.content[v].token_id,
-      //       nft_name: response.content[v].nft_name,
-
-      //       // ipfs://QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
-      //       // https://ipfs.io/ipfs/QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
-      //       image: image.replace('ipfs://', 'https://ipfs.io/ipfs/')
-      //     })
-      //   }
-      // })
-      // get all my nft list
-      const url = apiServer + '/user/getallnft?address=' + window.ethereum.selectedAddress
-      await axios.post(url).then(response => {
-        const data = response.data.Data
-
-        // TODO not support more then 100 nft
-        console.log('response:', data.data)
-        if (data.code !== 200) {
-          alert('get error, please try again')
-        } else {
-          const result = data.data.content
-          for (var v in result) {
-            // const image = JSON.parse(result[v].nft_json).image
-            const imageInfo = JSON.parse(result[v].nft_json)
-            let image = imageInfo.image // erc721
-            if (image === undefined || image === '') {
-              image = imageInfo.image_url // ens
-            }
-            if (image !== undefined) {
-              image = image.replace('ipfs://', 'https://ipfs.io/ipfs/')
-            }
-            this.playerInfo.allNfts.push({
-              token_id: result[v].token_id,
-              nft_name: result[v].nft_name,
-
-              // ipfs://QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
-              // https://ipfs.io/ipfs/QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
-              image: image
-            })
-          }
-        }
-      })
+      this.playerInfo.allNfts = await ajaxGetAllNfts(window.ethereum.selectedAddress)
+      console.log('[Main][displayProfileInfo]', this.playerInfo.allNfts)
     },
     async mint () {
       console.log('[mint] start')
@@ -573,7 +529,7 @@ export default {
       }
       await this.$Dapp.Bridges.writer.mint(floorNum, overrides).then(function (ret) {
         console.log(ret)
-        alert('已成功mint，请查看my floor.')
+        this.popupMessage('已成功mint，请查看my floor.')
       })
       this.showInfo.mint = true
     },
@@ -611,18 +567,18 @@ export default {
 
       await contractWriter.balanceOf(address).then(function (ret) {
         const len = parseInt(ret)
-        console.log('call balanceOf:', ret, len)
+        console.log('[Main][myFloor] call balanceOf:', ret, len)
         if (len === 0) {
-          alert('Your have nothing nft')
+          this.popupMessage('Your have nothing nft')
           return
         }
 
         for (let i = 0; i < len; i++) {
           contractWriter.tokenOfOwnerByIndex(address, i).then(function (tokenId) {
-            console.log('call tokenOfOwnerByIndex:', tokenId)
+            console.log('[Main][myFloor]call tokenOfOwnerByIndex:', tokenId)
 
             contractWriter.getTokenInfo(tokenId).then(function (ret) {
-              console.log('call getTokenInfo:', ret)
+              console.log('[Main][myFloor]call getTokenInfo:', ret)
               playerInfo.mintFloorTokenId.push(parseInt(ret.tokenId))
               playerInfo.mintFloorNumId.push(parseInt(ret.floorNo))
             })
@@ -633,7 +589,7 @@ export default {
     },
     async myFollowing () {
       this.resetPopWindow() // reset
-      console.log('click myFollowing')
+      console.log('[Main][myFollowing]click myFollowing')
       await this.login()
 
       const _that = this
@@ -648,7 +604,7 @@ export default {
     },
     async myFollowed () {
       this.resetPopWindow() // reset
-      console.log('click myFollowed')
+      console.log('[Main][myFollowed]click myFollowed')
       await this.login()
 
       const _that = this
@@ -662,7 +618,7 @@ export default {
       this.playerInfo.myFollowed = await ajaxGetMyFollower('listbyfollowerme', window.ethereum.selectedAddress)
     },
     room () {
-      this.popupMessage('room coming soon')
+      this.popupMessage('[Main][room]room coming soon')
     },
     async avatar () {
       this.popupMessage('插入测试数据.....')
@@ -677,14 +633,14 @@ export default {
       _that.search(this.gotoNum)
       // return
       await this.appContractWriter.getTokenInfo(this.gotoNum).then(function (ret) {
-        console.log('call getTokenInfo:', ret)
+        console.log('[Main][goto] call getTokenInfo:', ret)
         const tokenId = parseInt(ret.tokenId)
-        console.log('token id:', tokenId)
+        console.log('[Main][goto] token id:', tokenId)
         if (tokenId === 0) {
-          alert('this floor not available(may be you want to mint?), please input the right number')
+          this.popupMessage('this floor not available(may be you want to mint?), please input the right number')
         } else {
-          alert('going to the floor[' + tokenId + '] ...')
-          alert('coming soon :)')
+          this.popupMessage('going to the floor[' + tokenId + '] ...')
+          this.popupMessage('coming soon :)')
         }
       })
     },
@@ -768,22 +724,38 @@ export default {
         _that.building.floors.push({ id: 0, floorId: 'x', message: '', myFloor: 'The Hall', order: 99999, image: '../assets/images/walls/floor_x.png' })
       }
     },
-    openGame (param) {
+    async openGame (param) {
       const _that = this
-      console.log('[Main] openGame param ', param)
+      console.log('[Main][openGame] openGame param ', param)
       let address = _that.playerInfo.address
       if (!address) {
         // _that.popupMessage('Login first')
         // return
         address = '0x141721F4D7Fd95541396E74266FF272502Ec8899'
       }
-      _that.showInfo.game = true
-      _that.gameConfig.gameUrl =
-        _that.gameConfig.baseUrl +
-        '?roomId=' + param[0] +
-        '&wallet=' + address +
-        '&owned=' + '0'
-      console.log('[Main] openGame result ', _that.showInfo.game, _that.gameConfig.gameUrl)
+
+      // send nft to iframe game
+      this.playerInfo.allNfts = await ajaxGetAllNfts(window.ethereum.selectedAddress)
+      const message = {
+        source: 'web',
+        type: 'nftList',
+        data: []
+      }
+
+      for (var i in this.playerInfo.allNfts) {
+        const tmp = this.playerInfo.allNfts[i]
+        // console.log(i, this.playerInfo.allNfts[i])
+        message.data.push({ token_id: tmp.token_id, nft_name: tmp.nft_name, image: tmp.image })
+      }
+      sendMessage(message)
+
+      // _that.showInfo.game = true
+      // _that.gameConfig.gameUrl =
+      //   _that.gameConfig.baseUrl +
+      //   '?roomId=' + param[0] +
+      //   '&wallet=' + address +
+      //   '&owned=' + '0'
+      // console.log('[Main][openGame] openGame result ', _that.showInfo.game, _that.gameConfig.gameUrl)
     },
     loadMore () {
       this.loading = true
@@ -825,17 +797,17 @@ export default {
     }
   },
   created () {
-    console.log('[Main] created start!')
+    console.log('[Main][created] created start!')
     const _that = this
 
-    console.log('[Main] that ', _that.$Dapp)
+    console.log('[Main][created] that ', _that.$Dapp)
     const start = _that.getStart()
     if (start <= 6) {
       _that.building.first = true
     }
     _that.building.start = start
 
-    console.log('[Main] building ', _that.building)
+    console.log('[Main][created] building ', _that.building)
     _that.updateBuilding(start, _that.building.first)
   }
 }
