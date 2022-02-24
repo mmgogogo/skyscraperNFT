@@ -780,13 +780,13 @@ export default {
       }
       sendMessage(message)
 
-      // _that.showInfo.game = true
-      // _that.gameConfig.gameUrl =
-      //   _that.gameConfig.baseUrl +
-      //   '?roomId=' + param[0] +
-      //   '&wallet=' + address +
-      //   '&owned=' + '0'
-      // console.log('[Main][openGame] openGame result ', _that.showInfo.game, _that.gameConfig.gameUrl)
+      _that.showInfo.game = true
+      _that.gameConfig.gameUrl =
+        _that.gameConfig.baseUrl +
+        '?roomId=' + param[0] +
+        '&wallet=' + address +
+        '&owned=' + '0'
+      console.log('[Main][openGame] openGame result ', _that.showInfo.game, _that.gameConfig.gameUrl)
     },
     loadMore () {
       this.loading = true
