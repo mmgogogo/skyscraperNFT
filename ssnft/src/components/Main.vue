@@ -142,8 +142,8 @@
             </div>
             <div class="main6 flex-row">
               <div class="group10 flex-col">
-                <div class="layer flex-col justify-center" v-if="setting.loading">
-                  <span class="txt6">Loading...</span>
+                <div class="layer flex-col justify-center">
+                  <span class="txt6">{{setting.loading}}</span>
                 </div>
                 <div class="layer flex-col justify-center" v-for="v in playerInfo.mintFloorNumId" :key="v">
                   <span class="txt6">Floor Id:{{v}}</span>
@@ -162,6 +162,9 @@
             </div>
             <div class="main6 flex-row">
               <div class="group10 flex-col">
+                <div class="layer flex-col justify-center">
+                  <span class="txt6">{{setting.loading}}</span>
+                </div>
                 <div class="layer flex-col justify-center" v-for="v in playerInfo.myFollowing" :key="v.AddressTo">
                   <span class="txt6">玩家地址:{{v.AddressTo}}</span>
                 </div>
@@ -409,7 +412,7 @@ export default {
       },
       gotoNum: '',
       setting: {
-        loading: false // loading
+        loading: '' // loading
       },
       mint_floor_num: '',
       building: {
@@ -547,11 +550,12 @@ export default {
       sendMessage(message)
     },
     async myFloor () {
+      const _that = this
       console.log('[Main] myFloor click')
 
       this.resetPopWindow() // reset
       this.resetMintFloor() // reset
-      this.setting.loading = true // loading open
+      this.setting.loading = 'Loading...' // loading open
 
       await this.login()
 
@@ -564,16 +568,17 @@ export default {
       const address = window.ethereum.selectedAddress
       const contractWriter = this.$Dapp.Bridges.writer
       const playerInfo = this.playerInfo
+      const nftNum = 0
 
       await contractWriter.balanceOf(address).then(function (ret) {
-        const len = parseInt(ret)
-        console.log('[Main][myFloor] call balanceOf:', ret, len)
-        if (len === 0) {
-          this.popupMessage('Your have nothing nft')
+        const nftNum = parseInt(ret)
+        console.log('[Main][myFloor] call balanceOf:', ret, nftNum)
+        if (nftNum === 0) {
+          _that.popupMessage('Your have nothing nft')
           return
         }
 
-        for (let i = 0; i < len; i++) {
+        for (let i = 0; i < nftNum; i++) {
           contractWriter.tokenOfOwnerByIndex(address, i).then(function (tokenId) {
             console.log('[Main][myFloor]call tokenOfOwnerByIndex:', tokenId)
 
@@ -585,7 +590,10 @@ export default {
           })
         }
       })
-      this.setting.loading = false // loading close
+
+      if (nftNum === 0) {
+        this.setting.loading = 'Empty...'
+      }
     },
     async myFollowing () {
       this.resetPopWindow() // reset
@@ -598,9 +606,14 @@ export default {
       } else {
         _that.showInfo.myFollowing = true
       }
+      this.setting.loading = 'Loading...' // loading open
 
       // call
       this.playerInfo.myFollowing = await ajaxGetMyFollower('listbymefollower', window.ethereum.selectedAddress)
+
+      if (this.playerInfo.myFollowing === null || this.playerInfo.myFollowing.length === 0) {
+        this.setting.loading = 'Empty...'
+      }
     },
     async myFollowed () {
       this.resetPopWindow() // reset
