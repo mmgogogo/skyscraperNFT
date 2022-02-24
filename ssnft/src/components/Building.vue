@@ -30,6 +30,7 @@ import floor00007 from '../assets/images/walls/floor_00007.png'
 import floor00008 from '../assets/images/walls/floor_00008.png'
 import floor00009 from '../assets/images/walls/floor_00009.png'
 import floor00010 from '../assets/images/walls/floor_00010.png'
+import floorx from '../assets/images/walls/floor_x.png'
 
 export default {
   name: 'Floor',
@@ -63,7 +64,8 @@ export default {
         '00007': floor00007,
         '00008': floor00008,
         '00009': floor00009,
-        '00010': floor00010
+        '00010': floor00010,
+        x: floorx
       }
       return imageCfg[imagePath]
     },

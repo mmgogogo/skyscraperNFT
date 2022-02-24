@@ -771,10 +771,11 @@ export default {
     openGame (param) {
       const _that = this
       console.log('[Main] openGame param ', param)
-      const address = _that.playerInfo.address
+      let address = _that.playerInfo.address
       if (!address) {
-        _that.popupMessage('Login first')
-        return
+        // _that.popupMessage('Login first')
+        // return
+        address = '0x141721F4D7Fd95541396E74266FF272502Ec8899'
       }
       _that.showInfo.game = true
       _that.gameConfig.gameUrl =

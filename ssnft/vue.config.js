@@ -5,7 +5,7 @@ const resolve = (dir) => path.join(__dirname, '.', dir);
 
 module.exports = {
   productionSourceMap: false,
-  publicPath: '/skyscraper/',
+  publicPath: './',
   outputDir: 'dist',
   assetsDir: './',
   devServer: {
