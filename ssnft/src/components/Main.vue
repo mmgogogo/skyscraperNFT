@@ -102,7 +102,7 @@
       <!-- nav end -->
 
       <!-- content start -->
-      <div class="content flex-col">
+      <div class="content flex-col" @click='resetPopWindow()'>
         <Building :floors="building.floors" v-on:open-game="openGame"/>
         <!-- ladder start -->
         <div class="ladder flex-col">
@@ -142,7 +142,7 @@
             </div>
             <div class="main6 flex-row">
               <div class="group10 flex-col">
-                <div class="layer flex-col justify-center">
+                <div class="layer flex-col justify-center" v-if="setting.loading !== ''">
                   <span class="txt6">{{setting.loading}}</span>
                 </div>
                 <div class="layer flex-col justify-center" v-for="v in playerInfo.mintFloorNumId" :key="v">
@@ -162,7 +162,7 @@
             </div>
             <div class="main6 flex-row">
               <div class="group10 flex-col">
-                <div class="layer flex-col justify-center">
+                <div class="layer flex-col justify-center" v-if="setting.loading !== ''">
                   <span class="txt6">{{setting.loading}}</span>
                 </div>
                 <div class="layer flex-col justify-center" v-for="v in playerInfo.myFollowing" :key="v.AddressTo">
@@ -183,6 +183,9 @@
             </div>
             <div class="main6 flex-row">
               <div class="group10 flex-col">
+                <div class="layer flex-col justify-center" v-if="setting.loading !== ''">
+                  <span class="txt6">{{setting.loading}}</span>
+                </div>
                 <div class="layer flex-col justify-center" v-for="v in playerInfo.myFollowed" :key="v.AddressTo">
                   <span class="txt6">玩家地址:{{v.AddressFrom}}</span>
                 </div>
@@ -201,6 +204,9 @@
             </div>
             <div class="main6 flex-row">
               <div class="group10 flex-col">
+                <div class="layer flex-col justify-center" v-if="setting.loading !== ''">
+                  <span class="txt6">{{setting.loading}}</span>
+                </div>
                 <div class="layer flex-col justify-center" v-for="v in floorInfo.hotList" :key="v.TokenId">
                   <span class="txt6">楼层ID:{{v.TokenId}}， 热度:{{v.Num}}</span>
                 </div>
@@ -435,7 +441,7 @@ export default {
       _that.resetPopWindow()
     },
     onClickOutside (e) {
-      // console.log('[Main] onclick outside e ', e)
+      console.log('[Main] onclick outside e ', e)
       e.stopPropagation()
     },
     navi () {
@@ -474,21 +480,6 @@ export default {
       // reset all pop
       this.playerInfo.mintFloorNumId = []
       this.playerInfo.mintFloorTokenId = []
-    },
-    async hot () {
-      this.resetPopWindow() // reset
-
-      const _that = this
-      if (_that.showInfo.hot) {
-        _that.showInfo.hot = false
-      } else {
-        _that.showInfo.hot = true
-      }
-
-      const result = await ajaxGetHotToken()
-      console.log('[Main] hot list:', result)
-
-      this.floorInfo.hotList = result
     },
     async displayProfileInfo () {
       // show the profile
@@ -627,8 +618,35 @@ export default {
         _that.showInfo.myFollowed = true
       }
 
+      this.setting.loading = 'Loading...' // loading open
+
       // call
       this.playerInfo.myFollowed = await ajaxGetMyFollower('listbyfollowerme', window.ethereum.selectedAddress)
+
+      if (this.playerInfo.myFollowed === null || this.playerInfo.myFollowed.length === 0) {
+        this.setting.loading = 'Empty...'
+      }
+    },
+    async hot () {
+      this.resetPopWindow() // reset
+
+      const _that = this
+      if (_that.showInfo.hot) {
+        _that.showInfo.hot = false
+      } else {
+        _that.showInfo.hot = true
+      }
+
+      this.setting.loading = 'Loading...'
+
+      this.floorInfo.hotList = await ajaxGetHotToken()
+      console.log('[Main] hot list:', this.floorInfo.hotList)
+
+      if (this.floorInfo.hotList === null || this.floorInfo.hotList.length === 0) {
+        this.setting.loading = 'Empty...'
+      } else {
+        this.setting.loading = ''
+      }
     },
     room () {
       this.popupMessage('[Main][room]room coming soon')
