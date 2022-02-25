@@ -559,7 +559,6 @@ export default {
       const address = window.ethereum.selectedAddress
       const contractWriter = this.$Dapp.Bridges.writer
       const playerInfo = this.playerInfo
-      const nftNum = 0
 
       await contractWriter.balanceOf(address).then(function (ret) {
         const nftNum = parseInt(ret)
@@ -580,11 +579,13 @@ export default {
             })
           })
         }
-      })
 
-      if (nftNum === 0) {
-        this.setting.loading = 'Empty...'
-      }
+        if (nftNum === 0) {
+          _that.setting.loading = 'Empty...'
+        } else {
+          _that.setting.loading = ''
+        }
+      })
     },
     async myFollowing () {
       this.resetPopWindow() // reset
@@ -604,6 +605,8 @@ export default {
 
       if (this.playerInfo.myFollowing === null || this.playerInfo.myFollowing.length === 0) {
         this.setting.loading = 'Empty...'
+      } else {
+        this.setting.loading = ''
       }
     },
     async myFollowed () {
@@ -625,6 +628,8 @@ export default {
 
       if (this.playerInfo.myFollowed === null || this.playerInfo.myFollowed.length === 0) {
         this.setting.loading = 'Empty...'
+      } else {
+        this.setting.loading = ''
       }
     },
     async hot () {
