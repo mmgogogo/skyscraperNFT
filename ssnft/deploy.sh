@@ -6,6 +6,7 @@ set -e
 yarn run build
 
 cp -R CNAME dist/
+cp -R doc.md dist/
 
 # navigate into the build output directory
 cd dist

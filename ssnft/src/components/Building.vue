@@ -1,7 +1,19 @@
 <template>
 <div class="building flex-container align-end scroll" @scroll="handleScroll($event)">
   <div class="floor flex-row justify-between" v-for="(floorInfo, index) in floors" :key="index" :style="orderStyle(floorInfo.order)">
-    <div class="owner flex-col">
+    <div class="owner flex-container">
+      <div class="owner-card flex-col align-center">
+        <div class="owner-card-section flex-col">
+          <span class="owner-card-name">Bob Home</span>
+          <div class="owner-card-line flex-col"></div>
+          <div class="owner-card-value flex-row align-center">
+            <div class="owner-card-mod flex-col justify-center">
+              <div class="owner-card-layer flex-col"></div>
+            </div>
+            <span class="ower-card-word flex-col">167</span>
+          </div>
+        </div>
+      </div>
       <span class="message">{{ floorInfo.myFloor || defaultMsg }}</span>
     </div>
     <div class="room flex-col align-center" v-bind:class="[floorInfo.isFirst?'first':'']">
