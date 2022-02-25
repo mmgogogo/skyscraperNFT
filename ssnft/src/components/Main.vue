@@ -102,7 +102,7 @@
       <!-- nav end -->
 
       <!-- content start -->
-      <div class="content flex-col" @click='resetPopWindow()'>
+      <div class="content flex-col">
         <Building :floors="building.floors" v-on:open-game="openGame"/>
         <!-- ladder start -->
         <div class="ladder flex-col">
