@@ -17,7 +17,7 @@
     overflow-x: hidden;
 }
 .floor {
-    width: 100%;
+    width: 60vw;
     height: 5vw;
     /* margin-top: 20px; */
 }
@@ -27,7 +27,7 @@
     border-radius: 5px;
     /* background-color: rgb(196 199 223); */
     /* box-shadow: inset 2px 2px 1px 0px rgb(0 0 0 / 20%); */
-    width: 20%;
+    width: 12vw;
     padding: 19px 0 0 8px;
 }
 
@@ -36,7 +36,7 @@
     /* background-color: aliceblue; */
     background-color: rgb(26, 29, 30);
     padding: 0px;
-    width: 60%;
+    width: 36vw;
 }
 
 .decoration {
@@ -61,7 +61,7 @@
     height: 5vw;
     padding-top: 12px;
     /* background-color: #1adbdb4a; */
-    width: 20%;
+    width: 12vw;
     padding: 22px 0 0 16px;
 }
 
