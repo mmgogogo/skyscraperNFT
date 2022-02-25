@@ -23,7 +23,14 @@
       </div>
     </div>
     <div class="others flex-col">
-      <span class="message">{{ floorInfo.message || defaultMsg }}</span>
+      <!-- <span class="message">{{ floorInfo.message || defaultMsg }}</span> -->
+      <div class="board flex-row align-start">
+        <div class="board-container">
+          <span class="board-word flex-row">{{ floorInfo.id || '' }}</span>
+          <div class="board-icon flex-row"></div>
+        </div>
+        <span class="board-message">{{ floorInfo.message || defaultMsg }}</span>
+      </div>
     </div>
   </div>
 </div>

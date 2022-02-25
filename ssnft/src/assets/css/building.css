@@ -149,6 +149,57 @@
     text-shadow: 1px 1px 1px rgb(0 0 0 / 20%);
 }
 
+.board {
+    width: 9vw;
+    height: 3vw;
+    background-color: #544c4c;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.board-container {
+    width: auto;
+    max-width: 2vw;
+    height: 2vw;
+}
+
+.board-icon {
+    width: auto;
+    max-width: 2vw;
+    height: 2vw;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAGqADAAQAAAABAAAAGgAAAABMybYKAAAB8ElEQVRIDe1WO0/CUBilD6oUfA5MLm6MjiS6EFz4DY4mzo5s6Eb8C86GP9HJRMMCA3/A0cEoiVbBEqjnXG1zS6/pI8HJLzm97fkep7ffvVy0gsJ839dA6wBHIsl8BBALTdM4xsyMMd8ERXaBCpBWyEXsCzAHYvabEItXRqPRxWw2O8G9EcuME3PP865BnwMeEJkZ31xl4pNlEGENw7KsM4wHgEVCNp39AAzABIocpYA0M5HCRV/3Qcg1hJ/Ecj9m4J6EN9+lqEqjkKofY13Xj1QJeblwCS/1Y6fb7R7mLarKkxdDpB+TyYRLO7OVy2W91Wqx5wS/ljBZKODEKAdFHAkP9Xp9u9Pp7CGM+zCsH1sdCXUS3aVSyTBN834wGFTkfRUqJlbIFrCF8Mi+WpVQ8FqsL/bVqoUoKPbVXwiJ2f0LFdrt9mWj0Tjt9XpX4pukvGT+dI7jPFSr1Vvs/puUGrl7tKjVas/NZpMnamrLPCNWtm17kVrhJzCXUFYRxlOIZzsPu4jh11v5J4NBrusqc+j7LY9CLPgIjAFhOJve+/0+n0OODvIY/OFwGMsJ/HJeEE9feF7g3gaOgU2A9grcATwAyTGWMyHvAB+AnCP7g7wNxLwxXhbi7NaBgGPRT2BN4nArxKYYuSCWcwK/nMc60y+x0qgZoXHErAAAAABJRU5ErkJggg==) 0px 0px no-repeat;
+}
+
+.board-word {
+    width: 3vw;
+    height: 1vw;
+    /* display: block; */
+    overflow-wrap: break-word;
+    color: rgba(204, 204, 204, 1);
+    font-size: 12px;
+    font-family: DINAlternate-Bold;
+    white-space: nowrap;
+    line-height: 14px;
+    text-align: center;
+    text-shadow: 1px 1px 1px rgb(0 0 0 / 30%);
+    /* margin-left: 5px;*/
+}
+.board-message {
+    width: 6vw;
+    max-width: 8vw;
+    /* height: 3vw; */
+    margin: auto 0;
+    /* display: block; */
+    word-break: break-all;
+    /* overflow-wrap: break-word; */
+    color: rgba(255, 255, 255, 1);
+    font-size: 12px;
+    font-family: SFProDisplay-Medium;
+    white-space: normal;
+    /* line-height: 12px; */
+    text-align: left;
+}
+
 .chat {
     z-index: 58;
     height: 31px;
