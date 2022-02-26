@@ -103,7 +103,7 @@
 
       <!-- content start -->
       <div class="content flex-col" @click="onClick($event)">
-        <Building :floors="building.floors" v-on:open-game="openGame"/>
+        <Building :floors="building.floors" v-on:open-game="openGame"  v-on:floor-scroll="floorScroll"/>
         <!-- ladder start -->
         <div class="ladder flex-col">
           <div class="lmain6 flex-row justify-between">
@@ -455,7 +455,12 @@ export default {
       curMessage: '',
       building: {
         first: true,
-        page: 12,
+        page: 12, // max floors per page
+        min: 6, // curser min value
+        max: 9995, // curser max value
+        total: 10000, // total floors
+        wstep: 4, // wheel step per scroll
+        liftStep: 500, // lift step per increment
         scroll: 0,
         height: 0,
         start: 6,
@@ -492,20 +497,24 @@ export default {
     },
     async login (isInit) {
       const _that = this
-      console.log('[Main][login] Dapp is', _that.$Dapp)
       const dapp = _that.$Dapp
-      if (!dapp.Bridges.local ||
-          !_that.$Dapp.Bridges.ethereum ||
-          _that.playerInfo.address ||
-          _that.playerInfo.address !== '') {
-        await _that.$Dapp.connect()
-        _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
-        console.log('[Main] wallet address [%s]', _that.playerInfo.address)
+      console.log('[Main][login] Dapp is', dapp)
 
+      if (!dapp.isMetaMaskInstalled()) {
+        _that.popupMessage('Please install wallet plugin')
+        return
+      }
+      if (!dapp.Bridges.local || !dapp.Bridges.ethereum) {
+        console.log('[Main][login] connect')
+        await _that.$Dapp.connect()
+      } else {
+        _that.popupMessage('Metamask had connect success')
+      }
+      if (!_that.playerInfo.isLogin) {
+        _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
         _that.playerInfo.isLogin = true
         _that.playerInfo.status = 1
-      } else {
-        this.popupMessage('Metamask had connect success')
+        console.log('[Main] wallet address [%s]', _that.playerInfo.address)
       }
       // todo data
       // 这个要移一下位置绵绵
@@ -797,15 +806,14 @@ export default {
     search (floorId) {
       const _that = this
       let start = 0
-      if (floorId > 0 && floorId <= 10000) {
+      if (floorId > 0 && floorId <= _that.building.total) {
         if (floorId <= _that.building.page / 2) {
           // start = 0
-        } else if (floorId >= 9995) {
-          start = 10000 - _that.building.page
+        } else if (floorId >= _that.building.max) {
+          start = _that.building.total - _that.building.page
         } else {
           start = floorId - _that.building.page / 2
         }
-        // start = Math.ceil(floorId / 10) * 10
       }
       _that.building.start = start
       localStorage.setItem('buildingStart', start)
@@ -815,10 +823,10 @@ export default {
       const _that = this
       let start = _that.getStart()
       // start = Math.ceil( start / 500 )
-      if (start + 500 >= 10000) {
-        start = 10000 - 11
+      if (start + _that.building.liftStep >= _that.building.total) {
+        start = _that.building.total - 11
       } else {
-        start += 500
+        start += _that.building.liftStep
       }
       _that.building.start = start
       localStorage.setItem('buildingStart', start)
@@ -827,10 +835,10 @@ export default {
     decrement () {
       const _that = this
       let start = _that.getStart()
-      if (start < 500) {
+      if (start < _that.building.liftStep) {
         start = 1
       } else {
-        start -= 500
+        start -= _that.building.liftStep
       }
       _that.building.start = start
       localStorage.setItem('buildingStart', start)
@@ -856,7 +864,7 @@ export default {
       console.log('[Main][initBuilding] init start')
       const _that = this
       const start = _that.getStart()
-      if (start <= 6) {
+      if (start <= _that.building.min) {
         _that.building.first = true
       }
       _that.building.start = start
@@ -918,6 +926,33 @@ export default {
         }
         _that.building.floors.push(hallInfo)
       }
+    },
+    async floorScroll (event) {
+      const _that = this
+      const deltaY = event.deltaY
+      console.log('[Main][floorScroll] wheel event ', deltaY)
+      const step = Math.ceil(deltaY / 8)
+      console.log('[Main][floorScroll] wheel step ', step)
+      let start = _that.getStart()
+      console.log('[Main][floorScroll] wheel start start ', start)
+      const speed = _that.building.wstep
+      if (deltaY < 0) {
+        if (start + Math.abs(step) * speed >= 10000) {
+          start = _that.building.total - 11
+        } else {
+          start += Math.abs(step) * speed
+        }
+      } else {
+        if (start < _that.building.min) {
+          start = 1
+        } else {
+          start -= Math.abs(step) * speed
+        }
+      }
+      console.log('[Main][floorScroll] wheel end start ', start)
+      _that.building.start = start
+      localStorage.setItem('buildingStart', start)
+      _that.updateBuilding(start)
     },
     async getFloorListInfo (floorIds) {
       // todo data

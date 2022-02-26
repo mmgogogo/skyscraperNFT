@@ -1,5 +1,5 @@
 <template>
-<div class="building flex-container align-end scroll" @wheel="handleScroll($event)">
+<div class="building flex-container align-end scroll" @wheel="handleWheel($event)">
   <div class="floor flex-row justify-between" v-for="(floorInfo, index) in floors" :key="index" :style="orderStyle(floorInfo.order)">
     <div class="owner flex-container">
       <div class="owner-card flex-col align-center">
@@ -88,9 +88,10 @@ export default {
       }
       return imageCfg[imagePath]
     },
-    handleScroll (event) {
+    handleWheel (event) {
       event.preventDefault()
-      console.log('[Building] event ', event)
+      console.log('[Building][handleWheel] emit event ', event.deltaY)
+
       this.$emit('floor-scroll', event)
     }
   },
