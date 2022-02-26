@@ -5,6 +5,7 @@ frontend/orbitdb
 client_explore
 client/node_modules
 exchange
+chat
 ssnft/yarn.lock
 .gitignore
 .vscode/settings.json
