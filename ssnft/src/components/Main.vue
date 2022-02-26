@@ -129,8 +129,23 @@
         </div>
         <!-- ladder end -->
         <!-- chat start -->
-        <div class="chat flex-col align-center">
-          <div class="clayer5 flex-col"></div>
+        <div v-bind:class="[!showInfo.chat ? 'chat-height-30' : 'chat-height-360', 'chat-container', 'flex-col', 'align-center']">
+          <div v-bind:class="[!showInfo.chat ? 'chat-header-up' : 'chat-header-down', 'flex-col']" @click="chatSwitcher()"></div>
+          <div class="chat-body flex-col justify-between">
+            <div class="chat-msg-container flex-col">
+              <div class="chat-msg-list flex-col justify-between">
+                <span class="chat-msg-item" v-for="(msgInfo, index) in chatList" :key="index">
+                  {{ msgInfo.name +" : "+ msgInfo.content }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-footer flex-col justify-center">
+            <span class="chat-footer-msg">Chat：
+              <input type="text" class="message-input" name="message" id="message" v-model="curMessage" @keyup.enter="updateChatList()">
+            </span>
+          </div>
         </div>
         <!-- chat end -->
 
@@ -242,7 +257,7 @@
                 <span class="info10">Price</span>
                 <span class="word9">：</span>
                 <span class="word10">
-                  <input type="number" class="" placeholder="输入mint的楼层" v-model.number="mint_floor_num">
+                  <input type="number" class="" placeholder="输入mint的楼层" v-model.number="mintFloorNo">
                 </span>
                 <!-- <span class="word10">0.26</span>
                 <span class="txt5"></span>
@@ -341,6 +356,7 @@
     <!-- avatar start -->
   </main>
 </template>
+import { hexDataSlice } from 'ethers/lib/utils'
 
 <script>
 import * as ethers from 'ethers'
@@ -412,6 +428,7 @@ export default {
         profile: false,
         game: false,
         avatar: false,
+        chat: false,
         myFloor: false, // my nft
         myFollowing: false, // i see
         myFollowed: false // see i
@@ -434,7 +451,8 @@ export default {
       setting: {
         loading: '' // loading
       },
-      mint_floor_num: '',
+      mintFloorNo: '',
+      curMessage: '',
       building: {
         first: true,
         page: 12,
@@ -442,7 +460,13 @@ export default {
         height: 0,
         start: 6,
         floors: []
-      }
+      },
+      chatList: [
+        { name: 'Bob', content: 'Can you help me?' },
+        { name: 'Lisa', content: 'No, I can\'t' },
+        { name: '泽连斯基', content: '西方抛弃了我们！' },
+        { name: '普京', content: '去死吧！' }
+      ]
     }
   },
   props: {
@@ -514,6 +538,32 @@ export default {
       this.playerInfo.allNfts = await ajaxGetAllNfts(window.ethereum.selectedAddress)
       console.log('[Main][displayProfileInfo]', this.playerInfo.allNfts)
     },
+    chatSwitcher () {
+      const _that = this
+      if (_that.showInfo.chat) {
+        _that.showInfo.chat = false
+      } else {
+        _that.showInfo.chat = true
+      }
+    },
+    updateChatList () {
+      const _that = this
+      console.log('[Main][chat] message is', _that.curMessage)
+      if (_that.curMessage) {
+        const len = _that.chatList.length
+        if (len > 20) {
+          _that.chatList = _that.chatList.slice(len - 19)
+        }
+        _that.chatList.unshift({ name: 'PZ', content: _that.curMessage })
+
+        // todo data broadcast to the world channel
+        // data structure
+        // let msgInfo = { name: 'sender name', content: 'a message' }
+        // broadcast( msgInfo )
+
+        _that.curMessage = ''
+      }
+    },
     async displayMint () {
       console.log('[Main][mint] start')
       const _that = this
@@ -535,11 +585,11 @@ export default {
         _that.popupMessage('please login wallet', 'top', 'right')
         return
       }
-      if (_that.mint_floor_num <= 0) {
+      if (_that.mintFloorNo <= 0) {
         _that.popupMessage('please type correct floor no')
         return
       }
-      const floorNum = _that.mint_floor_num
+      const floorNum = _that.mintFloorNo
       const floorPrice = ethers.utils.parseEther('0.1')
       console.log('realmint:::', floorNum, floorPrice)
 
