@@ -373,11 +373,6 @@ import {
   ajaxGetHotToken, ajaxGetMyFollower, ajaxGetAllNfts
 } from '@/utils/AjaxData.js'
 
-// 服务器地址
-// const serverUrl = '47.75.51.251:9950'
-// const wsServer = 'ws://' + serverUrl + '/ws'
-// const apiServer = 'http://' + serverUrl
-
 export default {
   name: 'Navigator',
   components: { //
@@ -504,7 +499,7 @@ export default {
         _that.popupMessage('Please install wallet plugin')
         return
       }
-      if (!dapp.Bridges.local || !dapp.Bridges.ethereum) {
+      if (!dapp.Bridges.local || !dapp.Bridges.ethereum || _that.$Dapp.Bridges.ethereum === undefined) {
         console.log('[Main][login] connect')
         await _that.$Dapp.connect()
       } else {
