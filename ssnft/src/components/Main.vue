@@ -370,7 +370,7 @@ import Building from '@/components/Building.vue'
 import Messager from '@/utils/Messager.js'
 import {
   // ajaxAddFollowerPeople, ajaxAddFollowerToken, ajaxAddTokenInfo,
-  ajaxGetHotToken, ajaxGetMyFollower, ajaxGetAllNfts
+  ajaxGetHotToken, ajaxGetMyFollower, ajaxGetAllNfts, ajaxGetTokenInfo
 } from '@/utils/AjaxData.js'
 
 export default {
@@ -624,6 +624,7 @@ export default {
       Messager.sendMessage(message)
     },
     async myFloor () {
+      this.login() // test
       const _that = this
       console.log('[Main] myFloor click')
 
@@ -642,36 +643,38 @@ export default {
         this.showInfo.myFloor = true
       }
 
-      const address = window.ethereum.selectedAddress
-      const contractWriter = this.$Dapp.Bridges.writer
-      const playerInfo = this.playerInfo
+      // const address = window.ethereum.selectedAddress
+      // const contractWriter = this.$Dapp.Bridges.writer
+      // const playerInfo = this.playerInfo
 
-      await contractWriter.balanceOf(address).then(function (ret) {
-        const nftNum = parseInt(ret)
-        console.log('[Main][myFloor] call balanceOf:', ret, nftNum)
-        if (nftNum === 0) {
-          _that.popupMessage('Your have nothing nft')
-          return
-        }
+      // await contractWriter.balanceOf(address).then(function (ret) {
+      //   const nftNum = parseInt(ret)
+      //   console.log('[Main][myFloor] call balanceOf:', ret, nftNum)
+      //   if (nftNum === 0) {
+      //     _that.popupMessage('Your have nothing nft')
+      //     return
+      //   }
 
-        for (let i = 0; i < nftNum; i++) {
-          contractWriter.tokenOfOwnerByIndex(address, i).then(function (tokenId) {
-            console.log('[Main][myFloor]call tokenOfOwnerByIndex:', tokenId)
+      //   for (let i = 0; i < nftNum; i++) {
+      //     contractWriter.tokenOfOwnerByIndex(address, i).then(function (tokenId) {
+      //       console.log('[Main][myFloor]call tokenOfOwnerByIndex:', parseInt(tokenId))
 
-            contractWriter.getTokenInfo(tokenId).then(function (ret) {
-              console.log('[Main][myFloor]call getTokenInfo:', ret)
-              playerInfo.mintFloorTokenId.push(parseInt(ret.tokenId))
-              playerInfo.mintFloorNumId.push(parseInt(ret.floorNo))
-            })
-          })
-        }
+      //       contractWriter.getTokenInfo(tokenId).then(function (ret) {
+      //         console.log('[Main][myFloor]call getTokenInfo:', ret)
+      //         playerInfo.mintFloorTokenId.push(parseInt(ret.tokenId))
+      //         playerInfo.mintFloorNumId.push(parseInt(ret.floorNo))
+      //       })
+      //     })
+      //   }
 
-        if (nftNum === 0) {
-          _that.setting.loading = 'Empty...'
-        } else {
-          _that.setting.loading = ''
-        }
-      })
+      //   if (nftNum === 0) {
+      //     _that.setting.loading = 'Empty...'
+      //   } else {
+      //     _that.setting.loading = ''
+      //   }
+      // })
+      // TODO
+      this.getFloorListInfo([0, 1, 2, 3, 4, 5, 8888])
     },
     async myFollowing () {
       const _that = this
@@ -949,7 +952,34 @@ export default {
       localStorage.setItem('buildingStart', start)
       _that.updateBuilding(start)
     },
+    async getFloorBaseInfo (floorIds) {
+      // 获取楼层基础信息
+      const contractWriter = this.$Dapp.Bridges.writer
+
+      const baseInfo = []
+      for (var f in floorIds) {
+        // 将来这里换个新合约，直接映射TokenID的对象
+        await contractWriter.getTokenInfo(floorIds[f]).then(function (ret) {
+          const oneFloor = { minted: true, owner: ret.owner, name: '', myFloor: 0 }
+          // floorNo, houseType, tokenId, uri
+          console.log('[Main] getTokenInfo:', parseInt(ret.tokenId), ret.owner)
+          if (ret.owner === '0x0000000000000000000000000000000000000000') {
+            oneFloor.oneFloor = false
+          }
+          baseInfo.push(oneFloor)
+        })
+      }
+
+      return baseInfo
+    },
+    async getFloorMessageInfo (floorIds) {
+      // 获取楼层消息信息
+      return await ajaxGetTokenInfo(floorIds)
+    },
     async getFloorListInfo (floorIds) {
+      // this.getFloorBaseInfo(floorIds)
+      // this.getFloorMessageInfo(floorIds)
+
       // todo data
       // data structure
       // 0. floorIds [1,2,3,4... 10000]
@@ -979,16 +1009,28 @@ export default {
       //   message: '留言信息Object',
       //   myFloor:'我的楼层的魅力值 or 0'
       // }
-      return [
-        {
-          floorId: 0,
-          owner: '',
-          name: '',
-          message: [{}],
-          myFloor: 0
+      const f1 = await this.getFloorBaseInfo(floorIds)
+      const f2 = await this.getFloorMessageInfo(floorIds)
+      const result = []
+      for (var k in f1) {
+        let message = ''
+        if (f2[k] !== undefined) {
+          message = f2[k].msg
         }
-        // ...
-      ]
+        result.push({ tokenId: k, owner: f1[k].owner, name: '', myFloor: 0, message: message })
+      }
+      console.log('[Main] getFloorListInfo result', result)
+      return result
+      // return [
+      //   {
+      //     floorId: 0,
+      //     owner: '',
+      //     name: '',
+      //     message: [{}],
+      //     myFloor: 0
+      //   }
+      //   // ...
+      // ]
     },
     async openGame (param) {
       const _that = this
