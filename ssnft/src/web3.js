@@ -50,6 +50,10 @@ const isMetaMaskInstalled = () => {
 
 const Dapp = {
   Bridges: {},
+  isMetaMaskInstalled: () => {
+    const { ethereum } = window
+    return Boolean(ethereum && ethereum.isMetaMask)
+  },
   connect: async () => {
     try {
       if (isMetaMaskInstalled()) {
@@ -123,12 +127,6 @@ const Dapp = {
     alert('请安装钱包！')
   }
 }
-
-// $(fn => {
-//   (async function () {
-//     await Dapp.connect()
-//   })()
-// })
 
 export default {
   install: (App) => {

@@ -1,5 +1,5 @@
 <template>
-<div class="building flex-container align-end scroll" @scroll="handleScroll($event)">
+<div class="building flex-container align-end scroll" @wheel="handleScroll($event)">
   <div class="floor flex-row justify-between" v-for="(floorInfo, index) in floors" :key="index" :style="orderStyle(floorInfo.order)">
     <div class="owner flex-container">
       <div class="owner-card flex-col align-center">
@@ -89,33 +89,9 @@ export default {
       return imageCfg[imagePath]
     },
     handleScroll (event) {
-      if (event) {
-        const target = event.target
-        // console.log('[Building] target ', target)
-        // console.log('[Building] target offsetHeight offsetTop scrollHeight scrollTop clientHeight clientTop', target.offsetHeight, target.offsetTop, target.scrollHeight, target.scrollTop, target.clientHeight, target.clientTop)
-        // console.log('[Building] target ', target.getBoundingClientRect())
-        if (!this.scrolled) {
-          // target.scrollTo(0, 0)
-          target.scrollTop = target.scrollHeight
-          this.scrolled = true
-        }
-      }
-      // offsetHeight: 871
-      // offsetTop: 76
-      // scrollHeight: 876
-      // scrollTop: 6
-      // clientHeight: 871
-      // clientTop: 0
-      // ClientHeight = Height of an element.
-      // OffsetHeight = ClientHeight + Scrollbar Height.
-      // Height of scrollbar = offsetHeight  – clientHeight.
-
-      // element.getBoundingClientRect().bottom
-
-      // console.log('[Building] event ', event)
-      // Any code to be executed when the window is scrolled
-      // this.isUserScrolling = (window.scrollY > 0)
-      // console.log('[Building]  calling handleScroll', window.scoll, window.pageYOffset)
+      event.preventDefault()
+      console.log('[Building] event ', event)
+      this.$emit('floor-scroll', event)
     }
   },
   created () {
@@ -130,54 +106,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.game {
-  z-index: 200;
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  top: 0px;
-  left: 0px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: inherit;
-  background-color: rgb(4 4 4 / 90%);
-}
-.close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 30px;
-  height: 30px;
-  background: url(../assets/images/close.png) -2px -2px no-repeat;
-  background-size: 30px 30px;
-}
 
-.scroll {
-  scrollbar-width: thin;          /* "auto" or "thin" */
-  /* scrollbar-color: white white;   scroll thumb and track */
-  scrollbar-color: transparent transparent;
-}
-/* Works on Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: transparent;
-}
-
-/* Works on Chrome, Edge, and Safari */
-*::-webkit-scrollbar {
-  width: 12px;
-}
-
-*::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-*::-webkit-scrollbar-thumb {
-  background-color: transparent;
-  border-radius: 20px;
-  border: 3px solid transparent;
-}
 </style>

@@ -70,3 +70,9 @@ $ yarn deploy
 # { path: '/skyscraper', redirect: { name: 'Home' } }, // 重定向
 
 ```
+
+#### Install dependencies
+```
+yarn add husky -D
+
+```

@@ -70,7 +70,7 @@
               >{{ baseConfig.lang_007 }}</span>
           </div>
           <div class="bd8 flex-row justify-between">
-            <div class="layer2 flex-col align-center btn-hand" @click="mint()">
+            <div class="layer2 flex-col align-center btn-hand" @click="displayMint()">
               <div class="layer3 flex-col justify-between">
                 <div class="layer4 flex-col"></div>
                 <span class="txt3">
@@ -102,7 +102,7 @@
       <!-- nav end -->
 
       <!-- content start -->
-      <div class="content flex-col">
+      <div class="content flex-col" @click="onClick($event)">
         <Building :floors="building.floors" v-on:open-game="openGame"/>
         <!-- ladder start -->
         <div class="ladder flex-col">
@@ -135,18 +135,18 @@
         <!-- chat end -->
 
         <!-- my floor start -->
-        <div class="hot flex-col" v-if="showInfo.myFloor">
-          <div class="group1 flex-col justify-between">
-            <div class="main5 flex-col justify-center">
-              <span class="txt5">My Floor</span>
+        <div class="hot flex-col" v-if="showInfo.myFloor" @click="onClickOutside($event)">
+          <div class="hot-group flex-col justify-between">
+            <div class="hot-title-container flex-col justify-center">
+              <span class="hot-title">My Floor</span>
             </div>
-            <div class="main6 flex-row">
-              <div class="group10 flex-col">
-                <div class="layer flex-col justify-center" v-if="setting.loading !== ''">
-                  <span class="txt6">{{setting.loading}}</span>
+            <div class="hot-container flex-row">
+              <div class="hot-list flex-col">
+                <div class="hot-item flex-col justify-center" v-if="setting.loading !== ''">
+                  <span class="hot-layer-message">{{setting.loading}}</span>
                 </div>
-                <div class="layer flex-col justify-center" v-for="v in playerInfo.mintFloorNumId" :key="v">
-                  <span class="txt6">Floor Id:{{v}}</span>
+                <div class="hot-item flex-col justify-center" v-for="v in playerInfo.mintFloorNumId" :key="v">
+                  <span class="hot-layer-message" @click="openGame([v, true, playerInfo.address])">Floor Id:{{v}}</span>
                 </div>
               </div>
             </div>
@@ -155,18 +155,18 @@
         <!-- my floor end -->
 
         <!-- myFollowing start -->
-        <div class="hot flex-col" v-if="showInfo.myFollowing">
-          <div class="group1 flex-col justify-between">
-            <div class="main5 flex-col justify-center">
-              <span class="txt5">Following</span>
+        <div class="hot flex-col" v-if="showInfo.myFollowing" @click="onClickOutside($event)">
+          <div class="hot-group flex-col justify-between">
+            <div class="hot-title-container flex-col justify-center">
+              <span class="hot-title">Following</span>
             </div>
-            <div class="main6 flex-row">
-              <div class="group10 flex-col">
-                <div class="layer flex-col justify-center" v-if="setting.loading !== ''">
-                  <span class="txt6">{{setting.loading}}</span>
+            <div class="hot-container flex-row">
+              <div class="hot-list flex-col">
+                <div class="hot-item flex-col justify-center" v-if="setting.loading !== ''">
+                  <span class="hot-layer-message">{{setting.loading}}</span>
                 </div>
-                <div class="layer flex-col justify-center" v-for="v in playerInfo.myFollowing" :key="v.AddressTo">
-                  <span class="txt6">玩家地址:{{v.AddressTo}}</span>
+                <div class="hot-item flex-col justify-center" v-for="v in playerInfo.myFollowing" :key="v.AddressTo">
+                  <span class="hot-layer-message">玩家地址:{{v.AddressTo}}</span>
                 </div>
               </div>
               <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
@@ -176,18 +176,18 @@
         <!-- myFollowing end -->
 
         <!-- myFollowed start -->
-        <div class="hot flex-col" v-if="showInfo.myFollowed">
-          <div class="group1 flex-col justify-between">
-            <div class="main5 flex-col justify-center">
-              <span class="txt5">Followed</span>
+        <div class="hot flex-col" v-if="showInfo.myFollowed" @click="onClickOutside($event)">
+          <div class="hot-group flex-col justify-between">
+            <div class="hot-title-container flex-col justify-center">
+              <span class="hot-title">Followed</span>
             </div>
-            <div class="main6 flex-row">
-              <div class="group10 flex-col">
-                <div class="layer flex-col justify-center" v-if="setting.loading !== ''">
-                  <span class="txt6">{{setting.loading}}</span>
+            <div class="hot-container flex-row">
+              <div class="hot-list flex-col">
+                <div class="hot-item flex-col justify-center" v-if="setting.loading !== ''">
+                  <span class="hot-layer-message">{{setting.loading}}</span>
                 </div>
-                <div class="layer flex-col justify-center" v-for="v in playerInfo.myFollowed" :key="v.AddressTo">
-                  <span class="txt6">玩家地址:{{v.AddressFrom}}</span>
+                <div class="hot-item flex-col justify-center" v-for="v in playerInfo.myFollowed" :key="v.AddressTo">
+                  <span class="hot-layer-message">玩家地址:{{v.AddressFrom}}</span>
                 </div>
               </div>
               <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
@@ -197,18 +197,18 @@
         <!-- myFollowed end -->
 
         <!-- hot start -->
-        <div class="hot flex-col" v-if="showInfo.hot">
-          <div class="group1 flex-col justify-between">
-            <div class="main5 flex-col justify-center">
-              <span class="txt5 btn-hand">Hot</span>
+        <div class="hot flex-col" v-if="showInfo.hot" @click="onClickOutside($event)">
+          <div class="hot-group flex-col justify-between">
+            <div class="hot-title-container flex-col justify-center">
+              <span class="hot-title btn-hand">Hot</span>
             </div>
-            <div class="main6 flex-row">
-              <div class="group10 flex-col">
-                <div class="layer flex-col justify-center" v-if="setting.loading !== ''">
-                  <span class="txt6">{{setting.loading}}</span>
+            <div class="hot-container flex-row">
+              <div class="hot-list flex-col">
+                <div class="hot-item flex-col justify-center" v-if="setting.loading !== ''">
+                  <span class="hot-layer-message">{{setting.loading}}</span>
                 </div>
-                <div class="layer flex-col justify-center" v-for="v in floorInfo.hotList" :key="v.TokenId">
-                  <span class="txt6">楼层ID:{{v.TokenId}}， 热度:{{v.Num}}</span>
+                <div class="hot-item flex-col justify-center" v-for="v in floorInfo.hotList" :key="v.TokenId">
+                  <span class="hot-layer-message">楼层ID:{{v.TokenId}}， 热度:{{v.Num}}</span>
                 </div>
               </div>
               <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
@@ -325,27 +325,37 @@
     <!-- game info start https://elevenzhou.github.io/Space/ -->
     <!-- <Game :show="showInfo.game" :url="gameConfig.gameUrl" @click="click()" /> -->
     <div class="game" v-if="showInfo.game && gameConfig.gameUrl" @click="click()">
-    <div class="close" @click="close()"></div>
-    <iframe id="game" title="game" :src="gameConfig.gameUrl"
-    style="min-height:500px;height:1080px;width:1920px;"
-    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-    ></iframe>
-  </div>
+      <div class="close" @click="close()"></div>
+      <iframe id="game" title="game" :src="gameConfig.gameUrl" :style="windowCompute()"
+      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+      ></iframe>
+    </div>
     <!-- game info end -->
+    <!-- avatar start -->
+    <div class="game" v-if="showInfo.avatar && gameConfig.avatarUrl" @click="click()">
+      <div class="close" @click="close()"></div>
+      <iframe id="avatar" title="avatar" :src="gameConfig.avatarUrl" :style="windowCompute()"
+      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+      ></iframe>
+    </div>
+    <!-- avatar start -->
   </main>
 </template>
 
 <script>
 import * as ethers from 'ethers'
-// import axios from 'axios'
+import $ from 'jquery'
 import Toastify from 'toastify-js'
 import 'toastify-js/src/toastify.css'
 import Clipboard from 'clipboard'
 
 // import Game from '@/components/Game.vue'
 import Building from '@/components/Building.vue'
-import sendMessage from '@/utils/Utils.js'
-import { ajaxAddFollowerPeople, ajaxAddFollowerToken, ajaxAddTokenInfo, ajaxGetHotToken, ajaxGetMyFollower, ajaxGetAllNfts } from '@/utils/AjaxData.js'
+import Messager from '@/utils/Messager.js'
+import {
+  // ajaxAddFollowerPeople, ajaxAddFollowerToken, ajaxAddTokenInfo,
+  ajaxGetHotToken, ajaxGetMyFollower, ajaxGetAllNfts
+} from '@/utils/AjaxData.js'
 
 // 服务器地址
 // const serverUrl = '47.75.51.251:9950'
@@ -381,9 +391,12 @@ export default {
       },
       gameConfig: {
         total: 10000,
-        // baseUrl: 'https://dontil.github.io/test/',
+        // baseUrl: 'http://127.0.0.1:9000', // https://dontil.github.io/test/ http://127.0.0.1:9000
         baseUrl: 'https://kokoya-game-1308188195.file.myqcloud.com/dress/game/nft/index.html',
-        gameUrl: ''
+        gameUrl: '',
+        avatarBaseUrl: 'https://kokoya-game-1308188195.file.myqcloud.com/dress/game/nftAvatar/index.html',
+        avatarUrl: '',
+        windowHeight: window.innerHeight
       },
       address: '',
       url: window.location.href ? window.location.href : '',
@@ -398,6 +411,7 @@ export default {
         hot: false,
         profile: false,
         game: false,
+        avatar: false,
         myFloor: false, // my nft
         myFollowing: false, // i see
         myFollowed: false // see i
@@ -438,36 +452,44 @@ export default {
     onClick (e) {
       // console.log('[Main] outside click event', e)
       const _that = this
-      _that.resetPopWindow()
+      _that.closePopup()
+    },
+    closePopup () {
+      const _that = this
+      _that.showInfo.hot = false
+      _that.showInfo.mint = false
+      _that.showInfo.myFloor = false
+      _that.showInfo.myFollowing = false
+      _that.showInfo.myFollowed = false
     },
     onClickOutside (e) {
       console.log('[Main] onclick outside e ', e)
       e.stopPropagation()
     },
-    navi () {
-      console.log('[navigator]navi ', this.$Dapp)
-    },
     async login (isInit) {
       const _that = this
-      console.log('[Main]login ', _that.$Dapp)
-      await _that.$Dapp.connect()
-      _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
-      console.log('[Main]address ', _that.playerInfo.address)
+      console.log('[Main][login] Dapp is', _that.$Dapp)
+      const dapp = _that.$Dapp
+      if (!dapp.Bridges.local ||
+          !_that.$Dapp.Bridges.ethereum ||
+          _that.playerInfo.address ||
+          _that.playerInfo.address !== '') {
+        await _that.$Dapp.connect()
+        _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
+        console.log('[Main] wallet address [%s]', _that.playerInfo.address)
 
-      // set profile
-      if (_that.playerInfo.address !== '') {
         _that.playerInfo.isLogin = true
         _that.playerInfo.status = 1
-
-        if (isInit) {
-          this.popupMessage('Metamask had connect success')
-        }
+      } else {
+        this.popupMessage('Metamask had connect success')
       }
-      const message = {
-        source: 'web',
-        type: 'updateTitle'
-      }
-      sendMessage(message)
+      // todo data
+      // 这个要移一下位置绵绵
+      // const message = {
+      //   source: 'web',
+      //   type: 'updateTitle'
+      // }
+      // Messager.sendMessage(message)
     },
     resetPopWindow () {
       console.log('[Main][resetPopWindow] start')
@@ -484,33 +506,40 @@ export default {
     async displayProfileInfo () {
       // show the profile
       const _that = this
-
-      // common login
-      _that.login()
+      if (!_that.playerInfo.isLogin) {
+        await _that.login()
+      }
       _that.showInfo.profile = true
 
-      // 独立出去
       this.playerInfo.allNfts = await ajaxGetAllNfts(window.ethereum.selectedAddress)
       console.log('[Main][displayProfileInfo]', this.playerInfo.allNfts)
     },
-    async mint () {
-      console.log('[mint] start')
-      await this.login()
-
+    async displayMint () {
+      console.log('[Main][mint] start')
       const _that = this
+      if (!_that.playerInfo.isLogin) {
+        await this.login()
+      }
+      setTimeout(function () {
+        _that.showInfo.mint = false
+      }, 5000)
       if (_that.showInfo.mint) {
         _that.showInfo.mint = false
       } else {
         _that.showInfo.mint = true
       }
-      // 添加关闭倒计时
     },
     async realMint () {
-      if (this.mint_floor_num <= 0) {
-        this.popupMessage('请输入正确的楼层号')
+      const _that = this
+      if (!_that.playerInfo.isLogin) {
+        _that.popupMessage('please login wallet', 'top', 'right')
         return
       }
-      const floorNum = this.mint_floor_num
+      if (_that.mint_floor_num <= 0) {
+        _that.popupMessage('please type correct floor no')
+        return
+      }
+      const floorNum = _that.mint_floor_num
       const floorPrice = ethers.utils.parseEther('0.1')
       console.log('realmint:::', floorNum, floorPrice)
 
@@ -521,24 +550,24 @@ export default {
         gasPrice: 20000000000, // default
         value: floorPrice
       }
-      await this.$Dapp.Bridges.writer.mint(floorNum, overrides).then(function (ret) {
+      await _that.$Dapp.Bridges.writer.mint(floorNum, overrides).then(function (ret) {
         console.log(ret)
-        this.popupMessage('已成功mint，请查看my floor.')
+        _that.popupMessage('已成功mint，请查看my floor.')
       })
-      this.showInfo.mint = true
+      _that.showInfo.mint = true
     },
-    // closedd
     close () {
       const _that = this
       _that.showInfo.profile = false
       _that.showInfo.game = false
+      _that.showInfo.avatar = false
     },
-    click () {
+    click () { // test sendMessage to iframe
       const message = {
         source: 'web',
         type: 'updateTitle'
       }
-      sendMessage(message)
+      Messager.sendMessage(message)
     },
     async myFloor () {
       const _that = this
@@ -548,7 +577,10 @@ export default {
       this.resetMintFloor() // reset
       this.setting.loading = 'Loading...' // loading open
 
-      await this.login()
+      if (!_that.playerInfo.isLogin) {
+        this.popupMessage('login wallet to loading more information')
+        return
+      }
 
       if (this.showInfo.myFloor) {
         this.showInfo.myFloor = false
@@ -587,76 +619,108 @@ export default {
       }
     },
     async myFollowing () {
-      this.resetPopWindow() // reset
-      console.log('[Main][myFollowing]click myFollowing')
-      await this.login()
-
       const _that = this
+      _that.resetPopWindow() // reset
+      console.log('[Main][myFollowing]click myFollowing')
+
+      if (!_that.playerInfo.isLogin) {
+        _that.popupMessage('login wallet to loading more information')
+        return
+      }
+
       if (_that.showInfo.myFollowing) {
         _that.showInfo.myFollowing = false
       } else {
         _that.showInfo.myFollowing = true
       }
-      this.setting.loading = 'Loading...' // loading open
+      _that.setting.loading = 'Loading...' // loading open
 
       // call
-      this.playerInfo.myFollowing = await ajaxGetMyFollower('listbymefollower', window.ethereum.selectedAddress)
+      _that.playerInfo.myFollowing = await ajaxGetMyFollower('listbymefollower', window.ethereum.selectedAddress)
 
-      if (this.playerInfo.myFollowing === null || this.playerInfo.myFollowing.length === 0) {
-        this.setting.loading = 'Empty...'
+      if (_that.playerInfo.myFollowing === null || _that.playerInfo.myFollowing.length === 0) {
+        _that.setting.loading = 'Empty...'
       }
     },
     async myFollowed () {
-      this.resetPopWindow() // reset
-      console.log('[Main][myFollowed]click myFollowed')
-      await this.login()
-
       const _that = this
+
+      _that.resetPopWindow() // reset
+      console.log('[Main][myFollowed] click myFollowed')
+
+      if (!_that.playerInfo.isLogin) {
+        _that.popupMessage('login wallet to loading more information')
+        return
+      }
+
       if (_that.showInfo.myFollowed) {
         _that.showInfo.myFollowed = false
       } else {
         _that.showInfo.myFollowed = true
       }
 
-      this.setting.loading = 'Loading...' // loading open
+      _that.setting.loading = 'Loading...' // loading open
 
       // call
-      this.playerInfo.myFollowed = await ajaxGetMyFollower('listbyfollowerme', window.ethereum.selectedAddress)
+      _that.playerInfo.myFollowed = await ajaxGetMyFollower('listbyfollowerme', window.ethereum.selectedAddress)
 
-      if (this.playerInfo.myFollowed === null || this.playerInfo.myFollowed.length === 0) {
-        this.setting.loading = 'Empty...'
+      if (_that.playerInfo.myFollowed === null || _that.playerInfo.myFollowed.length === 0) {
+        _that.setting.loading = 'Empty...'
       }
     },
     async hot () {
-      this.resetPopWindow() // reset
-
       const _that = this
+
+      _that.resetPopWindow()
+
       if (_that.showInfo.hot) {
         _that.showInfo.hot = false
       } else {
         _that.showInfo.hot = true
       }
 
-      this.setting.loading = 'Loading...'
+      _that.setting.loading = 'Loading...'
 
-      this.floorInfo.hotList = await ajaxGetHotToken()
-      console.log('[Main] hot list:', this.floorInfo.hotList)
+      _that.floorInfo.hotList = await ajaxGetHotToken()
+      console.log('[Main][hot] hotList is ', _that.floorInfo.hotList)
 
-      if (this.floorInfo.hotList === null || this.floorInfo.hotList.length === 0) {
-        this.setting.loading = 'Empty...'
+      if (_that.floorInfo.hotList === null || _that.floorInfo.hotList.length === 0) {
+        _that.setting.loading = 'Empty...'
       } else {
-        this.setting.loading = ''
+        _that.setting.loading = ''
       }
     },
     room () {
-      this.popupMessage('[Main][room]room coming soon')
+      this.popupMessage('room coming soon')
     },
     async avatar () {
-      this.popupMessage('插入测试数据.....')
-      await ajaxAddFollowerPeople(window.ethereum.selectedAddress, parseInt(Math.random() * 10000))
-      await ajaxAddFollowerPeople(parseInt(Math.random() * 10000), window.ethereum.selectedAddress)
-      await ajaxAddFollowerToken(window.ethereum.selectedAddress, parseInt(Math.random() * 10000))
-      await ajaxAddTokenInfo(parseInt(Math.random() * 10000), parseInt(Math.random() * 10000))
+      // this.popupMessage('插入测试数据.....')
+      // await ajaxAddFollowerPeople(window.ethereum.selectedAddress, parseInt(Math.random() * 10000))
+      // await ajaxAddFollowerPeople(parseInt(Math.random() * 10000), window.ethereum.selectedAddress)
+      // await ajaxAddFollowerToken(window.ethereum.selectedAddress, parseInt(Math.random() * 10000))
+      // await ajaxAddTokenInfo(parseInt(Math.random() * 10000), parseInt(Math.random() * 10000))
+      const _that = this
+      let address = _that.playerInfo.address
+      if (!address) {
+        // _that.popupMessage('Login first')
+        // return
+        address = '0x141721F4D7Fd95541396E74266FF272502Ec8899'
+      }
+      _that.showInfo.avatar = true
+      _that.gameConfig.avatarUrl = _that.gameConfig.avatarBaseUrl + '?wallet=' + address
+      console.log('[Main][avatar] avatarUrl', _that.showInfo.avatar, _that.gameConfig.avatarUrl)
+    },
+    windowCompute () {
+      const _that = this
+      console.log('[Main][windowCompute] ', _that.gameConfig.windowHeight)
+      const wHeight = _that.gameConfig.windowHeight
+      return {
+        'min-height': '500px',
+        'box-sizing': 'content-box',
+        'border-width': '0px',
+        height: wHeight ? wHeight + 'px' : '768px',
+        width: wHeight ? wHeight * 1.7778 + 'px' : '1024px'
+      }
     },
     async goto () {
       const _that = this
@@ -733,27 +797,113 @@ export default {
         'padding-top': (22.71 - (22.71 * start) / 10000) + 'vw'
       }
     },
-    updateBuilding (start, first = false) {
+    initBuilding () {
+      console.log('[Main][initBuilding] init start')
+      const _that = this
+      const start = _that.getStart()
+      if (start <= 6) {
+        _that.building.first = true
+      }
+      _that.building.start = start
+      console.log('[Main][created] building ', _that.building)
+      _that.updateBuilding(start, _that.building.first)
+    },
+    async updateBuilding (start, first = false) {
       const _that = this
       _that.building.floors = []
       _that.building.height = Math.ceil(start / 500) + 1
       if (start <= 6) {
         first = true
       }
+      const curFloorList = []
+      const floorIds = []
       for (let i = start; i < start + 12; i++) {
-        let floorId = _that.strPadLeft(i + 1)
+        let floorIdStr = _that.strPadLeft(i + 1)
         if (i >= 10) {
           let rand = 0
           while (rand === 0) {
             rand = Math.floor(Math.random(10) * 10)
           }
-          floorId = _that.strPadLeft(rand)
+          floorIdStr = _that.strPadLeft(rand)
         }
-        _that.building.floors.push({ id: i, floorId: floorId, message: '', myFloor: i, order: 10 - i, image: '../assets/images/walls/floor_' + floorId + '.png' })
+        const order = 10 - i
+        const image = '../assets/images/walls/floor_' + floorIdStr + '.png'
+        const floorInfo = {
+          id: i,
+          floorId: floorIdStr,
+          owner: '',
+          name: '',
+          message: '',
+          myFloor: i,
+          order: order,
+          image: image
+        }
+        floorIds.push(i)
+        curFloorList.push(floorInfo)
+        _that.building.floors.push(floorInfo)
       }
+      // todo data 通过组织结果返回后在这里处理
+      // 见下面的 getFloorListInfo 方法
+      // let processedList = await _that.getFloorListInfo(floorIds)
+      // for(item of processedList) {
+      //   const newFloorInfo = item
+      //   _that.building.floors.push(floorInfo)
+      // }
+
       if (first) {
-        _that.building.floors.push({ id: 0, floorId: 'x', message: '', myFloor: 'The Hall', order: 99999, image: '../assets/images/walls/floor_x.png' })
+        const hallInfo = {
+          id: 0,
+          floorId: 'x',
+          owner: '',
+          name: '',
+          message: '',
+          myFloor: 'The Hall',
+          order: 99999,
+          image: '../assets/images/walls/floor_x.png'
+        }
+        _that.building.floors.push(hallInfo)
       }
+    },
+    async getFloorListInfo (floorIds) {
+      // todo data
+      // data structure
+      // 0. floorIds [1,2,3,4... 10000]
+      // 建议是 100条，取好缓存在本地
+      //
+      // 1. 楼层基础信息数据列表
+      // 输入楼层列表，返回楼层状态对象
+      // getFloorBaseInfo([1,2,3,4...])
+      //
+      // {
+      //   1: { mined:false },
+      //   2: { minted: true, owner: '0xabc...', name:'', myFloor: 0 },
+      //   3: { minted: true, owner: '0xabc...', name:'', myFloor: 0 },
+      //   ...
+      // }
+
+      // 2. 楼层是否留言的数据列表
+      // 输入楼层列表，返回楼层状态对象
+      // getFloorMessageInfo([1,2,3,4...])
+      // {1: [{from: 0xabc, msg: 'hello'}], ...}
+
+      // 3. 返回值数据结构
+      // {
+      //   floorId: '楼层ID',
+      //   owner: '所有者的地者',
+      //   name: '所有者的名字',
+      //   message: '留言信息Object',
+      //   myFloor:'我的楼层的魅力值 or 0'
+      // }
+      return [
+        {
+          floorId: 0,
+          owner: '',
+          name: '',
+          message: [{}],
+          myFloor: 0
+        }
+        // ...
+      ]
     },
     async openGame (param) {
       const _that = this
@@ -778,15 +928,30 @@ export default {
       //   // console.log(i, this.playerInfo.allNfts[i])
       //   message.data.push({ token_id: tmp.token_id, nft_name: tmp.nft_name, image: tmp.image })
       // }
-      // sendMessage(message)
+      // Messager.sendMessage(message)
 
+      let owned = 0
+      if (param[1]) {
+        owned = 1
+      } else {
+        // todo data
+        // 所有者信息模拟
+        owned = _that.randBoolean()
+      }
       _that.showInfo.game = true
       _that.gameConfig.gameUrl =
         _that.gameConfig.baseUrl +
         '?roomId=' + param[0] +
         '&wallet=' + address +
-        '&owned=' + '0'
+        '&owned=' + owned
       console.log('[Main][openGame] openGame result ', _that.showInfo.game, _that.gameConfig.gameUrl)
+    },
+    randBoolean () {
+      const rand = Math.random()
+      if (Math.ceil(rand * 10) > 5) {
+        return '1'
+      }
+      return '0'
     },
     loadMore () {
       this.loading = true
@@ -825,28 +990,35 @@ export default {
       clipboard.on('error', e => {
         _that.popupMessage('copy failed')
       })
+    },
+    timer () {
+      // loop 1 time per 8 seconds
+      setInterval(function () {
+        // console.log('[Main][timer] add timer event here')
+      }, 15000)
     }
   },
   created () {
     console.log('[Main][created] created start!')
     const _that = this
-
-    console.log('[Main][created] that ', _that.$Dapp)
-    const start = _that.getStart()
-    if (start <= 6) {
-      _that.building.first = true
-    }
-    _that.building.start = start
-
-    console.log('[Main][created] building ', _that.building)
-    _that.updateBuilding(start, _that.building.first)
+    console.log('[Main][created] display Dapp 1 ', _that.$Dapp)
+    $(fn => {
+      (async function () {
+        console.log('[Main][created] display Dapp 2 ', _that.$Dapp)
+        if (!_that.$Dapp.isMetaMaskInstalled()) {
+          _that.popupMessage('Please install wallet plugin')
+        }
+        _that.initBuilding()
+        await _that.timer()
+        await Messager.listener()
+      })()
+    })
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 .game {
   z-index: 200;
   position: absolute;
