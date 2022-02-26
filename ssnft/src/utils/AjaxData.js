@@ -3,9 +3,9 @@ import qs from 'qs'
 
 // 服务器地址
 // const serverUrl = '127.0.0.1:9950'
-const serverUrl = 'www.iamxmm.xyz:9950'
+const serverUrl = 'iamxmm.xyz'
 // const wsServer = 'ws://' + serverUrl + '/ws'
-const apiServer = 'http://' + serverUrl
+const apiServer = 'https://' + serverUrl
 
 // 添加关注地址
 export async function ajaxAddFollowerPeople (from, to) {

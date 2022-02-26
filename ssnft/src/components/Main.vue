@@ -591,7 +591,6 @@ export default {
       const address = window.ethereum.selectedAddress
       const contractWriter = this.$Dapp.Bridges.writer
       const playerInfo = this.playerInfo
-      const nftNum = 0
 
       await contractWriter.balanceOf(address).then(function (ret) {
         const nftNum = parseInt(ret)
@@ -612,11 +611,13 @@ export default {
             })
           })
         }
-      })
 
-      if (nftNum === 0) {
-        this.setting.loading = 'Empty...'
-      }
+        if (nftNum === 0) {
+          _that.setting.loading = 'Empty...'
+        } else {
+          _that.setting.loading = ''
+        }
+      })
     },
     async myFollowing () {
       const _that = this
@@ -638,8 +639,10 @@ export default {
       // call
       _that.playerInfo.myFollowing = await ajaxGetMyFollower('listbymefollower', window.ethereum.selectedAddress)
 
-      if (_that.playerInfo.myFollowing === null || _that.playerInfo.myFollowing.length === 0) {
-        _that.setting.loading = 'Empty...'
+      if (this.playerInfo.myFollowing === null || this.playerInfo.myFollowing.length === 0) {
+        this.setting.loading = 'Empty...'
+      } else {
+        this.setting.loading = ''
       }
     },
     async myFollowed () {
@@ -664,8 +667,10 @@ export default {
       // call
       _that.playerInfo.myFollowed = await ajaxGetMyFollower('listbyfollowerme', window.ethereum.selectedAddress)
 
-      if (_that.playerInfo.myFollowed === null || _that.playerInfo.myFollowed.length === 0) {
-        _that.setting.loading = 'Empty...'
+      if (this.playerInfo.myFollowed === null || this.playerInfo.myFollowed.length === 0) {
+        this.setting.loading = 'Empty...'
+      } else {
+        this.setting.loading = ''
       }
     },
     async hot () {
