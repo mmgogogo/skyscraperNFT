@@ -370,8 +370,9 @@ import Building from '@/components/Building.vue'
 import Messager from '@/utils/Messager.js'
 import {
   // ajaxAddFollowerPeople, ajaxAddFollowerToken, ajaxAddTokenInfo,
-  ajaxGetHotToken, ajaxGetMyFollower, ajaxGetAllNfts, ajaxGetTokenInfo
+  ajaxGetHotToken, ajaxGetMyFollower, ajaxGetAllNfts, ajaxGetTokenInfo, ajaxGetTokenHotNum
 } from '@/utils/AjaxData.js'
+// import { addLocalStorage, getLocalStorage } from '@/utils/Utils.js'
 
 export default {
   name: 'Navigator',
@@ -903,13 +904,12 @@ export default {
         curFloorList.push(floorInfo)
         _that.building.floors.push(floorInfo)
       }
-      // todo data 通过组织结果返回后在这里处理
-      // 见下面的 getFloorListInfo 方法
-      // let processedList = await _that.getFloorListInfo(floorIds)
-      // for(item of processedList) {
+      // 通过组织结果返回后在这里处理
+      const processedList = await _that.getFloorListInfo(floorIds)
+      for (const item in processedList) {
       //   const newFloorInfo = item
-      //   _that.building.floors.push(floorInfo)
-      // }
+        _that.building.floors.push(item)
+      }
 
       if (first) {
         const hallInfo = {
@@ -952,31 +952,33 @@ export default {
       localStorage.setItem('buildingStart', start)
       _that.updateBuilding(start)
     },
+    async getTokenFromContract (floorId) {
+      // 获取楼层合约里面的信息，将来这里换个新合约，直接映射TokenID的对象
+      const oneFloor = { minted: 0, owner: '', tokenId: floorId }
+      await this.$Dapp.Bridges.writer.getTokenInfo(floorId).then(function (ret) {
+        // floorNo, houseType, tokenId, uri
+        console.log('[Main] getTokenFromContract:', parseInt(ret.tokenId), ret.owner)
+        if (ret.owner !== '0x0000000000000000000000000000000000000000') {
+          oneFloor.owner = ret.owner
+          oneFloor.minted = 1
+        }
+      })
+      console.log('[Main] getTokenFromContract response', oneFloor)
+      return oneFloor
+    },
     async getFloorBaseInfo (floorIds) {
-      // 获取楼层基础信息
-      const contractWriter = this.$Dapp.Bridges.writer
-
+      // 获取楼层组合信息
       const baseInfo = []
       for (var f in floorIds) {
-        // 将来这里换个新合约，直接映射TokenID的对象
-        await contractWriter.getTokenInfo(floorIds[f]).then(function (ret) {
-          const oneFloor = { minted: true, owner: ret.owner, name: '', myFloor: 0 }
-          // floorNo, houseType, tokenId, uri
-          console.log('[Main] getTokenInfo:', parseInt(ret.tokenId), ret.owner)
-          if (ret.owner === '0x0000000000000000000000000000000000000000') {
-            oneFloor.oneFloor = false
-          }
-          baseInfo.push(oneFloor)
-        })
+        // 这里会统一处理缓存情况
+        const oneFloor = await this.getTokenFromContract(floorIds[f])
+        baseInfo.push(oneFloor)
       }
-
+      console.log('[Main] getFloorBaseInfo response', baseInfo)
       return baseInfo
     },
-    async getFloorMessageInfo (floorIds) {
-      // 获取楼层消息信息
-      return await ajaxGetTokenInfo(floorIds)
-    },
     async getFloorListInfo (floorIds) {
+      // 获取楼层全部信息
       // this.getFloorBaseInfo(floorIds)
       // this.getFloorMessageInfo(floorIds)
 
@@ -1009,18 +1011,6 @@ export default {
       //   message: '留言信息Object',
       //   myFloor:'我的楼层的魅力值 or 0'
       // }
-      const f1 = await this.getFloorBaseInfo(floorIds)
-      const f2 = await this.getFloorMessageInfo(floorIds)
-      const result = []
-      for (var k in f1) {
-        let message = ''
-        if (f2[k] !== undefined) {
-          message = f2[k].msg
-        }
-        result.push({ tokenId: k, owner: f1[k].owner, name: '', myFloor: 0, message: message })
-      }
-      console.log('[Main] getFloorListInfo result', result)
-      return result
       // return [
       //   {
       //     floorId: 0,
@@ -1031,6 +1021,26 @@ export default {
       //   }
       //   // ...
       // ]
+
+      // TODO 先从缓存里面读取，如果已经存在，则直接返回，否则开始拉取新数据，设置缓存过期
+
+      const f1 = await this.getFloorBaseInfo(floorIds) // 楼层信息
+      const f2 = await ajaxGetTokenInfo(floorIds) // 留言信息
+      const f3 = await ajaxGetTokenHotNum(floorIds) // 留言信息
+      const result = []
+      for (var k in f1) {
+        let message = ''
+        let myFloorNum = 0
+        if (f2[k] !== undefined) {
+          message = f2[k].msg
+        }
+        if (f3[k] !== undefined) {
+          myFloorNum = f3[k].num
+        }
+        result.push({ tokenId: f1[k].tokenId, owner: f1[k].owner, name: '', myFloor: myFloorNum, message: message })
+      }
+      console.log('[Main] getFloorListInfo result', result)
+      return result
     },
     async openGame (param) {
       const _that = this
@@ -1061,9 +1071,10 @@ export default {
       if (param[1]) {
         owned = 1
       } else {
-        // todo data
-        // 所有者信息模拟
-        owned = _that.randBoolean()
+        // data
+        // owned = _that.randBoolean()
+        const oneFloor = await _that.getTokenFromContract(1)
+        owned = oneFloor.minted
       }
       _that.showInfo.game = true
       _that.gameConfig.gameUrl =

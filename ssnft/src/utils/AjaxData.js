@@ -162,7 +162,6 @@ export async function ajaxGetTokenInfo (tokenIds) {
   await axios.post(url).then(response => {
     const data = response.data
 
-    // TODO not support more then 100 nft
     console.log('[AjaxData] ajaxGetTokenInfo response:', data)
     if (data.Code === 0) {
       const items = data.Data
@@ -174,5 +173,27 @@ export async function ajaxGetTokenInfo (tokenIds) {
   })
 
   console.log('[AjaxData] ajaxGetTokenInfo result:', result)
+  return result
+}
+
+// 获取楼层热度
+export async function ajaxGetTokenHotNum (tokenIds) {
+  console.log('[AjaxData] call ajaxGetTokenHotNum:')
+
+  const result = []
+  const url = apiServer + '/followertoken/listbytokenids?tokenIds=' + tokenIds.join(',')
+  await axios.post(url).then(response => {
+    const data = response.data
+
+    console.log('[AjaxData] ajaxGetTokenHotNum response-2:', data)
+    if (data.Code === 0) {
+      const items = data.Data
+      for (var i in items) {
+        const oneToken = { tokenId: items[i].TokenId, num: items[i].Num }
+        result[items[i].TokenId] = oneToken
+      }
+    }
+  })
+
   return result
 }
