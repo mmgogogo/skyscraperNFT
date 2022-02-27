@@ -255,10 +255,9 @@
             <div class="box13 flex-row">
               <div class="box14">
                 <span class="info10">楼层ID</span>
-                <span class="info10">Price</span>
                 <span class="word9">：</span>
                 <span class="word10">
-                  <input type="number" class="" placeholder="输入mint的楼层" v-model.number="mintFloorNo">
+                  <input type="number" class="" placeholder="输入MINT的楼层ID" v-model.number="mintFloorNo">
                 </span>
                 <!-- <span class="word10">0.26</span>
                 <span class="txt5"></span>
@@ -588,9 +587,9 @@ export default {
       if (!_that.playerInfo.isLogin) {
         await this.login()
       }
-      setTimeout(function () {
-        _that.showInfo.mint = false
-      }, 5000)
+      // setTimeout(function () {
+      //   _that.showInfo.mint = false
+      // }, 5000)
       if (_that.showInfo.mint) {
         _that.showInfo.mint = false
       } else {
@@ -609,11 +608,11 @@ export default {
       }
       const floorNum = _that.mintFloorNo
       const floorPrice = ethers.utils.parseEther('0.1')
-      console.log('realmint:::', floorNum, floorPrice)
+      console.log('[Main] realmint:::', floorNum, floorPrice)
 
       // All overrides are optional
       const overrides = {
-        // gasLimit: 23000, // default
+        gasLimit: 50000, // default
         // gasPrice: ethers.utils.parseUnits('9.0', 'gwei'), // default
         gasPrice: 20000000000, // default
         value: floorPrice
