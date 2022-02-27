@@ -103,6 +103,7 @@
 
       <!-- content start -->
       <div class="content flex-col" @click="onClick($event)">
+        <!--TODO fly 这里传不进去-->
         <Building :floors="building.floors" v-on:open-game="openGame"  v-on:floor-scroll="floorScroll"/>
         <!-- ladder start -->
         <div class="ladder flex-col">
@@ -644,38 +645,38 @@ export default {
         this.showInfo.myFloor = true
       }
 
-      // const address = window.ethereum.selectedAddress
-      // const contractWriter = this.$Dapp.Bridges.writer
-      // const playerInfo = this.playerInfo
+      const address = window.ethereum.selectedAddress
+      const contractWriter = this.$Dapp.Bridges.writer
+      const playerInfo = this.playerInfo
 
-      // await contractWriter.balanceOf(address).then(function (ret) {
-      //   const nftNum = parseInt(ret)
-      //   console.log('[Main][myFloor] call balanceOf:', ret, nftNum)
-      //   if (nftNum === 0) {
-      //     _that.popupMessage('Your have nothing nft')
-      //     return
-      //   }
+      await contractWriter.balanceOf(address).then(function (ret) {
+        const tokenNum = parseInt(ret)
+        console.log('[Main][myFloor] call balanceOf:', ret, tokenNum)
+        if (tokenNum === 0) {
+          _that.popupMessage('Your have nothing nft')
+          return
+        }
 
-      //   for (let i = 0; i < nftNum; i++) {
-      //     contractWriter.tokenOfOwnerByIndex(address, i).then(function (tokenId) {
-      //       console.log('[Main][myFloor]call tokenOfOwnerByIndex:', parseInt(tokenId))
+        for (let i = 0; i < tokenNum; i++) {
+          contractWriter.tokenOfOwnerByIndex(address, i).then(function (tokenId) {
+            console.log('[Main][myFloor]call tokenOfOwnerByIndex:', parseInt(tokenId))
 
-      //       contractWriter.getTokenInfo(tokenId).then(function (ret) {
-      //         console.log('[Main][myFloor]call getTokenInfo:', ret)
-      //         playerInfo.mintFloorTokenId.push(parseInt(ret.tokenId))
-      //         playerInfo.mintFloorNumId.push(parseInt(ret.floorNo))
-      //       })
-      //     })
-      //   }
+            contractWriter.getTokenInfo(tokenId).then(function (ret) {
+              console.log('[Main][myFloor]call getTokenInfo:', ret)
+              playerInfo.mintFloorTokenId.push(parseInt(ret.tokenId))
+              playerInfo.mintFloorNumId.push(parseInt(ret.floorNo))
+            })
+          })
+        }
 
-      //   if (nftNum === 0) {
-      //     _that.setting.loading = 'Empty...'
-      //   } else {
-      //     _that.setting.loading = ''
-      //   }
-      // })
-      // TODO
-      this.getFloorListInfo([0, 1, 2, 3, 4, 5, 8888])
+        if (tokenNum === 0) {
+          _that.setting.loading = 'Empty...'
+        } else {
+          _that.setting.loading = ''
+        }
+      })
+      // Test
+      // this.getFloorListInfo([0, 1, 2, 3, 4, 5, 8888])
     },
     async myFollowing () {
       const _that = this
@@ -775,7 +776,7 @@ export default {
     },
     windowCompute () {
       const _that = this
-      console.log('[Main][windowCompute] ', _that.gameConfig.windowHeight)
+      console.log('[Main][windowCompute] windowHeight', _that.gameConfig.windowHeight)
       const wHeight = _that.gameConfig.windowHeight
       return {
         'min-height': '500px',
@@ -790,7 +791,7 @@ export default {
       console.log('[Main] floor id is ', this.gotoNum)
       _that.search(this.gotoNum)
       // return
-      await this.appContractWriter.getTokenInfo(this.gotoNum).then(function (ret) {
+      await this.$Dapp.Bridges.writer.getTokenInfo(this.gotoNum).then(function (ret) {
         console.log('[Main][goto] call getTokenInfo:', ret)
         const tokenId = parseInt(ret.tokenId)
         console.log('[Main][goto] token id:', tokenId)
@@ -893,10 +894,11 @@ export default {
         const floorInfo = {
           id: i,
           floorId: floorIdStr,
+          minted: 0,
           owner: '',
           name: '',
           message: '',
-          myFloor: i,
+          myFloor: 0,
           order: order,
           image: image
         }
@@ -906,15 +908,16 @@ export default {
       }
       // 通过组织结果返回后在这里处理
       const processedList = await _that.getFloorListInfo(floorIds)
-      for (const item in processedList) {
-      //   const newFloorInfo = item
+      for (const item of processedList) {
         _that.building.floors.push(item)
       }
+      console.log('[Main] building floors', _that.building.floors)
 
       if (first) {
         const hallInfo = {
           id: 0,
           floorId: 'x',
+          minted: 0,
           owner: '',
           name: '',
           message: '',
@@ -951,41 +954,6 @@ export default {
       _that.building.start = start
       localStorage.setItem('buildingStart', start)
       _that.updateBuilding(start)
-    },
-    async getTokenFromContract (floorId) {
-      // 判断是否有缓存
-      const cacheName = 'FloorCache:'
-      const oneFloorCache = getLocalStorage(cacheName + floorId)
-      if (oneFloorCache !== null) {
-        return oneFloorCache
-      }
-
-      // 获取楼层合约里面的信息，将来这里换个新合约，直接映射TokenID的对象
-      const oneFloor = { minted: 0, owner: '', tokenId: floorId }
-      await this.$Dapp.Bridges.writer.getTokenInfo(floorId).then(function (ret) {
-        // floorNo, houseType, tokenId, uri
-        console.log('[Main] getTokenFromContract:', parseInt(ret.tokenId), ret.owner)
-        if (ret.owner !== '0x0000000000000000000000000000000000000000') {
-          oneFloor.owner = ret.owner
-          oneFloor.minted = 1
-        }
-      })
-      console.log('[Main] getTokenFromContract response', oneFloor)
-
-      // 写入缓存
-      addLocalStorage(cacheName + floorId, oneFloor)
-      return oneFloor
-    },
-    async getFloorBaseInfo (floorIds) {
-      // 获取楼层组合信息
-      const baseInfo = []
-      for (var f in floorIds) {
-        // 这里会统一处理缓存情况
-        const oneFloor = await this.getTokenFromContract(floorIds[f])
-        baseInfo.push(oneFloor)
-      }
-      console.log('[Main] getFloorBaseInfo response', baseInfo)
-      return baseInfo
     },
     async getFloorListInfo (floorIds) {
       // 获取楼层全部信息
@@ -1047,10 +1015,45 @@ export default {
         if (f3[k] !== undefined) {
           myFloorNum = f3[k].num
         }
-        result.push({ tokenId: f1[k].tokenId, owner: f1[k].owner, name: '', myFloor: myFloorNum, message: message })
+        result.push({ tokenId: f1[k].tokenId, minted: f1[k].minted, owner: f1[k].owner, name: '', myFloor: myFloorNum, message: message })
       }
       console.log('[Main] getFloorListInfo result', result)
       return result
+    },
+    async getFloorBaseInfo (floorIds) {
+      // 获取楼层组合信息
+      const baseInfo = []
+      for (var f in floorIds) {
+        // 这里会统一处理缓存情况
+        const oneFloor = await this.getTokenFromContract(floorIds[f])
+        baseInfo.push(oneFloor)
+      }
+      console.log('[Main] getFloorBaseInfo response', baseInfo)
+      return baseInfo
+    },
+    async getTokenFromContract (floorId) {
+      // 判断是否有缓存
+      const cacheName = 'FloorCache:'
+      const oneFloorCache = getLocalStorage(cacheName + floorId)
+      if (oneFloorCache !== null) {
+        return oneFloorCache
+      }
+
+      // 获取楼层合约里面的信息，将来这里换个新合约，直接映射TokenID的对象
+      const oneFloor = { minted: 0, owner: '', tokenId: floorId }
+      await this.$Dapp.Bridges.writer.getTokenInfo(floorId).then(function (ret) {
+        // floorNo, houseType, tokenId, uri
+        console.log('[Main] getTokenFromContract:', parseInt(ret.tokenId), ret.owner)
+        if (ret.owner !== '0x0000000000000000000000000000000000000000') {
+          oneFloor.owner = ret.owner
+          oneFloor.minted = 1
+        }
+      })
+      console.log('[Main] getTokenFromContract response', oneFloor)
+
+      // 写入缓存
+      addLocalStorage(cacheName + floorId, oneFloor)
+      return oneFloor
     },
     async openGame (param) {
       const _that = this
@@ -1080,12 +1083,11 @@ export default {
       let owned = 0
       if (param[1]) {
         owned = 1
-      } else {
-        // data
-        // owned = _that.randBoolean()
-        const oneFloor = await _that.getTokenFromContract(1)
-        owned = oneFloor.minted
       }
+      // } else {
+      // data
+      // owned = _that.randBoolean()
+      // }
       _that.showInfo.game = true
       _that.gameConfig.gameUrl =
         _that.gameConfig.baseUrl +
@@ -1153,9 +1155,10 @@ export default {
     $(fn => {
       (async function () {
         console.log('[Main][created] display Dapp 2 ', _that.$Dapp)
-        if (!_that.$Dapp.isMetaMaskInstalled()) {
-          _that.popupMessage('Please install wallet plugin')
-        }
+        // if (!_that.$Dapp.isMetaMaskInstalled()) {
+        //   _that.popupMessage('Please install wallet plugin')
+        // }
+        _that.login()
         _that.initBuilding()
         await _that.timer()
         await Messager.listener()

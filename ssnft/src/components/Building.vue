@@ -4,20 +4,20 @@
     <div class="owner flex-container">
       <div class="owner-card flex-col align-center">
         <div class="owner-card-section flex-col">
-          <span class="owner-card-name">Bob Home</span>
+          <span class="owner-card-name">{{ floorInfo.name || hiddenAddress(floorInfo.owner) || defaultName }}</span>
           <div class="owner-card-line flex-col"></div>
           <div class="owner-card-value flex-row align-center">
             <div class="owner-card-mod flex-col justify-center">
               <div class="owner-card-layer flex-col"></div>
             </div>
-            <span class="ower-card-word flex-col">167</span>
+            <span class="ower-card-word flex-col">{{ floorInfo.myFloor }}</span>
           </div>
         </div>
       </div>
-      <span class="message">{{ floorInfo.myFloor || defaultMsg }}</span>
+      <!-- <span class="message">{{ floorInfo.message || defaultMsg }}</span> -->
     </div>
     <div class="room flex-col align-center" v-bind:class="[floorInfo.isFirst?'first':'']">
-      <div class="decoration flex-container align-start" v-on:click="$emit('open-game', [floorInfo.id, true, 'abc'])">
+      <div class="decoration flex-container align-start" v-on:click="$emit('open-game', [floorInfo.tokenId, floorInfo.minted, floorInfo.owner])">
         <img class="floor-area flex-row" referrerpolicy="no-referrer" src="../assets/images/walls/floor_area.png" alt="" />
         <img class="floor-img flex-row" referrerpolicy="no-referrer" v-bind:src="requireImg(floorInfo.floorId)" alt="" />
       </div>
@@ -55,7 +55,8 @@ export default {
   name: 'Floor',
   data () {
     return {
-      defaultMsg: 'this is a message',
+      defaultMsg: '欢迎来我家',
+      defaultName: '空置房',
       scrolled: false
     }
   },
@@ -93,6 +94,10 @@ export default {
       console.log('[Building][handleWheel] emit event ', event.deltaY)
 
       this.$emit('floor-scroll', event)
+    },
+    hiddenAddress (address) {
+      var reg = /^(\w{4})\w+(\w{4})$/
+      return address.replace(reg, '$1****$2')
     }
   },
   created () {

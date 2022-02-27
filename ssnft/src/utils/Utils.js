@@ -10,6 +10,7 @@ export function curTimeSe () {
  * @param {integer} sec 过期时间，秒为单位
  */
 export function addLocalStorage (key, value, sec) {
+  console.log('[Utils] addLocalStorage', key, value, sec)
   if (sec === undefined) {
     sec = 60 * 60
   }
@@ -19,7 +20,7 @@ export function addLocalStorage (key, value, sec) {
 export function getLocalStorage (key) {
   let data = localStorage.getItem(key)
   data = JSON.parse(data)
-  console.log('[Utils] getLocalStorage', data)
+  console.log('[Utils] getLocalStorage', key, data)
   if (data === null || data.expire < curTimeSe()) {
     return null
   } else {
