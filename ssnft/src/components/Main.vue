@@ -372,7 +372,7 @@ import {
   // ajaxAddFollowerPeople, ajaxAddFollowerToken, ajaxAddTokenInfo,
   ajaxGetHotToken, ajaxGetMyFollower, ajaxGetAllNfts, ajaxGetTokenInfo, ajaxGetTokenHotNum
 } from '@/utils/AjaxData.js'
-// import { addLocalStorage, getLocalStorage } from '@/utils/Utils.js'
+import { addLocalStorage, getLocalStorage } from '@/utils/Utils.js'
 
 export default {
   name: 'Navigator',
@@ -953,6 +953,13 @@ export default {
       _that.updateBuilding(start)
     },
     async getTokenFromContract (floorId) {
+      // 判断是否有缓存
+      const cacheName = 'FloorCache:'
+      const oneFloorCache = getLocalStorage(cacheName + floorId)
+      if (oneFloorCache !== null) {
+        return oneFloorCache
+      }
+
       // 获取楼层合约里面的信息，将来这里换个新合约，直接映射TokenID的对象
       const oneFloor = { minted: 0, owner: '', tokenId: floorId }
       await this.$Dapp.Bridges.writer.getTokenInfo(floorId).then(function (ret) {
@@ -964,6 +971,9 @@ export default {
         }
       })
       console.log('[Main] getTokenFromContract response', oneFloor)
+
+      // 写入缓存
+      addLocalStorage(cacheName + floorId, oneFloor)
       return oneFloor
     },
     async getFloorBaseInfo (floorIds) {
