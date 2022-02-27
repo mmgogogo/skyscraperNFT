@@ -144,7 +144,7 @@
 
           <div class="chat-footer flex-col justify-center">
             <span class="chat-footer-msg">Chat：
-              <input type="text" class="message-input" name="message" id="message" v-model="curMessage" @keyup.enter="updateChatList()">
+              <input type="text" class="message-input" name="message" id="message" v-model="curMessage" @keyup.enter="submitChat()">
             </span>
           </div>
         </div>
@@ -371,9 +371,9 @@ import Building from '@/components/Building.vue'
 import Messager from '@/utils/Messager.js'
 import {
   // ajaxAddFollowerPeople, ajaxAddFollowerToken, ajaxAddTokenInfo,
-  ajaxGetHotToken, ajaxGetMyFollower, ajaxGetAllNfts, ajaxGetTokenInfo, ajaxGetTokenHotNum
+  ajaxGetHotToken, ajaxGetMyFollower, ajaxGetAllNfts, ajaxGetTokenInfo, ajaxGetTokenHotNum, wsServerUrl
 } from '@/utils/AjaxData.js'
-import { addLocalStorage, getLocalStorage } from '@/utils/Utils.js'
+import { addLocalStorage, getLocalStorage, hiddenAddress } from '@/utils/Utils.js'
 
 export default {
   name: 'Navigator',
@@ -464,11 +464,10 @@ export default {
         floors: []
       },
       chatList: [
-        { name: 'Bob', content: 'Can you help me?' },
-        { name: 'Lisa', content: 'No, I can\'t' },
-        { name: '泽连斯基', content: '西方抛弃了我们！' },
-        { name: '普京', content: '去死吧！' }
-      ]
+        { name: '系统', content: '欢迎进入聊天频道！' }
+      ],
+      chatConn: null, // chat connection
+      chatRandNum: 0 // chat rand agent id
     }
   },
   props: {
@@ -501,6 +500,7 @@ export default {
         _that.popupMessage('Please install wallet plugin')
         return
       }
+      // TODO:切换账号这里应该重新处理
       if (!dapp.Bridges.local || !dapp.Bridges.ethereum || _that.$Dapp.Bridges.ethereum === undefined) {
         console.log('[Main][login] connect')
         await _that.$Dapp.connect()
@@ -552,20 +552,32 @@ export default {
         _that.showInfo.chat = true
       }
     },
-    updateChatList () {
+    updateChatList (chatName, msg) {
+      // 更新聊天框
+      const len = this.chatList.length
+      if (len > 20) {
+        this.chatList = this.chatList.slice(len - 19)
+      }
+      this.chatList.unshift({ name: hiddenAddress(chatName), content: msg })
+    },
+    submitChat (chatName) {
+      // 发送聊天内容
       const _that = this
-      console.log('[Main][chat] message is', _that.curMessage)
-      if (_that.curMessage) {
-        const len = _that.chatList.length
-        if (len > 20) {
-          _that.chatList = _that.chatList.slice(len - 19)
-        }
-        _that.chatList.unshift({ name: 'PZ', content: _that.curMessage })
+      if (!_that.playerInfo.isLogin) {
+        _that.popupMessage('login wallet to loading more information')
+        return
+      }
+      if (chatName === undefined) {
+        chatName = this.playerInfo.address
+      }
 
-        // todo data broadcast to the world channel
-        // data structure
-        // let msgInfo = { name: 'sender name', content: 'a message' }
-        // broadcast( msgInfo )
+      console.log('[Main] ws message is', _that.curMessage)
+      if (_that.curMessage) {
+        // 发送消息
+        this.broadcast(this.playerInfo.address, _that.curMessage)
+
+        // 更新聊天框
+        this.updateChatList(chatName, _that.curMessage)
 
         _that.curMessage = ''
       }
@@ -1146,6 +1158,48 @@ export default {
       setInterval(function () {
         // console.log('[Main][timer] add timer event here')
       }, 15000)
+    },
+    // 初始化聊天服务器
+    initChatServer () {
+      const _that = this
+      let chatName = hiddenAddress(this.playerInfo.address)
+      if (chatName === '') {
+        chatName = this.chatRandNum
+      }
+      if (window.WebSocket) {
+        const url = wsServerUrl() + '?id=' + chatName + '&room=0'
+        console.log('[Main] ws server url: ' + url)
+        _that.chatConn = new WebSocket(url)
+        _that.chatConn.onopen = function (evt) {
+          _that.broadcast('系统', '欢迎' + chatName + '加入频道')
+        }
+        _that.chatConn.onclose = function (evt) {
+          _that.broadcast('系统', 'Connection closed')
+        }
+        _that.chatConn.onmessage = function (evt) {
+          // 解析消息
+          const data = JSON.parse(JSON.parse(evt.data))
+          console.log('data', data)
+          _that.updateChatList(data.name, data.msg)
+        }
+      } else {
+        _that.popupMessage('Your browser does not support chat service')
+      }
+    },
+    broadcast (name, msg) {
+      // 发送通知
+      if (this.chatConn === null) {
+        alert('send chat failed')
+        return
+      }
+      // 打包消息
+      const data = JSON.stringify({
+        name: name,
+        msg: msg,
+        room: 0,
+        type: 0 // 0=公共 1=私聊
+      })
+      console.log('=====>', this.chatConn.send(data))
     }
   },
   created () {
@@ -1162,6 +1216,11 @@ export default {
         _that.initBuilding()
         await _that.timer()
         await Messager.listener()
+
+        // init chat server
+        _that.chatRandNum = parseInt(Math.random() * 1000000)
+        console.log('[Main] start connect ws server')
+        _that.initChatServer()
       })()
     })
   }

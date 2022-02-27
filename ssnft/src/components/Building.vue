@@ -50,6 +50,7 @@ import floor00008 from '../assets/images/walls/floor_00008.png'
 import floor00009 from '../assets/images/walls/floor_00009.png'
 import floor00010 from '../assets/images/walls/floor_00010.png'
 import floorx from '../assets/images/walls/floor_x.png'
+import { hiddenAddress } from '@/utils/Utils.js'
 
 export default {
   name: 'Floor',
@@ -96,8 +97,7 @@ export default {
       this.$emit('floor-scroll', event)
     },
     hiddenAddress (address) {
-      var reg = /^(\w{4})\w+(\w{4})$/
-      return address.replace(reg, '$1****$2')
+      return hiddenAddress(address)
     }
   },
   created () {

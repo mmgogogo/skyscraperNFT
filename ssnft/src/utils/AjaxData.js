@@ -3,8 +3,18 @@ import qs from 'qs'
 
 // 服务器地址
 const apiServer = 'http://127.0.0.1:9950'
+const wsServer = 'ws://127.0.0.1:9950/ws'
 // const wsServer = 'ws://iamxmm.xyz/ws'
 // const apiServer = 'https://iamxmm.xyz'
+
+// 共享服务
+export function wsServerUrl () {
+  return wsServer
+}
+
+export function apiServerUrl () {
+  return apiServer
+}
 
 // 添加关注地址
 export async function ajaxAddFollowerPeople (from, to) {
