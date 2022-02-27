@@ -103,7 +103,6 @@
 
       <!-- content start -->
       <div class="content flex-col" @click="onClick($event)">
-        <!--TODO fly 这里传不进去-->
         <Building :floors="building.floors" v-on:open-game="openGame"  v-on:floor-scroll="floorScroll"/>
         <!-- ladder start -->
         <div class="ladder flex-col">
@@ -576,7 +575,7 @@ export default {
         this.broadcast(this.playerInfo.address, _that.curMessage)
 
         // 更新聊天框
-        this.updateChatList(chatName, _that.curMessage)
+        // this.updateChatList(chatName, _that.curMessage)
 
         _that.curMessage = ''
       }
@@ -619,7 +618,7 @@ export default {
       }
       await _that.$Dapp.Bridges.writer.mint(floorNum, overrides).then(function (ret) {
         console.log(ret)
-        _that.popupMessage('已成功mint，请查看my floor.')
+        _that.popupMessage('已成功MINT楼层，请查看My Floor')
       })
       _that.showInfo.mint = true
     },
@@ -971,7 +970,6 @@ export default {
       // this.getFloorBaseInfo(floorIds)
       // this.getFloorMessageInfo(floorIds)
 
-      // todo data
       // data structure
       // 0. floorIds [1,2,3,4... 10000]
       // 建议是 100条，取好缓存在本地
@@ -1010,8 +1008,6 @@ export default {
       //   }
       //   // ...
       // ]
-
-      // TODO 先从缓存里面读取，如果已经存在，则直接返回，否则开始拉取新数据，设置缓存过期
 
       const f1 = await this.getFloorBaseInfo(floorIds) // 楼层信息
       const f2 = await ajaxGetTokenInfo(floorIds) // 留言信息
@@ -1170,7 +1166,7 @@ export default {
         console.log('[Main] ws server url: ' + url)
         _that.chatConn = new WebSocket(url)
         _that.chatConn.onopen = function (evt) {
-          _that.broadcast('系统', '欢迎' + chatName + '加入频道')
+          _that.broadcast('系统', '欢迎[' + chatName + ']加入频道')
         }
         _that.chatConn.onclose = function (evt) {
           _that.broadcast('系统', 'Connection closed')
@@ -1178,7 +1174,7 @@ export default {
         _that.chatConn.onmessage = function (evt) {
           // 解析消息
           const data = JSON.parse(JSON.parse(evt.data))
-          console.log('data', data)
+          console.log('[Main] ws data', data)
           _that.updateChatList(data.name, data.msg)
         }
       } else {
@@ -1198,7 +1194,7 @@ export default {
         room: 0,
         type: 0 // 0=公共 1=私聊
       })
-      console.log('=====>', this.chatConn.send(data))
+      this.chatConn.send(data)
     }
   },
   created () {
