@@ -237,44 +237,52 @@
       <!-- mint start -->
       <div class="shadow" v-if="showInfo.mint" @click="onClick($event)">
         <div id="mint" class="mint flex-col" @click="onClickOutside($event)">
-          <div class="block flex-row justify-between">
-            <div class="main4 flex-col"></div>
-            <div class="main5 flex-col justify-between">
-              <span class="txt3">Skyscraper&nbsp;Floor</span>
-              <span class="txt4">请输入你需要mint的楼层号</span>
-              <!-- <span class="txt4">
-                Phanta&nbsp;Bear&nbsp;is&nbsp;a&nbsp;collection&nbsp;of&nbsp;10,000&nbsp;algorithmically&nbsp;generated&nbsp;digital&nbsp;collectibles&nbsp;that&nbsp;double&nbsp;as&nbsp;memebership&nbsp;cards&nbsp;for&nbsp;the&nbsp;Ezek&nbsp;Club.&nbsp;Each&nbsp;Phanta&nbsp;Bear&nbsp;has&nbsp;a&nbsp;unique&nbsp;set&nbsp;of&nbsp;traits&nbsp;and&nbsp;unlocks&nbsp;varying,&nbsp;unique&nbsp;levels&nbsp;of&nbsp;access&nbsp;and&nbsp;perks&nbsp;for&nbsp;its&nbsp;owner.&nbsp;Phanta&nbsp;Bear&nbsp;project&nbsp;was&nbsp;jointly&nbsp;launched&nbsp;by&nbsp;PHANTACi&nbsp;and&nbsp;Ezek
-              </span> -->
-              <div class="mod2 flex-col justify-center btn-hand">
-                <span class="info7" @click="realMint()">MINT</span>
+          <div class="mint-container flex-row justify-between">
+            <div class="mint-left flex-col"></div>
+            <div class="mint-right flex-col">
+              <span class="mint-desc-title flex-row">Skyscraper Floor</span>
+              <span class="mint-desc-content flex-row">
+                Phanta Bear is a collection of 10,000 algorithmically generated digital collectibles that double as memebership cards for the Ezek Club. Each Phanta Bear has a unique set of traits and unlocks varying, unique levels of access and perks for its owner. Phanta Bear project was jointly launched by PHANTACi and Ezek
+              </span>
+              <div class="mint-btn flex-row align-center btn-hand">
+                <span class="mint-btn-txt flex-col" @click="realMint()">MINT</span>
               </div>
+              <!-- <span class="txt4">请输入你需要mint的楼层号</span> -->
             </div>
           </div>
-          <div class="block2 flex-col">
-            <div class="box13 flex-row">
-              <div class="box14">
-                <span class="info10">楼层ID</span>
+          <div class="mint-left-layer flex-col">
+            <div class="mint-left-msg-up flex-row">
+              <div class="mint-left-msg-up-container flex-container">
+                <span class="mint-price-txt">Price</span>
+                <span class="mint-price-split">：</span>
+                <span class="mint-price-value">0.26</span>
+                <span class="mint-price-unit">ETH</span>
+
+                <!-- mm -->
+                <!-- <span class="info10">楼层ID</span>
                 <span class="info10">Price</span>
                 <span class="word9">：</span>
                 <span class="word10">
                   <input type="number" class="" placeholder="输入mint的楼层" v-model.number="mintFloorNo">
-                </span>
-                <!-- <span class="word10">0.26</span>
-                <span class="txt5"></span>
-                <span class="txt6">ETH</span> -->
+                </span> -->
+                <!-- mm -->
               </div>
             </div>
-            <!-- <div class="box15 flex-row justify-between">
-              <div class="main6 flex-col">
-                <div class="group6 flex-col"></div>
+            <div class="mint-left-msg-down flex-row justify-between">
+              <div class="mint-left-msg-up-container flex-container">
+                <span class="mint-number-txt flex-col">Amount</span>
+                <span class="mint-price-split">：</span>
+                <div class="mint-minus flex-row align-center">
+                  <div class="mint-minus-img flex-col"></div>
+                </div>
+                <span class="mint-number-val ">2</span>
+                <div class="mint-plus flex-row align-center">
+                  <div class="mint-plus-img flex-col"></div>
+                </div>
               </div>
-              <span class="word11">1</span>
-              <div class="main7 flex-col">
-                <div class="group7 flex-col"></div>
-              </div>
-            </div>-->
-            <img class="pic1" referrerpolicy="no-referrer" src="../assets/images/floor_icon.png" alt=""/>
-            <!-- <span class="info11">Amount：</span> -->
+            </div>
+            <img class="mint-floor-icon" referrerpolicy="no-referrer" src="../assets/images/floor_icon.png" alt=""/>
+
           </div>
         </div>
       </div>
@@ -288,7 +296,7 @@
           <div class="player7 flex-col justify-center align-center">
             <div class="player8 flex-row">
               <div class="pmod6 flex-col"><div class="psection11 flex-col"></div></div>
-              <span class="pinfo4">My&nbsp;Wallet</span>
+              <span class="pinfo4">My Wallet</span>
               <div class="pmod7 flex-col">
                 <div class="player9 flex-col" @click="close()"></div>
               </div>
@@ -508,7 +516,7 @@ export default {
         console.log('[Main][login] connect')
         await _that.$Dapp.connect()
       } else {
-        _that.popupMessage('Metamask had connect success')
+        _that.popupMessage('Metamask connected')
       }
       if (!_that.playerInfo.isLogin) {
         _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
@@ -577,11 +585,11 @@ export default {
       console.log('[Main][mint] start')
       const _that = this
       if (!_that.playerInfo.isLogin) {
-        await this.login()
+        await _that.login()
       }
-      setTimeout(function () {
-        _that.showInfo.mint = false
-      }, 5000)
+      // setTimeout(function () {
+      //   _that.showInfo.mint = false
+      // }, 5000)
       if (_that.showInfo.mint) {
         _that.showInfo.mint = false
       } else {
