@@ -2,10 +2,10 @@ import axios from 'axios'
 import qs from 'qs'
 
 // 服务器地址
-const apiServer = 'http://127.0.0.1:9950'
-const wsServer = 'ws://127.0.0.1:9950/ws'
-// const wsServer = 'ws://iamxmm.xyz/ws'
-// const apiServer = 'https://iamxmm.xyz'
+// const apiServer = 'http://127.0.0.1:9950'
+// const wsServer = 'ws://127.0.0.1:9950/ws'
+const wsServer = 'wss://iamxmm.xyz/ws'
+const apiServer = 'https://iamxmm.xyz'
 
 // 共享服务
 export function wsServerUrl () {
