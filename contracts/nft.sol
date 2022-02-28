@@ -1,45 +1,34 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Pausable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract IBuilding is Context, AccessControlEnumerable, ERC721Enumerable, ERC721Burnable, ERC721Pausable {
+contract IBuilding is Context, Ownable, ERC721, ERC721Burnable, ERC721Pausable, IERC721Enumerable {
     using EnumerableSet for EnumerableSet.UintSet;
     using Counters for Counters.Counter;
 
     // fund account
     address payable public receiver;
 
-    // contract admin role
-    bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-
     // nft storage struct
     enum Sales { EXPECT, SELLING, CLOSE }
-    // house types random
-    struct HouseType {
-        uint256 sittingRoom;
-        uint256 bedroom;
-        uint256 room2;
-        uint256 room3;
-        uint256 room4;
-    }
 
     // 楼层描述
     struct Floor {
         uint256 floorNo;    // floor number
         address owner;      // owner who minted
         uint256 tokenId;    // nftId
-        HouseType houseType;// random hourseType 
-        bytes uri;          // tokenURI
+        uint256 houseType;  // random hourseType 
+        bytes uri;          // tokenURI TODO
     }
 
-    uint256 buildingId;
+    uint256 public buildingId;
 
     mapping(uint256 => Floor) public _floorTokenMap;
     mapping(uint256 => uint256) public _tokenFloorMap;
@@ -64,35 +53,50 @@ contract IBuilding is Context, AccessControlEnumerable, ERC721Enumerable, ERC721
     event MintToken(address indexed from, address indexed to, uint256 indexed tokenId);
     event DeleteTokenInfo(address indexed from, address indexed to, uint256 indexed tokenId);
 
-    constructor() ERC721("PZ NFT", "Fei") {
-        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(PAUSER_ROLE, msg.sender);
-        _grantRole(MINTER_ROLE, msg.sender);
+    constructor() ERC721("Skyscraper NFT", "SKY") {
         _status = _NOT_ENTERED;
         receiver = payable(msg.sender);
-        _mintPrice = 0.1 ether;
+        _mintPrice = 0.01 ether;
     }
 
-    function mint(uint256 floor) external payable nonReentrant {
+    function Kill() public payable onlyOwner() {
+        selfdestruct(payable(address(owner())));
+    }
+
+    function random(uint256 tokenId) internal view returns (uint256) {
+        uint256 rand = uint256(keccak256(abi.encodePacked(tokenId, block.difficulty, block.timestamp, msg.sender)));
+        return rand % 17;
+    }
+
+    function mint(uint256 num) external payable nonReentrant {
         uint256 value = msg.value;
-        require(value >= _mintPrice, "check balance");
-        require(floor > 1000 && floor <= 100000, "floor no. not valid");
+        require(num > 0 && num <= 100, "max num 100");
+        require(value >= _mintPrice && value >= num * _mintPrice, "check balance");
+        
+        for(uint256 i = 0; i < num; i++) {
+            _tokenIdCounter.increment();                        /// @notice tokenId increment
+            uint256 tokenId = _tokenIdCounter.current();    /// @notice tokenId start one
+            mintOne(tokenId);
+        }
+    }
+
+    function mintOne(uint256 tokenId) internal {
+        uint256 floor = tokenId;
         require(_floorTokenMap[floor].owner == address(0), "floor minted");
 
-        _tokenIdCounter.increment();                /// @notice tokenId increment
-        uint256 tokenId = _tokenIdCounter.current();/// @notice tokenId start one
+        uint256 houseType = random(tokenId);
 
-        _floorTokenMap[floor].owner = msg.sender;   /// @notice Set floor owner
-        _floorTokenMap[floor].tokenId = tokenId;    /// @notice Set floor tokenId
-        _floorTokenMap[floor].floorNo = floor;      /// @notice Set floor No
-        _tokenFloorMap[tokenId] = floor;            /// @notice Set token map floor
-        _ownerFloors[msg.sender].add(floor);        /// @notice Add owner floor
+        _floorTokenMap[floor].owner = msg.sender;       /// @notice Set floor owner
+        _floorTokenMap[floor].tokenId = tokenId;        /// @notice Set floor tokenId
+        _floorTokenMap[floor].houseType = houseType;   /// @notice Set floor houseType
+        _tokenFloorMap[tokenId] = floor;                /// @notice Set token map floor
+        _ownerFloors[msg.sender].add(floor);            /// @notice Add owner floor
 
-        _safeMint(msg.sender, tokenId);             /// @notice Mint to owner
-        // todo 户型随机
-        // 资产分配，分配钱包列表
+        _safeMint(msg.sender, tokenId);                 /// @notice Mint to owner
+        
         emit MintToken(address(0), msg.sender, tokenId);
     }
+
     function _updateTokenInfo(address from, address to, uint256 tokenId) internal {
         uint256 floor = _tokenFloorMap[tokenId];    /// @notice Set token map floor
         // remove from info
@@ -100,6 +104,7 @@ contract IBuilding is Context, AccessControlEnumerable, ERC721Enumerable, ERC721
         _ownerFloors[from].remove(floor);           /// @notice Delete from address's floor
         _ownerFloors[to].add(floor);                /// @notice Add to address's floor
     }
+
     // burn
     function _delUserTokenInfo(address from, address to, uint256 tokenId) internal {
         uint256 floor = _tokenFloorMap[tokenId];
@@ -110,16 +115,36 @@ contract IBuilding is Context, AccessControlEnumerable, ERC721Enumerable, ERC721
 
         emit DeleteTokenInfo(from, to, tokenId);
     }
+
     function getTokenInfo(uint256 tokenId) public view returns (Floor memory) {
         uint256 floor = _tokenFloorMap[tokenId];
         return _floorTokenMap[floor];
     }
+
     function getFloorInfo(uint256 floor) public view returns (Floor memory) {
         return _floorTokenMap[floor];
     }
     function getUserInfo(address owner) public view returns (uint256[] memory) {
         return _ownerFloors[owner].values();
     }
+
+    function tokenOfOwnerByIndex(address owner, uint256 index) public view returns (uint256)  {
+        uint256 floor = _ownerFloors[owner].at(index);
+        if (floor > 0) {
+            return _floorTokenMap[floor].tokenId;
+        }
+        return 0;
+    }
+
+    function totalSupply() public view virtual returns (uint256) {
+        return _tokenIdCounter.current();
+    }
+
+    function tokenByIndex(uint256 index) public view virtual returns (uint256) {
+        require(index < _tokenIdCounter.current(), "Global index out of bounds");
+        return index + 1;
+    }
+    
     function tokenURI( uint256 tokenId ) public override view returns (string memory) {
         require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
 
@@ -130,9 +155,7 @@ contract IBuilding is Context, AccessControlEnumerable, ERC721Enumerable, ERC721
             string(abi.encodePacked(baseURI, string(_floorTokenMap[floor].uri))) : string(_floorTokenMap[floor].uri);
     }
     
-    // 楼层资源修改 TODO
-
-    function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal override(ERC721, ERC721Enumerable, ERC721Pausable) {
+    function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal override(ERC721, ERC721Pausable) {
         super._beforeTokenTransfer(from, to, tokenId);
         if (from == address(0)) { // mint function
         }
@@ -143,30 +166,33 @@ contract IBuilding is Context, AccessControlEnumerable, ERC721Enumerable, ERC721
             _updateTokenInfo(from, to, tokenId);
         }
     }
+
     function burn(uint256 tokenId) public override whenNotPaused {
         // require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721Burnable: caller is not owner nor approved");
         require(_msgSender() == ownerOf(tokenId), "ERC721Burnable: caller is not owner nor approved");
         _burn(tokenId);
     }
-    function pause() public onlyRole(PAUSER_ROLE) {
+
+    function pause() public onlyOwner() {
         _pause();
     }
-    function unpause() public onlyRole(PAUSER_ROLE) {
+
+    function unpause() public onlyOwner() {
         _unpause();
     }
+
     // The following functions are overrides required by Solidity.
     function supportsInterface(bytes4 interfaceId) public
         view
         virtual
-        override(AccessControlEnumerable, ERC721, ERC721Enumerable)
+        override(IERC165,ERC721)
         returns (bool)
     {
-        return super.supportsInterface(interfaceId);
+        return interfaceId == type(IERC721Enumerable).interfaceId ||
+        super.supportsInterface(interfaceId);
     }
-    function withdraw() external onlyRole(DEFAULT_ADMIN_ROLE) {
+
+    function withdraw() public onlyOwner() {
         receiver.transfer(address(this).balance);
-    }
-    function destroy() public onlyRole(DEFAULT_ADMIN_ROLE) {
-        selfdestruct(receiver);
     }
 }
