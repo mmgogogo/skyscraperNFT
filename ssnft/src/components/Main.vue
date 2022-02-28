@@ -143,7 +143,7 @@
 
           <div class="chat-footer flex-col justify-center">
             <span class="chat-footer-msg">Chat：
-              <input type="text" class="message-input" name="message" id="message" v-model="curMessage" @keyup.enter="updateChatList()">
+              <input type="text" class="message-input" name="message" id="message" v-model="curMessage" @keyup.enter="submitChat()">
             </span>
           </div>
         </div>
@@ -368,13 +368,9 @@ import Building from '@/components/Building.vue'
 import Messager from '@/utils/Messager.js'
 import {
   // ajaxAddFollowerPeople, ajaxAddFollowerToken, ajaxAddTokenInfo,
-  ajaxGetHotToken, ajaxGetMyFollower, ajaxGetAllNfts
+  ajaxGetHotToken, ajaxGetMyFollower, ajaxGetAllNfts, ajaxGetTokenInfo, ajaxGetTokenHotNum, wsServerUrl
 } from '@/utils/AjaxData.js'
-
-// 服务器地址
-// const serverUrl = '47.75.51.251:9950'
-// const wsServer = 'ws://' + serverUrl + '/ws'
-// const apiServer = 'http://' + serverUrl
+import { addLocalStorage, getLocalStorage, hiddenAddress } from '@/utils/Utils.js'
 
 export default {
   name: 'Navigator',
@@ -469,11 +465,10 @@ export default {
         floors: []
       },
       chatList: [
-        { name: 'Bob', content: 'Can you help me?' },
-        { name: 'Lisa', content: 'No, I can\'t' },
-        { name: '泽连斯基', content: '西方抛弃了我们！' },
-        { name: '普京', content: '去死吧！' }
-      ]
+        { name: '系统', content: '欢迎进入聊天频道！' }
+      ],
+      chatConn: null, // chat connection
+      chatRandNum: 0 // chat rand agent id
     }
   },
   props: {
@@ -533,7 +528,8 @@ export default {
         _that.popupMessage('Please install wallet plugin')
         return
       }
-      if (!dapp.Bridges.local || !dapp.Bridges.ethereum) {
+      // TODO:切换账号这里应该重新处理
+      if (!dapp.Bridges.local || !dapp.Bridges.ethereum || _that.$Dapp.Bridges.ethereum === undefined) {
         console.log('[Main][login] connect')
         await _that.$Dapp.connect()
         // await _that.$Dapp.sign(_that.$Dapp.Bridges.ethereum.selectedAddress, _that.generateSessKey())
@@ -585,20 +581,32 @@ export default {
         _that.showInfo.chat = true
       }
     },
-    updateChatList () {
+    updateChatList (chatName, msg) {
+      // 更新聊天框
+      const len = this.chatList.length
+      if (len > 20) {
+        this.chatList = this.chatList.slice(len - 19)
+      }
+      this.chatList.unshift({ name: hiddenAddress(chatName), content: msg })
+    },
+    submitChat (chatName) {
+      // 发送聊天内容
       const _that = this
-      console.log('[Main][chat] message is', _that.curMessage)
-      if (_that.curMessage) {
-        const len = _that.chatList.length
-        if (len > 20) {
-          _that.chatList = _that.chatList.slice(len - 19)
-        }
-        _that.chatList.unshift({ name: 'PZ', content: _that.curMessage })
+      if (!_that.playerInfo.isLogin) {
+        _that.popupMessage('login wallet to loading more information')
+        return
+      }
+      if (chatName === undefined) {
+        chatName = this.playerInfo.address
+      }
 
-        // todo data broadcast to the world channel
-        // data structure
-        // let msgInfo = { name: 'sender name', content: 'a message' }
-        // broadcast( msgInfo )
+      console.log('[Main] ws message is', _that.curMessage)
+      if (_that.curMessage) {
+        // 发送消息
+        this.broadcast(this.playerInfo.address, _that.curMessage)
+
+        // 更新聊天框
+        // this.updateChatList(chatName, _that.curMessage)
 
         _that.curMessage = ''
       }
@@ -628,20 +636,21 @@ export default {
         _that.popupMessage('Input param error')
         return
       }
+
       const floorNum = _that.mintConfig.mintNum.toString()
       const floorPrice = ethers.utils.parseEther(_that.mintConfig.mintPrice.toString())
       console.log('[Main][realMint]  num, price ', floorNum, floorPrice)
 
       // All overrides are optional
       const overrides = {
-        // gasLimit: 23000, // default
+        gasLimit: 50000, // default
         // gasPrice: ethers.utils.parseUnits('9.0', 'gwei'), // default
         gasPrice: 20000000000, // default
         value: floorPrice
       }
       await _that.$Dapp.Bridges.writer.mint(floorNum, overrides).then(function (ret) {
         console.log(ret)
-        _that.popupMessage('已成功mint，请查看my floor.')
+        _that.popupMessage('已成功MINT楼层，请查看My Floor')
       })
       _that.showInfo.mint = true
     },
@@ -659,6 +668,7 @@ export default {
       Messager.sendMessage(message)
     },
     async myFloor () {
+      this.login() // test
       const _that = this
       console.log('[Main] myFloor click')
 
@@ -682,16 +692,16 @@ export default {
       const playerInfo = this.playerInfo
 
       await contractWriter.balanceOf(address).then(function (ret) {
-        const nftNum = parseInt(ret)
-        console.log('[Main][myFloor] call balanceOf:', ret, nftNum)
-        if (nftNum === 0) {
+        const tokenNum = parseInt(ret)
+        console.log('[Main][myFloor] call balanceOf:', ret, tokenNum)
+        if (tokenNum === 0) {
           _that.popupMessage('Your have nothing nft')
           return
         }
 
-        for (let i = 0; i < nftNum; i++) {
+        for (let i = 0; i < tokenNum; i++) {
           contractWriter.tokenOfOwnerByIndex(address, i).then(function (tokenId) {
-            console.log('[Main][myFloor]call tokenOfOwnerByIndex:', tokenId)
+            console.log('[Main][myFloor]call tokenOfOwnerByIndex:', parseInt(tokenId))
 
             contractWriter.getTokenInfo(tokenId).then(function (ret) {
               console.log('[Main][myFloor]call getTokenInfo:', ret)
@@ -701,12 +711,14 @@ export default {
           })
         }
 
-        if (nftNum === 0) {
+        if (tokenNum === 0) {
           _that.setting.loading = 'Empty...'
         } else {
           _that.setting.loading = ''
         }
       })
+      // Test
+      // this.getFloorListInfo([0, 1, 2, 3, 4, 5, 8888])
     },
     async myFollowing () {
       const _that = this
@@ -806,7 +818,7 @@ export default {
     },
     windowCompute () {
       const _that = this
-      console.log('[Main][windowCompute] ', _that.gameConfig.windowHeight)
+      console.log('[Main][windowCompute] windowHeight', _that.gameConfig.windowHeight)
       const wHeight = _that.gameConfig.windowHeight
       return {
         'min-height': '500px',
@@ -821,7 +833,7 @@ export default {
       console.log('[Main] floor id is ', this.gotoNum)
       _that.search(this.gotoNum)
       // return
-      await this.appContractWriter.getTokenInfo(this.gotoNum).then(function (ret) {
+      await this.$Dapp.Bridges.writer.getTokenInfo(this.gotoNum).then(function (ret) {
         console.log('[Main][goto] call getTokenInfo:', ret)
         const tokenId = parseInt(ret.tokenId)
         console.log('[Main][goto] token id:', tokenId)
@@ -924,10 +936,11 @@ export default {
         const floorInfo = {
           id: i,
           floorId: floorIdStr,
+          minted: 0,
           owner: '',
           name: '',
           message: '',
-          myFloor: i,
+          myFloor: 0,
           order: order,
           image: image
         }
@@ -935,18 +948,18 @@ export default {
         curFloorList.push(floorInfo)
         _that.building.floors.push(floorInfo)
       }
-      // todo data 通过组织结果返回后在这里处理
-      // 见下面的 getFloorListInfo 方法
-      // let processedList = await _that.getFloorListInfo(floorIds)
-      // for(item of processedList) {
-      //   const newFloorInfo = item
-      //   _that.building.floors.push(floorInfo)
-      // }
+      // 通过组织结果返回后在这里处理
+      const processedList = await _that.getFloorListInfo(floorIds)
+      for (const item of processedList) {
+        _that.building.floors.push(item)
+      }
+      console.log('[Main] building floors', _that.building.floors)
 
       if (first) {
         const hallInfo = {
           id: 0,
           floorId: 'x',
+          minted: 0,
           owner: '',
           name: '',
           message: '',
@@ -985,7 +998,10 @@ export default {
       _that.updateBuilding(start)
     },
     async getFloorListInfo (floorIds) {
-      // todo data
+      // 获取楼层全部信息
+      // this.getFloorBaseInfo(floorIds)
+      // this.getFloorMessageInfo(floorIds)
+
       // data structure
       // 0. floorIds [1,2,3,4... 10000]
       // 建议是 100条，取好缓存在本地
@@ -1014,16 +1030,69 @@ export default {
       //   message: '留言信息Object',
       //   myFloor:'我的楼层的魅力值 or 0'
       // }
-      return [
-        {
-          floorId: 0,
-          owner: '',
-          name: '',
-          message: [{}],
-          myFloor: 0
+      // return [
+      //   {
+      //     floorId: 0,
+      //     owner: '',
+      //     name: '',
+      //     message: [{}],
+      //     myFloor: 0
+      //   }
+      //   // ...
+      // ]
+
+      const f1 = await this.getFloorBaseInfo(floorIds) // 楼层信息
+      const f2 = await ajaxGetTokenInfo(floorIds) // 留言信息
+      const f3 = await ajaxGetTokenHotNum(floorIds) // 留言信息
+      const result = []
+      for (var k in f1) {
+        let message = ''
+        let myFloorNum = 0
+        if (f2[k] !== undefined) {
+          message = f2[k].msg
         }
-        // ...
-      ]
+        if (f3[k] !== undefined) {
+          myFloorNum = f3[k].num
+        }
+        result.push({ tokenId: f1[k].tokenId, minted: f1[k].minted, owner: f1[k].owner, name: '', myFloor: myFloorNum, message: message })
+      }
+      console.log('[Main] getFloorListInfo result', result)
+      return result
+    },
+    async getFloorBaseInfo (floorIds) {
+      // 获取楼层组合信息
+      const baseInfo = []
+      for (var f in floorIds) {
+        // 这里会统一处理缓存情况
+        const oneFloor = await this.getTokenFromContract(floorIds[f])
+        baseInfo.push(oneFloor)
+      }
+      console.log('[Main] getFloorBaseInfo response', baseInfo)
+      return baseInfo
+    },
+    async getTokenFromContract (floorId) {
+      // 判断是否有缓存
+      const cacheName = 'FloorCache:'
+      const oneFloorCache = getLocalStorage(cacheName + floorId)
+      if (oneFloorCache !== null) {
+        return oneFloorCache
+      }
+
+      // 获取楼层合约里面的信息，将来这里换个新合约，直接映射TokenID的对象
+      const oneFloor = { minted: 0, owner: '', tokenId: floorId }
+      await this.$Dapp.Bridges.writer.getTokenInfo(floorId).then(function (ret) {
+        // floorNo, houseType, tokenId, uri
+        console.log('[Main] getTokenFromContract:', parseInt(ret.tokenId), ret.owner)
+        if (ret.owner !== '0x0000000000000000000000000000000000000000') {
+          oneFloor.owner = ret.owner
+          oneFloor.minted = 1
+        }
+      })
+      console.log('[Main] getTokenFromContract response', oneFloor)
+
+      // 写入缓存
+      addLocalStorage(cacheName + floorId, oneFloor)
+      return oneFloor
     },
     async openGame (param) {
       const _that = this
@@ -1053,11 +1122,11 @@ export default {
       let owned = 0
       if (param[1]) {
         owned = 1
-      } else {
-        // todo data
-        // 所有者信息模拟
-        owned = _that.randBoolean()
       }
+      // } else {
+      // data
+      // owned = _that.randBoolean()
+      // }
       _that.showInfo.game = true
       _that.gameConfig.gameUrl =
         _that.gameConfig.baseUrl +
@@ -1116,6 +1185,48 @@ export default {
       setInterval(function () {
         // console.log('[Main][timer] add timer event here')
       }, 15000)
+    },
+    // 初始化聊天服务器
+    initChatServer () {
+      const _that = this
+      let chatName = hiddenAddress(this.playerInfo.address)
+      if (chatName === '') {
+        chatName = this.chatRandNum
+      }
+      if (window.WebSocket) {
+        const url = wsServerUrl() + '?id=' + chatName + '&room=0'
+        console.log('[Main] ws server url: ' + url)
+        _that.chatConn = new WebSocket(url)
+        _that.chatConn.onopen = function (evt) {
+          _that.broadcast('系统', '欢迎[' + chatName + ']加入频道')
+        }
+        _that.chatConn.onclose = function (evt) {
+          _that.broadcast('系统', 'Connection closed')
+        }
+        _that.chatConn.onmessage = function (evt) {
+          // 解析消息
+          const data = JSON.parse(JSON.parse(evt.data))
+          console.log('[Main] ws data', data)
+          _that.updateChatList(data.name, data.msg)
+        }
+      } else {
+        _that.popupMessage('Your browser does not support chat service')
+      }
+    },
+    broadcast (name, msg) {
+      // 发送通知
+      if (this.chatConn === null) {
+        alert('send chat failed')
+        return
+      }
+      // 打包消息
+      const data = JSON.stringify({
+        name: name,
+        msg: msg,
+        room: 0,
+        type: 0 // 0=公共 1=私聊
+      })
+      this.chatConn.send(data)
     }
   },
   created () {
@@ -1125,12 +1236,18 @@ export default {
     $(fn => {
       (async function () {
         console.log('[Main][created] display Dapp 2 ', _that.$Dapp)
-        if (!_that.$Dapp.isMetaMaskInstalled()) {
-          _that.popupMessage('Please install wallet plugin')
-        }
+        // if (!_that.$Dapp.isMetaMaskInstalled()) {
+        //   _that.popupMessage('Please install wallet plugin')
+        // }
+        _that.login()
         _that.initBuilding()
         await _that.timer()
         await Messager.listener()
+
+        // init chat server
+        _that.chatRandNum = parseInt(Math.random() * 1000000)
+        console.log('[Main] start connect ws server')
+        _that.initChatServer()
       })()
     })
   }

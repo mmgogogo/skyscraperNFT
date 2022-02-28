@@ -2,10 +2,19 @@ import axios from 'axios'
 import qs from 'qs'
 
 // 服务器地址
-// const serverUrl = '127.0.0.1:9950'
-const serverUrl = 'iamxmm.xyz'
-// const wsServer = 'ws://' + serverUrl + '/ws'
-const apiServer = 'https://' + serverUrl
+// const apiServer = 'http://127.0.0.1:9950'
+// const wsServer = 'ws://127.0.0.1:9950/ws'
+const wsServer = 'wss://iamxmm.xyz/ws'
+const apiServer = 'https://iamxmm.xyz'
+
+// 共享服务
+export function wsServerUrl () {
+  return wsServer
+}
+
+export function apiServerUrl () {
+  return apiServer
+}
 
 // 添加关注地址
 export async function ajaxAddFollowerPeople (from, to) {
@@ -147,6 +156,51 @@ export async function ajaxGetAllNfts (address) {
           // https://ipfs.io/ipfs/QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
           image: image
         })
+      }
+    }
+  })
+
+  return result
+}
+
+// 获取token的留言
+export async function ajaxGetTokenInfo (tokenIds) {
+  const result = {}
+
+  // URL
+  const url = apiServer + '/token/listbytokenids?tokenIds=' + tokenIds.join(',')
+  await axios.post(url).then(response => {
+    const data = response.data
+
+    console.log('[AjaxData] ajaxGetTokenInfo response:', data)
+    if (data.Code === 0) {
+      const items = data.Data
+      for (var i in items) {
+        const oneToken = { from: items[i].Address, msg: items[i].Remark }
+        result[items[i].TokenId] = oneToken
+      }
+    }
+  })
+
+  console.log('[AjaxData] ajaxGetTokenInfo result:', result)
+  return result
+}
+
+// 获取楼层热度
+export async function ajaxGetTokenHotNum (tokenIds) {
+  console.log('[AjaxData] call ajaxGetTokenHotNum:')
+
+  const result = []
+  const url = apiServer + '/followertoken/listbytokenids?tokenIds=' + tokenIds.join(',')
+  await axios.post(url).then(response => {
+    const data = response.data
+
+    console.log('[AjaxData] ajaxGetTokenHotNum response-2:', data)
+    if (data.Code === 0) {
+      const items = data.Data
+      for (var i in items) {
+        const oneToken = { tokenId: items[i].TokenId, num: items[i].Num }
+        result[items[i].TokenId] = oneToken
       }
     }
   })
