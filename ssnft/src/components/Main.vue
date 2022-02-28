@@ -643,9 +643,9 @@ export default {
 
       // All overrides are optional
       const overrides = {
-        gasLimit: 50000, // default
+        gasLimit: 2000000, // default
         // gasPrice: ethers.utils.parseUnits('9.0', 'gwei'), // default
-        gasPrice: 20000000000, // default
+        // gasPrice: 20000000000, // default
         value: floorPrice
       }
       await _that.$Dapp.Bridges.writer.mint(floorNum, overrides).then(function (ret) {
