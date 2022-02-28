@@ -31,7 +31,8 @@ _.assign(1, 1)
 // const networkHttpProvider = 'https://kovan.infura.io/v3/' + providerToken
 
 // alchemy
-const contractAddress = '0xFD0B9c88DF4A884Eee463B7DBb46d97c53fa757B'
+// const contractAddress = '0xFD0B9c88DF4A884Eee463B7DBb46d97c53fa757B'
+const contractAddress = '0xc53885d4A9be6D17fcC56F4907E2CAc1d31261fd'
 // const web3HttpProvider = 'https://eth-ropsten.alchemyapi.io/v2/Po-F6eE3SaJQ9R74LUWLa1gOW36CTh7J'
 
 /**
@@ -47,6 +48,20 @@ const isMetaMaskInstalled = () => {
   const { ethereum } = window
   return Boolean(ethereum && ethereum.isMetaMask)
 }
+
+const signatureStr = `
+Welcome to SkyScraper!
+Click to sign in and accept the SkyScraper Terms of Service: https://superscape.net/
+
+This request will not trigger a blockchain transaction or cost any gas fees.
+Your authentication status will reset after 2 hours.
+
+Wallet address:
+\${wallet}
+
+Nonce:
+\${nonce}
+`
 
 const Dapp = {
   Bridges: {},
@@ -77,6 +92,12 @@ const Dapp = {
       console.log(['dapp exception ', e])
       throw e
     }
+  },
+  sign: async (wallet, nonce) => {
+    console.log('[Web3][sign]', wallet, nonce)
+    const signMessage = _.template(signatureStr)({ wallet: wallet, nonce: nonce })
+    const signature = await Dapp.Bridges.signer.signMessage(signMessage)
+    console.log('[Web3][sign] signature', signature)
   },
   listen: async () => {
     window.ethereum.on('accountsChanged', function () {

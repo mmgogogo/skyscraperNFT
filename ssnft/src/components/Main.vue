@@ -255,28 +255,19 @@
               <div class="mint-left-msg-up-container flex-container">
                 <span class="mint-price-txt">Price</span>
                 <span class="mint-price-split">：</span>
-                <span class="mint-price-value">0.26</span>
+                <span class="mint-price-value">{{ mintConfig.mintPrice }}</span>
                 <span class="mint-price-unit">ETH</span>
-
-                <!-- mm -->
-                <!-- <span class="info10">楼层ID</span>
-                <span class="info10">Price</span>
-                <span class="word9">：</span>
-                <span class="word10">
-                  <input type="number" class="" placeholder="输入mint的楼层" v-model.number="mintFloorNo">
-                </span> -->
-                <!-- mm -->
               </div>
             </div>
             <div class="mint-left-msg-down flex-row justify-between">
               <div class="mint-left-msg-up-container flex-container">
                 <span class="mint-number-txt flex-col">Amount</span>
                 <span class="mint-price-split">：</span>
-                <div class="mint-minus flex-row align-center">
+                <div class="mint-minus flex-row align-center" @click="mintDecrement()">
                   <div class="mint-minus-img flex-col"></div>
                 </div>
-                <span class="mint-number-val ">2</span>
-                <div class="mint-plus flex-row align-center">
+                <span class="mint-number-val ">{{ mintConfig.mintNum }}</span>
+                <div class="mint-plus flex-row align-center" @click="mintIncrement()">
                   <div class="mint-plus-img flex-col"></div>
                 </div>
               </div>
@@ -364,7 +355,6 @@
     <!-- avatar start -->
   </main>
 </template>
-import { hexDataSlice } from 'ethers/lib/utils'
 
 <script>
 import * as ethers from 'ethers'
@@ -397,7 +387,11 @@ export default {
       // 合约函数
       appContractWriter: this.$Dapp.Bridges.writer,
       appContractReader: this.$Dapp.Bridges.read,
-
+      mintConfig: {
+        mintNum: 1,
+        unit: 0.01,
+        mintPrice: 0.01
+      },
       // 基础配置
       baseConfig: {
         lang_001: 'Total Floor',
@@ -486,6 +480,23 @@ export default {
     msg: String
   },
   methods: {
+    mintIncrement () {
+      const _that = this
+      _that.mintConfig.mintNum++
+      _that.mintConfig.mintPrice = _that.mintConfig.unit * _that.mintConfig.mintNum
+      if (_that.mintConfig.mintNum > 20) {
+        _that.mintConfig.mintNum = 1
+      }
+    },
+    mintDecrement () {
+      const _that = this
+      if (_that.mintConfig.mintNum <= 1) {
+        _that.mintConfig.mintNum = 1
+      } else {
+        _that.mintConfig.mintNum--
+      }
+      _that.mintConfig.mintPrice = _that.mintConfig.unit * _that.mintConfig.mintNum
+    },
     onClick (e) {
       // console.log('[Main] outside click event', e)
       const _that = this
@@ -503,11 +514,21 @@ export default {
       console.log('[Main] onclick outside e ', e)
       e.stopPropagation()
     },
+    generateSessKey () {
+      const s = []
+      const hexDigits = '0123456789abcdef'
+      for (let i = 0; i < 36; i++) {
+        s[i] = hexDigits[Math.floor(Math.random() * 0x10)]
+      }
+      s[14] = '4'
+      s[19] = hexDigits[(s[19] & 0x3) | 0x8]
+      s[8] = s[13] = s[18] = s[23] = '-'
+      return s.join('')
+    },
     async login (isInit) {
       const _that = this
       const dapp = _that.$Dapp
       console.log('[Main][login] Dapp is', dapp)
-
       if (!dapp.isMetaMaskInstalled()) {
         _that.popupMessage('Please install wallet plugin')
         return
@@ -515,6 +536,7 @@ export default {
       if (!dapp.Bridges.local || !dapp.Bridges.ethereum) {
         console.log('[Main][login] connect')
         await _that.$Dapp.connect()
+        // await _that.$Dapp.sign(_that.$Dapp.Bridges.ethereum.selectedAddress, _that.generateSessKey())
       } else {
         _that.popupMessage('Metamask connected')
       }
@@ -602,13 +624,13 @@ export default {
         _that.popupMessage('please login wallet', 'top', 'right')
         return
       }
-      if (_that.mintFloorNo <= 0) {
-        _that.popupMessage('please type correct floor no')
+      if (_that.mintConfig.mintNum <= 0 || _that.mintConfig.mintPrice <= 0) {
+        _that.popupMessage('Input param error')
         return
       }
-      const floorNum = _that.mintFloorNo
-      const floorPrice = ethers.utils.parseEther('0.1')
-      console.log('realmint:::', floorNum, floorPrice)
+      const floorNum = _that.mintConfig.mintNum.toString()
+      const floorPrice = ethers.utils.parseEther(_that.mintConfig.mintPrice.toString())
+      console.log('[Main][realMint]  num, price ', floorNum, floorPrice)
 
       // All overrides are optional
       const overrides = {
