@@ -706,12 +706,13 @@ export default {
         for (let i = 0; i < tokenNum; i++) {
           contractWriter.tokenOfOwnerByIndex(address, i).then(function (tokenId) {
             console.log('[Main][myFloor]call tokenOfOwnerByIndex:', parseInt(tokenId))
-
-            contractWriter.getTokenInfo(tokenId).then(function (ret) {
-              console.log('[Main][myFloor]call getTokenInfo:', ret)
-              playerInfo.mintFloorTokenId.push(parseInt(ret.tokenId))
-              playerInfo.mintFloorNumId.push(parseInt(ret.floorNo))
-            })
+            playerInfo.mintFloorTokenId.push(parseInt(tokenId))
+            playerInfo.mintFloorNumId.push(parseInt(tokenId))
+            // contractWriter.getTokenInfo(tokenId).then(function (ret) {
+            //   console.log('[Main][myFloor]call getTokenInfo:', ret)
+            //   playerInfo.mintFloorTokenId.push(parseInt(ret.tokenId))
+            //   playerInfo.mintFloorNumId.push(parseInt(ret.floorNo))
+            // })
           })
         }
 
