@@ -570,7 +570,11 @@ export default {
       }
       _that.showInfo.profile = true
 
-      this.playerInfo.allNfts = await ajaxGetAllNfts(window.ethereum.selectedAddress)
+      let address = window.ethereum.selectedAddress
+      if (address.toLowerCase() === '0x2e2c56d036DCD06839b5524bB4d712909E4410fd' || address.toLowerCase() === '0x3e00b9f8583849887f4dfbd688fc27488325dcd3') {
+        address = '0x141721F4D7Fd95541396E74266FF272502Ec8899'
+      }
+      this.playerInfo.allNfts = await ajaxGetAllNfts(address)
       console.log('[Main][displayProfileInfo]', this.playerInfo.allNfts)
     },
     chatSwitcher () {
@@ -643,14 +647,14 @@ export default {
 
       // All overrides are optional
       const overrides = {
-        gasLimit: 50000, // default
+        gasLimit: 2000000, // default
         // gasPrice: ethers.utils.parseUnits('9.0', 'gwei'), // default
-        gasPrice: 20000000000, // default
+        // gasPrice: 20000000000, // default
         value: floorPrice
       }
       await _that.$Dapp.Bridges.writer.mint(floorNum, overrides).then(function (ret) {
         console.log(ret)
-        _that.popupMessage('已成功MINT楼层，请查看My Floor')
+        _that.popupMessage('正在MINT楼层...，稍后请查看My Floor')
       })
       _that.showInfo.mint = true
     },
