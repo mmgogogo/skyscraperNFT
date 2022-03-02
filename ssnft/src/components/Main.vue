@@ -143,7 +143,7 @@
 
           <div class="chat-footer flex-col justify-center">
             <span class="chat-footer-msg">Chat：
-              <input type="text" class="message-input" name="message" id="message" v-model="curMessage" @keyup.enter="submitChat()">
+              <input type="text" class="message-input" name="message" id="message" v-model="curMessage" maxlength="20" @keyup.enter="submitChat()">
             </span>
           </div>
         </div>
@@ -721,8 +721,6 @@ export default {
           _that.setting.loading = ''
         }
       })
-      // Test
-      // this.getFloorListInfo([0, 1, 2, 3, 4, 5, 8888])
     },
     async myFollowing () {
       const _that = this
@@ -927,6 +925,10 @@ export default {
       _that.updateBuilding(start, _that.building.first)
     },
     async updateBuilding (start, first = false) {
+      if (this.$Dapp.Bridges.writer === undefined) {
+        this.popupMessage('login wallet to loading more information')
+        return
+      }
       const _that = this
       _that.building.floors = []
       _that.building.height = Math.ceil(start / 500) + 1
