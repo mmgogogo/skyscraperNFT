@@ -849,14 +849,14 @@ export default {
       //   }
       // })
       // 新版本楼层=tokenID
-      const ret = await this.getTokenFromContract(this.gotoNum)
-      console.log('[Main][goto] call getTokenInfo:', ret)
-      if (ret.minted === 0) {
-      this.popupMessage('this floor not available(may be you want to mint?), please input the right number')
-      } else {
-        this.popupMessage('going to the floor[' + ret.tokenId + '] ...')
-        this.popupMessage('coming soon :)')
-      }
+      // const ret = await this.getTokenFromContract(this.gotoNum)
+      // console.log('[Main][goto] call getTokenInfo:', ret)
+      // if (ret.minted === 0) {
+      // this.popupMessage('this floor not available(may be you want to mint?), please input the right number')
+      // } else {
+      //   this.popupMessage('going to the floor[' + ret.tokenId + '] ...')
+      //   this.popupMessage('coming soon :)')
+      // }
     },
     search (floorId) {
       const _that = this
@@ -961,6 +961,7 @@ export default {
         curFloorList.push(floorInfo)
         _that.building.floors.push(floorInfo)
       }
+      console.log('[Main] _that.building.floors', _that.building.floors)
       // 通过组织结果返回后在这里处理
       const processedList = await _that.getFloorListInfo(floorIds)
       for (const item of processedList) {
@@ -1067,7 +1068,7 @@ export default {
         if (f3[k] !== undefined) {
           myFloorNum = f3[k].num
         }
-        result.push({ tokenId: f1[k].tokenId, minted: f1[k].minted, owner: f1[k].owner, name: '', myFloor: myFloorNum, message: message })
+        result.push({ tokenId: f1[k].tokenId, minted: f1[k].minted, owner: f1[k].owner, houseType: f1[k].houseType, name: '', myFloor: myFloorNum, message: message })
       }
       console.log('[Main] getFloorListInfo result', result)
       return result
