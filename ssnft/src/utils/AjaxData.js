@@ -140,22 +140,26 @@ export async function ajaxGetAllNfts (address) {
       const items = data.data.content
       for (var v in items) {
         // const image = JSON.parse(result[v].nft_json).image
-        const imageInfo = JSON.parse(items[v].nft_json)
-        let image = imageInfo.image // erc721
-        if (image === undefined || image === '') {
-          image = imageInfo.image_url // ens
-        }
-        if (image !== undefined) {
-          image = image.replace('ipfs://', 'https://ipfs.io/ipfs/')
-        }
-        result.push({
-          token_id: items[v].token_id,
-          nft_name: items[v].nft_name,
+        try {
+          const imageInfo = JSON.parse(items[v].nft_json)
+          let image = imageInfo.image // erc721
+          if (image === undefined || image === '') {
+            image = imageInfo.image_url // ens
+          }
+          if (image !== undefined) {
+            image = image.replace('ipfs://', 'https://ipfs.io/ipfs/')
+          }
+          result.push({
+            token_id: items[v].token_id,
+            nft_name: items[v].nft_name,
 
-          // ipfs://QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
-          // https://ipfs.io/ipfs/QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
-          image: image
-        })
+            // ipfs://QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
+            // https://ipfs.io/ipfs/QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
+            image: image
+          })
+        } catch (error) {
+          console.log('[AjaxData] ajaxGetAllNfts exception', v, error)
+        }
       }
     }
   })

@@ -143,7 +143,7 @@
 
           <div class="chat-footer flex-col justify-center">
             <span class="chat-footer-msg">Chat：
-              <input type="text" class="message-input" name="message" id="message" v-model="curMessage" @keyup.enter="submitChat()">
+              <input type="text" class="message-input" name="message" id="message" v-model="curMessage" maxlength="20" @keyup.enter="submitChat()">
             </span>
           </div>
         </div>
@@ -570,7 +570,11 @@ export default {
       }
       _that.showInfo.profile = true
 
-      this.playerInfo.allNfts = await ajaxGetAllNfts(window.ethereum.selectedAddress)
+      let address = window.ethereum.selectedAddress
+      if (address.toLowerCase() === '0x2e2c56d036DCD06839b5524bB4d712909E4410fd' || address.toLowerCase() === '0x3e00b9f8583849887f4dfbd688fc27488325dcd3') {
+        address = '0x141721F4D7Fd95541396E74266FF272502Ec8899'
+      }
+      this.playerInfo.allNfts = await ajaxGetAllNfts(address)
       console.log('[Main][displayProfileInfo]', this.playerInfo.allNfts)
     },
     chatSwitcher () {
@@ -650,7 +654,7 @@ export default {
       }
       await _that.$Dapp.Bridges.writer.mint(floorNum, overrides).then(function (ret) {
         console.log(ret)
-        _that.popupMessage('已成功MINT楼层，请查看My Floor')
+        _that.popupMessage('正在MINT楼层...，稍后请查看My Floor')
       })
       _that.showInfo.mint = true
     },
@@ -702,12 +706,12 @@ export default {
         for (let i = 0; i < tokenNum; i++) {
           contractWriter.tokenOfOwnerByIndex(address, i).then(function (tokenId) {
             console.log('[Main][myFloor]call tokenOfOwnerByIndex:', parseInt(tokenId))
-
-            contractWriter.getTokenInfo(tokenId).then(function (ret) {
-              console.log('[Main][myFloor]call getTokenInfo:', ret)
-              playerInfo.mintFloorTokenId.push(parseInt(ret.tokenId))
-              playerInfo.mintFloorNumId.push(parseInt(ret.floorNo))
-            })
+            playerInfo.mintFloorTokenId.push(parseInt(tokenId))
+            playerInfo.mintFloorNumId.push(parseInt(tokenId))
+            // contractWriter.getTokenInfo(tokenId).then(function (ret) {
+            //   console.log('[Main][myFloor]call getTokenInfo:', ret)
+            //   console.log('[Main][myFloor]call houseType:', parseInt(ret.houseType))
+            // })
           })
         }
 
@@ -717,8 +721,6 @@ export default {
           _that.setting.loading = ''
         }
       })
-      // Test
-      // this.getFloorListInfo([0, 1, 2, 3, 4, 5, 8888])
     },
     async myFollowing () {
       const _that = this
@@ -833,17 +835,26 @@ export default {
       console.log('[Main] floor id is ', this.gotoNum)
       _that.search(this.gotoNum)
       // return
-      await this.$Dapp.Bridges.writer.getTokenInfo(this.gotoNum).then(function (ret) {
-        console.log('[Main][goto] call getTokenInfo:', ret)
-        const tokenId = parseInt(ret.tokenId)
-        console.log('[Main][goto] token id:', tokenId)
-        if (tokenId === 0) {
-          this.popupMessage('this floor not available(may be you want to mint?), please input the right number')
-        } else {
-          this.popupMessage('going to the floor[' + tokenId + '] ...')
-          this.popupMessage('coming soon :)')
-        }
-      })
+      // await this.$Dapp.Bridges.writer.getTokenInfo(this.gotoNum).then(function (ret) {
+      //   console.log('[Main][goto] call getTokenInfo:', ret)
+      //   const tokenId = parseInt(ret.tokenId)
+      //   console.log('[Main][goto] token id:', tokenId)
+      //   if (tokenId === 0) {
+      //     this.popupMessage('this floor not available(may be you want to mint?), please input the right number')
+      //   } else {
+      //     this.popupMessage('going to the floor[' + tokenId + '] ...')
+      //     this.popupMessage('coming soon :)')
+      //   }
+      // })
+      // 新版本楼层=tokenID
+      // const ret = await this.getTokenFromContract(this.gotoNum)
+      // console.log('[Main][goto] call getTokenInfo:', ret)
+      // if (ret.minted === 0) {
+      // this.popupMessage('this floor not available(may be you want to mint?), please input the right number')
+      // } else {
+      //   this.popupMessage('going to the floor[' + ret.tokenId + '] ...')
+      //   this.popupMessage('coming soon :)')
+      // }
     },
     search (floorId) {
       const _that = this
@@ -914,6 +925,10 @@ export default {
       _that.updateBuilding(start, _that.building.first)
     },
     async updateBuilding (start, first = false) {
+      if (this.$Dapp.Bridges.writer === undefined) {
+        this.popupMessage('login wallet to loading more information')
+        return
+      }
       const _that = this
       _that.building.floors = []
       _that.building.height = Math.ceil(start / 500) + 1
@@ -948,6 +963,7 @@ export default {
         curFloorList.push(floorInfo)
         _that.building.floors.push(floorInfo)
       }
+      console.log('[Main] _that.building.floors', _that.building.floors)
       // 通过组织结果返回后在这里处理
       const processedList = await _that.getFloorListInfo(floorIds)
       for (const item of processedList) {
@@ -1054,7 +1070,7 @@ export default {
         if (f3[k] !== undefined) {
           myFloorNum = f3[k].num
         }
-        result.push({ tokenId: f1[k].tokenId, minted: f1[k].minted, owner: f1[k].owner, name: '', myFloor: myFloorNum, message: message })
+        result.push({ tokenId: f1[k].tokenId, minted: f1[k].minted, owner: f1[k].owner, houseType: f1[k].houseType, name: '', myFloor: myFloorNum, message: message })
       }
       console.log('[Main] getFloorListInfo result', result)
       return result
@@ -1079,13 +1095,15 @@ export default {
       }
 
       // 获取楼层合约里面的信息，将来这里换个新合约，直接映射TokenID的对象
-      const oneFloor = { minted: 0, owner: '', tokenId: floorId }
+      const oneFloor = { minted: 0, owner: '', tokenId: floorId, floorNo: 0, houseType: 0 }
       await this.$Dapp.Bridges.writer.getTokenInfo(floorId).then(function (ret) {
         // floorNo, houseType, tokenId, uri
         console.log('[Main] getTokenFromContract:', parseInt(ret.tokenId), ret.owner)
         if (ret.owner !== '0x0000000000000000000000000000000000000000') {
           oneFloor.owner = ret.owner
           oneFloor.minted = 1
+          oneFloor.houseType = parseInt(ret.houseType)
+          oneFloor.floorNo = parseInt(ret.floorNo)
         }
       })
       console.log('[Main] getTokenFromContract response', oneFloor)
