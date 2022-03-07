@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="room flex-col align-center" v-bind:class="[floorInfo.isFirst?'first':'']">
-      <div class="decoration flex-container align-start" v-on:click="$emit('open-game', [floorInfo.tokenId, floorInfo.minted, floorInfo.owner])">
+      <div class="decoration flex-container align-start" v-on:click="$emit('open-game', [floorInfo.floorId, floorInfo.minted, floorInfo.owner])">
         <img class="floor-area flex-row" referrerpolicy="no-referrer" src="../assets/images/walls/floor_area.png" alt="" />
         <img class="floor-img flex-row" referrerpolicy="no-referrer" v-bind:src="requireImg(floorInfo.houseType)" alt="" />
       </div>

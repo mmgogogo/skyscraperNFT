@@ -1,3 +1,5 @@
+import { ajaxGetAllNfts } from './AjaxData'
+
 export default
 class Messager {
   static sendMessage (message, callback) {
@@ -67,8 +69,7 @@ class Messager {
   }
 
   static async processNFTList (params) {
-    const wallet = params.data.wallet
-    // todo data
+    let wallet = params.data.wallet
     // data structure
     // {
     //     type: "nftList",
@@ -76,12 +77,20 @@ class Messager {
     //     data: [{"img":"...", "type":"eth"},{}]
     // }
     // let nftList = getUserNFTList(wallet)
+    let nftList = []
+    if (wallet) {
+      if (wallet === '0x2e2c56d036DCD06839b5524bB4d712909E4410fd' ||
+          wallet === '0x3722581ab9c563FF56554362856Ab1dD35D0d782') {
+        wallet = '0x141721F4D7Fd95541396E74266FF272502Ec8899'
+      }
+      nftList = ajaxGetAllNfts(wallet)
+    }
     const message = {
       type: 'nftList',
       source: 'web',
       data: {
         wallet: wallet,
-        nftList: [] // nftList
+        nftList: nftList
       }
     }
     Messager.sendMessage(message)

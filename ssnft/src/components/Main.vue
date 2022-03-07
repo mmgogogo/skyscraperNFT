@@ -1112,12 +1112,7 @@ export default {
     async openGame (param) {
       const _that = this
       console.log('[Main][openGame] openGame param ', param)
-      let address = _that.playerInfo.address
-      if (!address) {
-        // _that.popupMessage('Login first')
-        // return
-        address = '0x141721F4D7Fd95541396E74266FF272502Ec8899'
-      }
+      const address = _that.playerInfo.address
 
       // send nft to iframe game
       // this.playerInfo.allNfts = await ajaxGetAllNfts(window.ethereum.selectedAddress)
@@ -1134,8 +1129,13 @@ export default {
       // }
       // Messager.sendMessage(message)
 
+      if (parseInt(param[1]) === 0) {
+        _that.popupMessage('Not minted floor, cant open it')
+        return
+      }
+
       let owned = 0
-      if (param[1]) {
+      if (param[1] && address === param[2]) {
         owned = 1
       }
       // } else {
