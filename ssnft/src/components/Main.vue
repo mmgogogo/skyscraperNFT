@@ -1112,22 +1112,8 @@ export default {
     async openGame (param) {
       const _that = this
       console.log('[Main][openGame] openGame param ', param)
+      // toLowerCase()
       const address = _that.playerInfo.address
-
-      // send nft to iframe game
-      // this.playerInfo.allNfts = await ajaxGetAllNfts(window.ethereum.selectedAddress)
-      // const message = {
-      //   source: 'web',
-      //   type: 'nftList',
-      //   data: []
-      // }
-
-      // for (var i in this.playerInfo.allNfts) {
-      //   const tmp = this.playerInfo.allNfts[i]
-      //   // console.log(i, this.playerInfo.allNfts[i])
-      //   message.data.push({ token_id: tmp.token_id, nft_name: tmp.nft_name, image: tmp.image })
-      // }
-      // Messager.sendMessage(message)
 
       if (parseInt(param[1]) === 0) {
         _that.popupMessage('Not minted floor, cant open it')
@@ -1135,13 +1121,10 @@ export default {
       }
 
       let owned = 0
-      if (param[1] && address === param[2]) {
+      if (param[1] && address.toLowerCase() === param[2].toLowerCase()) {
         owned = 1
       }
-      // } else {
-      // data
-      // owned = _that.randBoolean()
-      // }
+
       _that.showInfo.game = true
       _that.gameConfig.gameUrl =
         _that.gameConfig.baseUrl +
