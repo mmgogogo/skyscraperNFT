@@ -533,10 +533,11 @@ export default {
         console.log('[Main][login] connect')
         await _that.$Dapp.connect()
         // await _that.$Dapp.sign(_that.$Dapp.Bridges.ethereum.selectedAddress, _that.generateSessKey())
-      } else {
-        _that.popupMessage('Metamask connected')
       }
-      if (_that.playerInfo.isLogin) {
+      // else {
+      //   _that.popupMessage('Metamask connected')
+      // }
+      if (!_that.playerInfo.isLogin) {
         _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
         _that.playerInfo.isLogin = true
         _that.playerInfo.status = 1
@@ -1200,7 +1201,7 @@ export default {
         console.log('[Main] ws server url: ' + url)
         _that.chatConn = new WebSocket(url)
         _that.chatConn.onopen = function (evt) {
-          _that.broadcast('系统', '欢迎[' + chatName + ']加入频道')
+          _that.broadcast('系统', '欢迎加入频道')
         }
         _that.chatConn.onclose = function (evt) {
           _that.broadcast('系统', 'Connection closed')
