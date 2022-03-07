@@ -14,16 +14,14 @@
           </div>
         </div>
       </div>
-      <!-- <span class="message">{{ floorInfo.message || defaultMsg }}</span> -->
     </div>
     <div class="room flex-col align-center" v-bind:class="[floorInfo.isFirst?'first':'']">
       <div class="decoration flex-container align-start" v-on:click="$emit('open-game', [floorInfo.tokenId, floorInfo.minted, floorInfo.owner])">
         <img class="floor-area flex-row" referrerpolicy="no-referrer" src="../assets/images/walls/floor_area.png" alt="" />
-        <img class="floor-img flex-row" referrerpolicy="no-referrer" v-bind:src="requireImg(floorInfo.floorId)" alt="" />
+        <img class="floor-img flex-row" referrerpolicy="no-referrer" v-bind:src="requireImg(floorInfo.houseType)" alt="" />
       </div>
     </div>
     <div class="others flex-col">
-      <!-- <span class="message">{{ floorInfo.message || defaultMsg }}</span> -->
       <div class="board flex-row align-start">
         <div class="board-container">
           <span class="board-word flex-row">{{ floorInfo.id || '' }}</span>
@@ -53,7 +51,7 @@ import floorx from '../assets/images/walls/floor_x.png'
 import { hiddenAddress } from '@/utils/Utils.js'
 
 export default {
-  name: 'Floor',
+  name: 'Building',
   data () {
     return {
       defaultMsg: '欢迎来我家',
@@ -62,7 +60,8 @@ export default {
     }
   },
   props: {
-    floors: []
+    first: Boolean,
+    floors: Array
   },
   methods: {
     close () {
@@ -74,7 +73,14 @@ export default {
         order: i
       }
     },
+    strPadLeft (str, chr = '0', len = 5) {
+      // console.log('[Main] strPadLeft str ', str)
+      return chr.repeat(len - String(str).length) + String(str)
+    },
     requireImg (imagePath) {
+      if (imagePath !== 'x') {
+        imagePath = this.strPadLeft(imagePath)
+      }
       const imageCfg = {
         '00001': floor00001,
         '00002': floor00002,
@@ -101,9 +107,9 @@ export default {
     }
   },
   created () {
-    console.log('[Game] created start!')
+    console.log('[Buiding] created start!')
     const _that = this
-    console.log('[Game] that ', _that.$Dapp)
+    console.log('[Buiding] that ', _that.$Dapp)
 
     window.addEventListener('scroll', _that.handleScroll)
   }

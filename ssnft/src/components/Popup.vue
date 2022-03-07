@@ -30,7 +30,7 @@ export default {
     show: Boolean,
     title: String,
     loading: Boolean,
-    popupList: [],
+    popupList: Array,
   },
   methods: {
     onClickOutside (e) {

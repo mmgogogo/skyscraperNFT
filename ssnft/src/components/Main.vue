@@ -103,7 +103,7 @@
 
       <!-- content start -->
       <div class="content flex-col" @click="onClick($event)">
-        <Building :floors="building.floors" v-on:open-game="openGame"  v-on:floor-scroll="floorScroll"/>
+        <Building :floors="building.floors" :first="building.first" v-on:open-game="openGame"  v-on:floor-scroll="floorScroll"/>
         <!-- ladder start -->
         <div class="ladder flex-col">
           <div class="lmain6 flex-row justify-between">
@@ -457,7 +457,7 @@ export default {
         min: 6, // curser min value
         max: 9995, // curser max value
         total: 10000, // total floors
-        wstep: 4, // wheel step per scroll
+        wstep: 1, // wheel step per scroll
         liftStep: 500, // lift step per increment
         scroll: 0,
         height: 0,
@@ -597,7 +597,7 @@ export default {
       // 发送聊天内容
       const _that = this
       if (!_that.playerInfo.isLogin) {
-        _that.popupMessage('login wallet to loading more information')
+        _that.popupMessage('Login wallet first')
         return
       }
       if (chatName === undefined) {
@@ -681,7 +681,7 @@ export default {
       this.setting.loading = 'Loading...' // loading open
 
       if (!_that.playerInfo.isLogin) {
-        this.popupMessage('login wallet to loading more information')
+        this.popupMessage('Login wallet to loading floor information')
         return
       }
 
@@ -728,7 +728,7 @@ export default {
       console.log('[Main][myFollowing]click myFollowing')
 
       if (!_that.playerInfo.isLogin) {
-        _that.popupMessage('login wallet to loading more information')
+        _that.popupMessage('Login wallet to loading following information')
         return
       }
 
@@ -755,7 +755,7 @@ export default {
       console.log('[Main][myFollowed] click myFollowed')
 
       if (!_that.playerInfo.isLogin) {
-        _that.popupMessage('login wallet to loading more information')
+        _that.popupMessage('Login wallet to loading followed information')
         return
       }
 
@@ -802,11 +802,6 @@ export default {
       this.popupMessage('room coming soon')
     },
     async avatar () {
-      // this.popupMessage('插入测试数据.....')
-      // await ajaxAddFollowerPeople(window.ethereum.selectedAddress, parseInt(Math.random() * 10000))
-      // await ajaxAddFollowerPeople(parseInt(Math.random() * 10000), window.ethereum.selectedAddress)
-      // await ajaxAddFollowerToken(window.ethereum.selectedAddress, parseInt(Math.random() * 10000))
-      // await ajaxAddTokenInfo(parseInt(Math.random() * 10000), parseInt(Math.random() * 10000))
       const _that = this
       let address = _that.playerInfo.address
       if (!address) {
@@ -913,68 +908,45 @@ export default {
         'padding-top': (22.71 - (22.71 * start) / 10000) + 'vw'
       }
     },
-    initBuilding () {
+    async initBuilding () {
       console.log('[Main][initBuilding] init start')
       const _that = this
       const start = _that.getStart()
       if (start <= _that.building.min) {
         _that.building.first = true
+      } else {
+        _that.building.first = false
       }
       _that.building.start = start
       console.log('[Main][created] building ', _that.building)
-      _that.updateBuilding(start, _that.building.first)
+      await _that.updateBuilding(start, _that.building.first)
+    },
+    range (start, end) {
+      return Array(end - start + 1).fill().map((_, idx) => start + idx)
     },
     async updateBuilding (start, first = false) {
-      if (this.$Dapp.Bridges.writer === undefined) {
-        this.popupMessage('login wallet to loading more information')
+      console.log('[Main][updateBuilding] start')
+
+      const _that = this
+
+      if (!_that.$Dapp.Bridges.writer) {
+        console.log('[Main][updateBuilding] writer is ', _that.$Dapp.Bridges.writer)
+        this.popupMessage('Login wallet to loading building information')
         return
       }
-      const _that = this
-      _that.building.floors = []
+
       _that.building.height = Math.ceil(start / 500) + 1
-      if (start <= 6) {
+      if (start <= _that.building.min) {
         first = true
       }
-      const curFloorList = []
-      const floorIds = []
-      for (let i = start; i < start + 12; i++) {
-        let floorIdStr = _that.strPadLeft(i + 1)
-        if (i >= 10) {
-          let rand = 0
-          while (rand === 0) {
-            rand = Math.floor(Math.random(10) * 10)
-          }
-          floorIdStr = _that.strPadLeft(rand)
-        }
-        const order = 10 - i
-        const image = '../assets/images/walls/floor_' + floorIdStr + '.png'
-        const floorInfo = {
-          id: i,
-          floorId: floorIdStr,
-          minted: 0,
-          owner: '',
-          name: '',
-          message: '',
-          myFloor: 0,
-          order: order,
-          image: image
-        }
-        floorIds.push(i)
-        curFloorList.push(floorInfo)
-        _that.building.floors.push(floorInfo)
-      }
-      console.log('[Main] _that.building.floors', _that.building.floors)
-      // 通过组织结果返回后在这里处理
-      const processedList = await _that.getFloorListInfo(floorIds)
-      for (const item of processedList) {
-        _that.building.floors.push(item)
-      }
-      console.log('[Main] building floors', _that.building.floors)
-
+      const floorIds = _that.range(start, start + _that.building.page - 1)
+      _that.building.floors = []
+      const floorListInfo = await _that.getFloorListInfo(floorIds)
       if (first) {
         const hallInfo = {
           id: 0,
           floorId: 'x',
+          houseType: 'x',
           minted: 0,
           owner: '',
           name: '',
@@ -983,18 +955,25 @@ export default {
           order: 99999,
           image: '../assets/images/walls/floor_x.png'
         }
-        _that.building.floors.push(hallInfo)
+        floorListInfo.unshift(hallInfo)
       }
+      _that.building.floors = floorListInfo
+
+      console.log('[Main] building floors', _that.building.floors)
     },
     async floorScroll (event) {
       const _that = this
       const deltaY = event.deltaY
-      console.log('[Main][floorScroll] wheel event ', deltaY)
-      const step = Math.ceil(deltaY / 8)
-      console.log('[Main][floorScroll] wheel step ', step)
+      // console.log('[Main][floorScroll] wheel event ', deltaY)
+      let step = Math.floor(deltaY / 8)
+      if (step < 1) {
+        step = Math.ceil(deltaY / 4)
+      }
+      // console.log('[Main][floorScroll] wheel step ', step)
       let start = _that.getStart()
-      console.log('[Main][floorScroll] wheel start start ', start)
+      // console.log('[Main][floorScroll] wheel start start ', start)
       const speed = _that.building.wstep
+      // < 0 scroll upper, > 0 scroll down
       if (deltaY < 0) {
         if (start + Math.abs(step) * speed >= 10000) {
           start = _that.building.total - 11
@@ -1006,14 +985,18 @@ export default {
           start = 1
         } else {
           start -= Math.abs(step) * speed
+          if (start < _that.building.min) {
+            start = 1
+          }
         }
       }
-      console.log('[Main][floorScroll] wheel end start ', start)
+      // console.log('[Main][floorScroll] wheel end start ', start)
       _that.building.start = start
       localStorage.setItem('buildingStart', start)
       _that.updateBuilding(start)
     },
     async getFloorListInfo (floorIds) {
+      console.log('[Main][getFloorListInfo] start')
       // 获取楼层全部信息
       // this.getFloorBaseInfo(floorIds)
       // this.getFloorMessageInfo(floorIds)
@@ -1054,33 +1037,47 @@ export default {
       //     message: [{}],
       //     myFloor: 0
       //   }
-      //   // ...
       // ]
+      const _that = this
 
-      const f1 = await this.getFloorBaseInfo(floorIds) // 楼层信息
-      const f2 = await ajaxGetTokenInfo(floorIds) // 留言信息
-      const f3 = await ajaxGetTokenHotNum(floorIds) // 留言信息
-      const result = []
-      for (var k in f1) {
-        let message = ''
-        let myFloorNum = 0
-        if (f2[k] !== undefined) {
-          message = f2[k].msg
+      // [{ minted: 0, owner: '', tokenId: floorId, floorNo: 0, houseType: 0 }, ...]
+      const f1 = await _that.getFloorBaseInfo(floorIds) // get floor baseInfo from contract
+      const f2 = await ajaxGetTokenInfo(floorIds) // get floor message info from server
+      const f3 = await ajaxGetTokenHotNum(floorIds) // get floor hot info from server
+      const floorsInfo = []
+      console.log('[Main][getFloorListInfo] floorBaseInfo ', f1)
+      for (let k = 0; k < floorIds.length; k++) {
+        let houseType = f1[k].houseType
+        if (parseInt(houseType) > 10 || parseInt(houseType) === 0) {
+          houseType = 10
         }
-        if (f3[k] !== undefined) {
-          myFloorNum = f3[k].num
+        houseType = _that.strPadLeft(houseType)
+        const image = '../assets/images/walls/floor_' + houseType + '.png'
+        const floorInfo = {
+          id: floorIds[k],
+          floorId: floorIds[k],
+          houseType: houseType,
+          minted: f1[k].minted,
+          owner: f1[k].owner,
+          name: '',
+          message: f2[k] !== undefined ? f2[k].msg : '',
+          myFloor: f3[k] !== undefined ? f3[k].num : 0,
+          order: 10 - k,
+          image: image
         }
-        result.push({ tokenId: f1[k].tokenId, minted: f1[k].minted, owner: f1[k].owner, houseType: f1[k].houseType, name: '', myFloor: myFloorNum, message: message })
+        floorsInfo.push(floorInfo)
       }
-      console.log('[Main] getFloorListInfo result', result)
-      return result
+      console.log('[Main][getFloorListInfo] floorsInfo ', floorsInfo)
+      return floorsInfo
     },
     async getFloorBaseInfo (floorIds) {
-      // 获取楼层组合信息
+      console.log('[Main][getFloorBaseInfo] floorIds ', floorIds)
+      // get floor base info from contract.
+      // [{ minted: 0, owner: '', tokenId: floorId, floorNo: 0, houseType: 0 }, ...]
       const baseInfo = []
-      for (var f in floorIds) {
+      for (const f of floorIds) {
         // 这里会统一处理缓存情况
-        const oneFloor = await this.getTokenFromContract(floorIds[f])
+        const oneFloor = await this.getTokenFromContract(f)
         baseInfo.push(oneFloor)
       }
       console.log('[Main] getFloorBaseInfo response', baseInfo)
@@ -1205,7 +1202,7 @@ export default {
       }, 15000)
     },
     // 初始化聊天服务器
-    initChatServer () {
+    async initChatServer () {
       const _that = this
       let chatName = hiddenAddress(this.playerInfo.address)
       if (chatName === '') {
@@ -1247,6 +1244,12 @@ export default {
       this.chatConn.send(data)
     }
   },
+  updated () {
+    console.log('[Main][update] start!')
+    if (this.building.first) {
+      $('.building').scrollTop($('.building').prop('scrollHeight'))
+    }
+  },
   created () {
     console.log('[Main][created] created start!')
     const _that = this
@@ -1254,18 +1257,21 @@ export default {
     $(fn => {
       (async function () {
         console.log('[Main][created] display Dapp 2 ', _that.$Dapp)
-        // if (!_that.$Dapp.isMetaMaskInstalled()) {
-        //   _that.popupMessage('Please install wallet plugin')
-        // }
-        _that.login()
-        _that.initBuilding()
+        if (!_that.$Dapp.isMetaMaskInstalled()) {
+          _that.popupMessage('Please install wallet plugin')
+        }
+        await _that.login()
+        await _that.initBuilding()
         await _that.timer()
         await Messager.listener()
 
         // init chat server
         _that.chatRandNum = parseInt(Math.random() * 1000000)
         console.log('[Main] start connect ws server')
-        _that.initChatServer()
+        await _that.initChatServer()
+
+        console.log('building', $('.building').prop('scrollHeight'))
+        $('.building').scrollTop($('.building').prop('scrollHeight'))
       })()
     })
   }

@@ -1,6 +1,7 @@
 import * as ethers from 'ethers'
 import $ from 'jquery'
 import _ from 'lodash'
+import Toastify from 'toastify-js'
 import contractNFTTest from './contractAbi'
 
 // -32000 execution reverted! "Internal JSON-RPC error." 原因为合约有报错
@@ -74,7 +75,18 @@ const Dapp = {
       if (isMetaMaskInstalled()) {
         if (window.ethereum.chainId !== targetChainId) {
           console.log('window.ethereum.chainId', window.ethereum.chainId, targetChainId)
-          alert('链ID ' + targetChainId + ' 不是 主网！请在钱包中切换')
+          Toastify({
+            text: 'Please switch to Ropsten Test Network',
+            duration: 3000,
+            newWindow: true,
+            close: true,
+            gravity: 'top', // `top` or `bottom`
+            position: 'right', // `left`, `center` or `right`
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+            style: {
+              background: 'linear-gradient(to right, #00b09b, #96c93d)'
+            }
+          }).showToast()
           return Dapp
         }
 
