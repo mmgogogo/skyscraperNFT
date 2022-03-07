@@ -536,7 +536,7 @@ export default {
       } else {
         _that.popupMessage('Metamask connected')
       }
-      if (!_that.playerInfo.isLogin) {
+      if (_that.playerInfo.isLogin) {
         _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
         _that.playerInfo.isLogin = true
         _that.playerInfo.status = 1
@@ -929,6 +929,10 @@ export default {
 
       const _that = this
 
+      // 如果连接异常直接退出
+      if (_that.errorConnect()) {
+        return
+      }
       if (!_that.$Dapp.Bridges.writer) {
         console.log('[Main][updateBuilding] writer is ', _that.$Dapp.Bridges.writer)
         this.popupMessage('Login wallet to loading building information')
@@ -1225,6 +1229,14 @@ export default {
         type: 0 // 0=公共 1=私聊
       })
       this.chatConn.send(data)
+    },
+    errorConnect () {
+      // 统计各种异常情况，然后直接退出
+      // 如果连接异常直接退出
+      if (this.$Dapp.Bridges.rightChainId === false) {
+        return true
+      }
+      return false
     }
   },
   updated () {

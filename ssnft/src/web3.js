@@ -74,6 +74,7 @@ const Dapp = {
     try {
       if (isMetaMaskInstalled()) {
         if (window.ethereum.chainId !== targetChainId) {
+          Dapp.Bridges.rightChainId = false
           console.log('window.ethereum.chainId', window.ethereum.chainId, targetChainId)
           Toastify({
             text: 'Please switch to Ropsten Test Network',
@@ -96,6 +97,7 @@ const Dapp = {
         Dapp.Bridges.reader = new ethers.Contract(contractAddress, contractAbi, Dapp.Bridges.local)
         Dapp.Bridges.signer = Dapp.Bridges.local.getSigner() // 钱包签名
         Dapp.Bridges.writer = Dapp.Bridges.reader.connect(Dapp.Bridges.signer)
+        Dapp.Bridges.rightChainId = false
 
         return Dapp
       }
