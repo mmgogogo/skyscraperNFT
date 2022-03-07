@@ -97,7 +97,7 @@ const Dapp = {
         Dapp.Bridges.reader = new ethers.Contract(contractAddress, contractAbi, Dapp.Bridges.local)
         Dapp.Bridges.signer = Dapp.Bridges.local.getSigner() // 钱包签名
         Dapp.Bridges.writer = Dapp.Bridges.reader.connect(Dapp.Bridges.signer)
-        Dapp.Bridges.rightChainId = false
+        Dapp.Bridges.rightChainId = true
 
         return Dapp
       }

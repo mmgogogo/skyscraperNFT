@@ -1,4 +1,4 @@
-import { ajaxGetAllNfts } from './AjaxData'
+import { ajaxGetAllNfts, ajaxAddFollowerPeople, ajaxAddFollowerToken, ajaxAddTokenInfo } from './AjaxData'
 
 export default
 class Messager {
@@ -96,33 +96,41 @@ class Messager {
     Messager.sendMessage(message)
   }
 
+  // 关注其他
   static async processFollowInfo (params) {
     // 关注了谁
     const follower = params.follower
     // 我是谁
-    const me = ''
+    const me = params.me
     // 关注的房间
     const roomId = params.roomId
     // 发生时间
     const time = params.time
-    console.log('[Web][Messager]] ', { follower: follower, roomId: roomId, time: time, me: me })
-    // todo data
-    // data structure
-    // 我关注了谁
-    // {
-    //   'from':me,
-    //   'roomId': 0,
-    //   'time': now,
-    //   'to': follower
-    // }
-    // 谁关注了我
-    // {
-    //   'from':me,
-    //   'roomId': 0,
-    //   'time': now,
-    //   'to': follower
-    // }
-    // let followingInfo = {'follower':'', 'roomId': 0, 'time': now, 'me': ''}
-    // saveFollowInfo(followingInfo)
+    console.log('[Web][Messager]processFollowInfo ', { follower: follower, roomId: roomId, time: time, me: me })
+
+    // 关注玩家
+    if (me !== '' && follower !== '') {
+      ajaxAddFollowerPeople(me, follower)
+    }
+
+    // 关注楼层
+    if (me !== '' && roomId !== '') {
+      ajaxAddFollowerToken(me, roomId)
+    }
+  }
+
+  // 楼层留言
+  static async processEditFloorInfo (params) {
+    // 楼层ID
+    const tokenId = params.tokenId
+    // 留言内容
+    const remark = params.remark
+    // 发生时间
+    const time = params.time
+    console.log('[Web][Messager]processEditFloorInfo ', { tokenId: tokenId, remark: remark, time: time })
+
+    if (tokenId !== '' && remark !== '') {
+      ajaxAddTokenInfo(tokenId, remark)
+    }
   }
 }

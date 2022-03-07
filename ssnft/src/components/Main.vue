@@ -537,8 +537,11 @@ export default {
       // else {
       //   _that.popupMessage('Metamask connected')
       // }
+
       if (!_that.playerInfo.isLogin) {
-        _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
+        if (_that.$Dapp.Bridges.ethereum !== undefined) {
+          _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
+        }
         _that.playerInfo.isLogin = true
         _that.playerInfo.status = 1
         console.log('[Main] wallet address [%s]', _that.playerInfo.address)
@@ -930,16 +933,6 @@ export default {
 
       const _that = this
 
-      // 如果连接异常直接退出
-      if (_that.errorConnect()) {
-        return
-      }
-      if (!_that.$Dapp.Bridges.writer) {
-        console.log('[Main][updateBuilding] writer is ', _that.$Dapp.Bridges.writer)
-        this.popupMessage('Login wallet to loading building information')
-        return
-      }
-
       _that.building.height = Math.ceil(start / 500) + 1
       if (start <= _that.building.min) {
         first = true
@@ -1044,6 +1037,11 @@ export default {
       //   }
       // ]
       const _that = this
+
+      if (_that.errorConnect()) {
+        console.log('Main][created] error', _that.$Dapp.Bridges)
+        return []
+      }
 
       // [{ minted: 0, owner: '', tokenId: floorId, floorNo: 0, houseType: 0 }, ...]
       const f1 = await _that.getFloorBaseInfo(floorIds) // get floor baseInfo from contract
