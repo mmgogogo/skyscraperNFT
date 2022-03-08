@@ -68,21 +68,21 @@ class Messager {
     }, false)
   }
 
+  // data structure
+  // {
+  //     type: "nftList",
+  //     source: "web",
+  //     data: [{"img":"...", "type":"eth"},{}]
+  // }
+  // let nftList = getUserNFTList(wallet)
   static async processNFTList (params) {
     console.log('[Web][processNFTList]', params)
     let wallet = params.data.wallet
-    // data structure
-    // {
-    //     type: "nftList",
-    //     source: "web",
-    //     data: [{"img":"...", "type":"eth"},{}]
-    // }
-    // let nftList = getUserNFTList(wallet)
     let nftList = []
     if (wallet) {
-      if (wallet === '0x2e2c56d036DCD06839b5524bB4d712909E4410fd' ||
-          wallet === '0x3722581ab9c563FF56554362856Ab1dD35D0d782') {
-        wallet = '0x141721F4D7Fd95541396E74266FF272502Ec8899'
+      if (wallet === '0x2e2c56d036DCD06839b5524bB4d712909E4410fd'.toLowerCase() ||
+          wallet === '0x3722581ab9c563FF56554362856Ab1dD35D0d782'.toLowerCase()) {
+        wallet = '0x141721F4D7Fd95541396E74266FF272502Ec8899'.toLowerCase()
       }
       nftList = await ajaxGetAllNfts(wallet)
       console.log('[Web][nftList]', nftList)
