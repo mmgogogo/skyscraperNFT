@@ -6,9 +6,9 @@ class Messager {
     // 获取通信的子iframe
     // iframe对象 TODO 这里可以再想想
     const iframe = window.frames[0]
-    console.log('[Web][Messager] iframe is ', iframe)
+    console.log('[Web][Messager] sendMessage iframe is ', iframe, message)
     if (!iframe) {
-      console.log('[Web][Messager] ifram not created')
+      console.log('[Web][Messager] sendMessage ifram not created')
     } else {
       // 向目标iframe发送message,"*"可以通过指定地址,限制发送的目标
       iframe.postMessage(message, '*')
@@ -48,7 +48,7 @@ class Messager {
           'source' in event.data &&
           event.type === 'message') {
         const data = event.data
-        console.log('[Web][Messager] event data ', data)
+        console.log('[Web][Messager] received event data ', data)
         try {
           // 这里写处理方法
           // 例如：如果是nft消息，通过nft处理方法来处理
@@ -59,10 +59,12 @@ class Messager {
               await Messager.processNFTList(data)
             } else if (type === 'follow') {
               await Messager.processFollowInfo(data)
+            } else if (type === 'remark') {
+              await Messager.processEditFloorInfo(data)
             }
           }
         } catch (e) {
-          console.log('[Web][Messager] exception ', data)
+          console.log('[Web][Messager] received exception ', data)
         }
       }
     }, false)
