@@ -69,6 +69,7 @@ class Messager {
   }
 
   static async processNFTList (params) {
+    console.log('[Web][processNFTList]', params)
     let wallet = params.data.wallet
     // data structure
     // {
@@ -83,17 +84,20 @@ class Messager {
           wallet === '0x3722581ab9c563FF56554362856Ab1dD35D0d782') {
         wallet = '0x141721F4D7Fd95541396E74266FF272502Ec8899'
       }
-      nftList = ajaxGetAllNfts(wallet)
-    }
-    const message = {
-      type: 'nftList',
-      source: 'web',
-      data: {
-        wallet: wallet,
-        nftList: nftList
+      nftList = await ajaxGetAllNfts(wallet)
+      console.log('[Web][nftList]', nftList)
+      if (nftList) {
+        const message = {
+          type: 'nftList',
+          source: 'web',
+          data: {
+            wallet: wallet,
+            nftList: nftList
+          }
+        }
+        Messager.sendMessage(message)
       }
     }
-    Messager.sendMessage(message)
   }
 
   // 关注其他

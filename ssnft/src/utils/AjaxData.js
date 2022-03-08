@@ -127,44 +127,60 @@ export async function ajaxGetMyFollower (type, address) {
 
 // 获取个人nft列表
 export async function ajaxGetAllNfts (address) {
-  const result = []
-
-  // get all my nft list
+  // console.log('[Web][Ajax] ajaxGetAllNfts start ', address)
   const url = apiServer + '/user/getallnft?address=' + address
-  await axios.post(url).then(response => {
-    const data = response.data.Data
-
-    // TODO not support more then 100 nft
-    console.log('[AjaxData] ajaxGetAllNfts response:', data)
-    if (data.code === 200) {
-      const items = data.data.content
-      for (var v in items) {
-        // const image = JSON.parse(result[v].nft_json).image
-        try {
-          const imageInfo = JSON.parse(items[v].nft_json)
-          let image = imageInfo.image // erc721
-          if (image === undefined || image === '') {
-            image = imageInfo.image_url // ens
+  return new Promise(
+    (resolve, reject) => axios.post(url).then(response => {
+      // console.log('[Web][Ajax][Response] is ', [response])
+      const data = response.data.Data
+      const result = []
+      // TODO not support more then 100 nft
+      // console.log('[Web][Ajax] ajaxGetAllNfts response data ', [data])
+      if (data.code === 200 && data.data) {
+        const contents = data.data.content
+        // console.log('[Web][Ajax] ajaxGetAllNfts content ', contents)
+        for (const item of contents) {
+          // console.log('[Web][Ajax] ajaxGetAllNfts nft_json ', item)
+          let nftJsonStr = item.nft_json
+          nftJsonStr = nftJsonStr.replace(' ', '')
+          nftJsonStr = nftJsonStr.replace('\n', '')
+          let nftJson = null
+          // if empty string
+          if (nftJsonStr) {
+            try {
+              nftJson = JSON.parse(nftJsonStr)
+            } catch (error) {
+              // parse json string error
+            }
+          }
+          let image = ''
+          if (nftJson && 'image' in nftJson) {
+            image = nftJson.image // erc721
+            if ('image_url' in nftJson && (image === undefined || image === '')) {
+              image = nftJson.image_url // ens
+            }
           }
           if (image !== undefined) {
             image = image.replace('ipfs://', 'https://ipfs.io/ipfs/')
           }
-          result.push({
-            token_id: items[v].token_id,
-            nft_name: items[v].nft_name,
-
-            // ipfs://QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
-            // https://ipfs.io/ipfs/QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
-            image: image
-          })
-        } catch (error) {
-          console.log('[AjaxData] ajaxGetAllNfts exception', v, error)
+          if (image) {
+            // console.log('[AjaxData][ajaxGetAllNfts] nftList image', image)
+            result.push({
+              token_id: item.token_id,
+              nft_name: item.nft_name,
+              // ipfs://QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
+              // https://ipfs.io/ipfs/QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE
+              image: image
+            })
+          }
         }
+        console.log('[Ajax][ajaxGetAllNfts] nftList', result)
+        resolve(result)
+      } else {
+        reject(new Error('return empty'))
       }
-    }
-  })
-
-  return result
+    })
+  )
 }
 
 // 获取token的留言
