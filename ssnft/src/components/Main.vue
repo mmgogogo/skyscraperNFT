@@ -1133,7 +1133,8 @@ export default {
         _that.gameConfig.baseUrl +
         '?roomId=' + param[0] +
         '&wallet=' + address +
-        '&owned=' + owned
+        '&owned=' + owned +
+        '&owner=' + param[2] // 拥有者地址
       console.log('[Main][openGame] openGame result ', _that.showInfo.game, _that.gameConfig.gameUrl)
     },
     randBoolean () {
