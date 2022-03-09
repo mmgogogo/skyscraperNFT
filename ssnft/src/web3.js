@@ -91,13 +91,21 @@ const Dapp = {
           return Dapp
         }
 
-        await window.ethereum.request({ method: 'eth_requestAccounts' })
+        var [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
         Dapp.Bridges.ethereum = window.ethereum
         Dapp.Bridges.local = new ethers.providers.Web3Provider(window.ethereum)
         Dapp.Bridges.reader = new ethers.Contract(contractAddress, contractAbi, Dapp.Bridges.local)
         Dapp.Bridges.signer = Dapp.Bridges.local.getSigner() // 钱包签名
         Dapp.Bridges.writer = Dapp.Bridges.reader.connect(Dapp.Bridges.signer)
         Dapp.Bridges.rightChainId = true
+        Dapp.Bridges.address = account
+
+        console.log('[web3] account address', account)
+        // 签名钱包数据
+        const signer = Dapp.Bridges.local.getSigner(account)
+        const signature = await signer.signMessage('Please sign to let us verify that you are the owner of this address ' + account)
+        console.log('[web3]signature', signature)
+        Dapp.Bridges.signature = signature
 
         return Dapp
       }

@@ -60,11 +60,11 @@ export async function ajaxAddFollowerToken (address, tokenId) {
 }
 
 // 添加关注楼层
-export async function ajaxGetHotToken () {
-  console.log('[AjaxData] call ajaxGetHotToken:')
+export async function ajaxGetHotToken (signature) {
+  console.log('[AjaxData] call ajaxGetHotToken:', signature)
 
   let result = []
-  const url = apiServer + '/followertoken/hot'
+  const url = apiServer + '/followertoken/hot?signature=' + signature
   await axios.post(url).then(response => {
     const data = response.data
 
