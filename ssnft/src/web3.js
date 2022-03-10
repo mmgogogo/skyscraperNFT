@@ -104,7 +104,7 @@ const Dapp = {
         // 签名钱包数据
         const signer = Dapp.Bridges.local.getSigner(account)
         const signature = await signer.signMessage('Please sign to let us verify that you are the owner of this address ' + account)
-        console.log('[web3]signature', signature)
+        console.log('[web3]signature', 'Please sign to let us verify that you are the owner of this address ' + account, signature)
         Dapp.Bridges.signature = signature
 
         return Dapp

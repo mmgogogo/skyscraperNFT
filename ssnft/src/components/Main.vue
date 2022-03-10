@@ -708,8 +708,12 @@ export default {
         for (let i = 0; i < tokenNum; i++) {
           contractWriter.tokenOfOwnerByIndex(address, i).then(function (tokenId) {
             console.log('[Main][myFloor]call tokenOfOwnerByIndex:', parseInt(tokenId))
-            playerInfo.mintFloorTokenId.push(parseInt(tokenId))
-            playerInfo.mintFloorNumId.push(parseInt(tokenId))
+            if (!playerInfo.mintFloorTokenId.includes(parseInt(tokenId))) {
+              playerInfo.mintFloorTokenId.push(parseInt(tokenId))
+            }
+            if (!playerInfo.mintFloorNumId.includes(parseInt(tokenId))) {
+              playerInfo.mintFloorNumId.push(parseInt(tokenId))
+            }
             // contractWriter.getTokenInfo(tokenId).then(function (ret) {
             //   console.log('[Main][myFloor]call getTokenInfo:', ret)
             //   console.log('[Main][myFloor]call houseType:', parseInt(ret.houseType))
