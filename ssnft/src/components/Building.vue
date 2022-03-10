@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="room flex-col align-center" v-bind:class="[floorInfo.isFirst?'first':'']">
-      <div class="decoration flex-container align-start" v-on:click="$emit('open-game', [floorInfo.floorId, floorInfo.minted, floorInfo.owner])">
+      <div class="decoration flex-container align-start" v-on:click="$emit('open-game', [floorInfo.floorId, floorInfo.minted, floorInfo.owner, floorInfo.houseType])">
         <img class="floor-area flex-row" referrerpolicy="no-referrer" src="../assets/images/walls/floor_area.png" alt="" />
         <img class="floor-img flex-row" referrerpolicy="no-referrer" v-bind:src="requireImg(floorInfo.houseType)" alt="" />
       </div>
@@ -77,9 +77,9 @@ export default {
       // console.log('[Main] strPadLeft str ', str)
       return chr.repeat(len - String(str).length) + String(str)
     },
-    requireImg (imagePath) {
-      if (imagePath !== 'x') {
-        imagePath = this.strPadLeft(imagePath)
+    requireImg (houseType) {
+      if (houseType !== 'x') {
+        houseType = this.strPadLeft(houseType)
       }
       const imageCfg = {
         '00001': floor00001,
@@ -94,7 +94,7 @@ export default {
         '00010': floor00010,
         x: floorx
       }
-      return imageCfg[imagePath]
+      return imageCfg[houseType]
     },
     handleWheel (event) {
       event.preventDefault()

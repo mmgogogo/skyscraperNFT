@@ -91,7 +91,7 @@ class Messager {
           type: 'nftList',
           source: 'web',
           data: {
-            wallet: wallet,
+            wallet: params.data.wallet,
             nftList: nftList
           }
         }

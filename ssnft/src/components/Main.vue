@@ -1050,12 +1050,10 @@ export default {
       const floorsInfo = []
       console.log('[Main][getFloorListInfo] floorBaseInfo ', f1)
       for (let k = 0; k < floorIds.length; k++) {
-        let houseType = f1[k].houseType
-        if (parseInt(houseType) > 10 || parseInt(houseType) === 0) {
-          houseType = 10
-        }
-        houseType = _that.strPadLeft(houseType)
-        const image = '../assets/images/walls/floor_' + houseType + '.png'
+        const minted = parseInt(f1[k].minted)
+        const houseType = minted > 0 ? parseInt(f1[k].houseType) + 1 : 0
+        const houseTypeStr = _that.strPadLeft(houseType)
+        const image = '../assets/images/walls/floor_' + houseTypeStr + '.png'
         const floorInfo = {
           id: floorIds[k],
           floorId: floorIds[k],
@@ -1074,7 +1072,7 @@ export default {
       return floorsInfo
     },
     async getFloorBaseInfo (floorIds) {
-      console.log('[Main][getFloorBaseInfo] floorIds ', floorIds)
+      // console.log('[Main][getFloorBaseInfo] floorIds ', floorIds)
       // get floor base info from contract.
       // [{ minted: 0, owner: '', tokenId: floorId, floorNo: 0, houseType: 0 }, ...]
       const baseInfo = []
@@ -1083,7 +1081,7 @@ export default {
         const oneFloor = await this.getTokenFromContract(f)
         baseInfo.push(oneFloor)
       }
-      console.log('[Main] getFloorBaseInfo response', baseInfo)
+      // console.log('[Main] getFloorBaseInfo response', baseInfo)
       return baseInfo
     },
     async getTokenFromContract (floorId) {
@@ -1098,7 +1096,7 @@ export default {
       const oneFloor = { minted: 0, owner: '', tokenId: floorId, floorNo: 0, houseType: 0 }
       await this.$Dapp.Bridges.writer.getTokenInfo(floorId).then(function (ret) {
         // floorNo, houseType, tokenId, uri
-        console.log('[Main] getTokenFromContract:', parseInt(ret.tokenId), ret.owner)
+        // console.log('[Main] getTokenFromContract:', parseInt(ret.tokenId), ret.owner)
         if (ret.owner !== '0x0000000000000000000000000000000000000000') {
           oneFloor.owner = ret.owner
           oneFloor.minted = 1
@@ -1106,34 +1104,46 @@ export default {
           oneFloor.floorNo = parseInt(ret.floorNo)
         }
       })
-      console.log('[Main] getTokenFromContract response', oneFloor)
+      // console.log('[Main] getTokenFromContract response', oneFloor)
 
       // 写入缓存
       addLocalStorage(cacheName + floorId, oneFloor)
       return oneFloor
     },
-    async openGame (param) {
+    // [floorId, minted, owner, houseType]
+    async openGame (params) {
       const _that = this
-      console.log('[Main][openGame] openGame param ', param)
-      // toLowerCase()
+      console.log('[Main][openGame] openGame params ', params)
+      // my wallet toLowerCase()
       const address = _that.playerInfo.address
+      // when user login game they signed a message use their wallet to prove the owner
+      // and Login server will return a token to Client, expired after 2 hours
+      // this is the login token, use it here
+      // todo data
 
-      if (parseInt(param[1]) === 0) {
+      if (parseInt(params[1]) === 0) {
         _that.popupMessage('Not minted floor, cant open it')
         return
       }
-
+      // Own the floor or not
       let owned = 0
-      if (param[1] && address.toLowerCase() === param[2].toLowerCase()) {
+      if (params[1] && address.toLowerCase() === params[2].toLowerCase()) {
         owned = 1
       }
 
+      // Added the owner wallet    = owner
+      // Added the floor houseType = layout
+      const owner = params[2].toLowerCase()
+      if (params.length >= 4 && params[3] > 0) {
+        params[3] = parseInt(params[3])
+      } else {
+        params[3] = 17
+      }
+      const houseType = params[3] + 10010
+
       _that.showInfo.game = true
-      _that.gameConfig.gameUrl =
-        _that.gameConfig.baseUrl +
-        '?roomId=' + param[0] +
-        '&wallet=' + address +
-        '&owned=' + owned
+      _that.gameConfig.gameUrl = _that.gameConfig.baseUrl + `?roomId=${params[0]}&wallet=${address}&owned=${owned}&owner=${owner}&layout=${houseType}&token=test'`
+
       console.log('[Main][openGame] openGame result ', _that.showInfo.game, _that.gameConfig.gameUrl)
     },
     randBoolean () {
