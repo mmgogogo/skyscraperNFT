@@ -477,19 +477,18 @@ export default {
   methods: {
     mintIncrement () {
       const _that = this
+      if (_that.mintConfig.mintNum >= 2) {
+        return
+      }
       _that.mintConfig.mintNum++
       _that.mintConfig.mintPrice = _that.mintConfig.unit * _that.mintConfig.mintNum
-      if (_that.mintConfig.mintNum > 20) {
-        _that.mintConfig.mintNum = 1
-      }
     },
     mintDecrement () {
       const _that = this
       if (_that.mintConfig.mintNum <= 1) {
-        _that.mintConfig.mintNum = 1
-      } else {
-        _that.mintConfig.mintNum--
+        return
       }
+      _that.mintConfig.mintNum--
       _that.mintConfig.mintPrice = _that.mintConfig.unit * _that.mintConfig.mintNum
     },
     onClick (e) {
