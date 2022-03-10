@@ -79,6 +79,9 @@ export default {
     },
     requireImg (houseType) {
       if (houseType !== 'x') {
+        if (houseType > 10) {
+          houseType = 10
+        }
         houseType = this.strPadLeft(houseType)
       }
       const imageCfg = {

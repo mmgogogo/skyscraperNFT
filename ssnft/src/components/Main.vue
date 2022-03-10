@@ -3,6 +3,7 @@
     <div class="header flex-row justify-center">
       <div class="navigation flex-row">
         <div class="logo flex-col"></div>
+        {{signature}}
         <div class="wallet flex-col btn-hand" @click="login(1)"></div>
         <div class="profile flex-col btn-hand" @click="displayProfileInfo()"></div>
       </div>
@@ -383,6 +384,7 @@ export default {
       // 合约函数
       appContractWriter: this.$Dapp.Bridges.writer,
       appContractReader: this.$Dapp.Bridges.read,
+      signature: '',
       mintConfig: {
         mintNum: 1,
         unit: 0.01,
@@ -545,13 +547,9 @@ export default {
         _that.playerInfo.status = 1
         console.log('[Main] wallet address [%s]', _that.playerInfo.address)
       }
-      // todo data
-      // 这个要移一下位置绵绵
-      // const message = {
-      //   source: 'web',
-      //   type: 'updateTitle'
-      // }
-      // Messager.sendMessage(message)
+
+      // 签名赋值
+      _that.signature = _that.$Dapp.Bridges.signature
     },
     resetPopWindow () {
       console.log('[Main][resetPopWindow] start')
@@ -709,8 +707,12 @@ export default {
         for (let i = 0; i < tokenNum; i++) {
           contractWriter.tokenOfOwnerByIndex(address, i).then(function (tokenId) {
             console.log('[Main][myFloor]call tokenOfOwnerByIndex:', parseInt(tokenId))
-            playerInfo.mintFloorTokenId.push(parseInt(tokenId))
-            playerInfo.mintFloorNumId.push(parseInt(tokenId))
+            if (!playerInfo.mintFloorTokenId.includes(parseInt(tokenId))) {
+              playerInfo.mintFloorTokenId.push(parseInt(tokenId))
+            }
+            if (!playerInfo.mintFloorNumId.includes(parseInt(tokenId))) {
+              playerInfo.mintFloorNumId.push(parseInt(tokenId))
+            }
             // contractWriter.getTokenInfo(tokenId).then(function (ret) {
             //   console.log('[Main][myFloor]call getTokenInfo:', ret)
             //   console.log('[Main][myFloor]call houseType:', parseInt(ret.houseType))
@@ -792,7 +794,7 @@ export default {
 
       _that.setting.loading = 'Loading...'
 
-      _that.floorInfo.hotList = await ajaxGetHotToken()
+      _that.floorInfo.hotList = await ajaxGetHotToken(_that.signature)
       console.log('[Main][hot] hotList is ', _that.floorInfo.hotList)
 
       if (_that.floorInfo.hotList === null || _that.floorInfo.hotList.length === 0) {
@@ -1142,7 +1144,6 @@ export default {
 
       _that.showInfo.game = true
       _that.gameConfig.gameUrl = _that.gameConfig.baseUrl + `?roomId=${params[0]}&wallet=${address}&owned=${owned}&owner=${owner}&layout=${houseType}&token=test'`
-
       console.log('[Main][openGame] openGame result ', _that.showInfo.game, _that.gameConfig.gameUrl)
     },
     randBoolean () {
