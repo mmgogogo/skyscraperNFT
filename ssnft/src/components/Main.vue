@@ -3,7 +3,6 @@
     <div class="header flex-row justify-center">
       <div class="navigation flex-row">
         <div class="logo flex-col"></div>
-        {{signature}}
         <div class="wallet flex-col btn-hand" @click="login(1)"></div>
         <div class="profile flex-col btn-hand" @click="displayProfileInfo()"></div>
       </div>
@@ -548,8 +547,16 @@ export default {
         console.log('[Main] wallet address [%s]', _that.playerInfo.address)
       }
 
-      // 签名赋值
-      _that.signature = _that.$Dapp.Bridges.signature
+      // 签名钱包数据
+      if (_that.signature === '') {
+        const signer = dapp.Bridges.local.getSigner(_that.playerInfo.address)
+        // const signMsg = 'Please sign to let us verify that you are the owner of this address'
+        const signMsg = 'Welcome'
+        const signature = await signer.signMessage(signMsg)
+        console.log('[Main]signature内容：', signMsg, signature)
+        // 签名赋值
+        this.signature = signature
+      }
     },
     resetPopWindow () {
       console.log('[Main][resetPopWindow] start')
@@ -1143,7 +1150,7 @@ export default {
       const houseType = params[3] + 10010
 
       _that.showInfo.game = true
-      _that.gameConfig.gameUrl = _that.gameConfig.baseUrl + `?roomId=${params[0]}&wallet=${address}&owned=${owned}&owner=${owner}&layout=${houseType}&token=test'`
+      _that.gameConfig.gameUrl = _that.gameConfig.baseUrl + `?roomId=${params[0]}&wallet=${address}&owned=${owned}&owner=${owner}&layout=${houseType}&sign=${this.signature}'`
       console.log('[Main][openGame] openGame result ', _that.showInfo.game, _that.gameConfig.gameUrl)
     },
     randBoolean () {
