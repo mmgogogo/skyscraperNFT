@@ -816,13 +816,17 @@ export default {
     async avatar () {
       const _that = this
       let address = _that.playerInfo.address
-      if (!address) {
-        // _that.popupMessage('Login first')
-        // return
+      if (!address || !_that.signature) {
+        _that.popupMessage('Login first')
+        return
+      }
+
+      if (address.toLowerCase() === '0x2e2c56d036DCD06839b5524bB4d712909E4410fd' || address.toLowerCase() === '0x3e00b9f8583849887f4dfbd688fc27488325dcd3') {
         address = '0x141721F4D7Fd95541396E74266FF272502Ec8899'
       }
+
       _that.showInfo.avatar = true
-      _that.gameConfig.avatarUrl = _that.gameConfig.avatarBaseUrl + '?wallet=' + address
+      _that.gameConfig.avatarUrl = _that.gameConfig.avatarBaseUrl + '?wallet=' + address + '&sign=' + _that.signature
       console.log('[Main][avatar] avatarUrl', _that.showInfo.avatar, _that.gameConfig.avatarUrl)
     },
     windowCompute () {
