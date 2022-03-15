@@ -548,7 +548,7 @@ export default {
       }
 
       // 签名钱包数据
-      if (_that.signature === '') {
+      if (isInit === 1 && _that.signature === '') {
         const signer = dapp.Bridges.local.getSigner(_that.playerInfo.address)
         // const signMsg = 'Please sign to let us verify that you are the owner of this address'
         const signMsg = 'Welcome'
@@ -1150,7 +1150,7 @@ export default {
       const houseType = params[3] + 10010
 
       _that.showInfo.game = true
-      _that.gameConfig.gameUrl = _that.gameConfig.baseUrl + `?roomId=${params[0]}&wallet=${address}&owned=${owned}&owner=${owner}&layout=${houseType}&sign=${this.signature}'`
+      _that.gameConfig.gameUrl = _that.gameConfig.baseUrl + `?roomId=${params[0]}&wallet=${address}&owned=${owned}&owner=${owner}&layout=${houseType}&sign=${this.signature}`
       console.log('[Main][openGame] openGame result ', _that.showInfo.game, _that.gameConfig.gameUrl)
     },
     randBoolean () {
@@ -1204,6 +1204,35 @@ export default {
         // console.log('[Main][timer] add timer event here')
       }, 15000)
     },
+    async broadcast (name, msg) {
+      // 发送通知
+      if (this.chatConn === null) {
+        console.log('重新链接服务器...')
+        this.initChatServer()
+      }
+      // 打包消息
+      const data = JSON.stringify({
+        name: name,
+        msg: msg,
+        room: 0,
+        type: 0 // 0=公共 1=私聊
+      })
+      // 校验当前链接状态
+      console.log('ws链接状态：', this.chatConn)
+      // CONNECTING：值为0，表示正在连接；
+      // OPEN：值为1，表示连接成功，可以通信了；
+      // CLOSING：值为2，表示连接正在关闭；
+      // CLOSED：值为3，表示连接已经关闭，或者打开连接失败。
+      try {
+        if (this.chatConn.readyState >= 2) {
+          console.log('断开重新链接：', this.chatConn)
+          await this.initChatServer()
+        }
+        this.chatConn.send(data)
+      } catch (error) {
+        console.log('ws send error')
+      }
+    },
     // 初始化聊天服务器
     async initChatServer () {
       const _that = this
@@ -1214,37 +1243,22 @@ export default {
       if (window.WebSocket) {
         const url = wsServerUrl() + '?id=' + chatName + '&room=0'
         console.log('[Main] ws server url: ' + url)
-        _that.chatConn = new WebSocket(url)
-        _that.chatConn.onopen = function (evt) {
+        this.chatConn = new WebSocket(url)
+        this.chatConn.onopen = function (evt) {
           _that.broadcast('系统', '欢迎加入频道')
         }
-        _that.chatConn.onclose = function (evt) {
+        this.chatConn.onclose = function (evt) {
           _that.broadcast('系统', 'Connection closed')
         }
-        _that.chatConn.onmessage = function (evt) {
+        this.chatConn.onmessage = function (evt) {
           // 解析消息
           const data = JSON.parse(JSON.parse(evt.data))
           console.log('[Main] ws data', data)
           _that.updateChatList(data.name, data.msg)
         }
       } else {
-        _that.popupMessage('Your browser does not support chat service')
+        this.popupMessage('Your browser does not support chat service')
       }
-    },
-    broadcast (name, msg) {
-      // 发送通知
-      if (this.chatConn === null) {
-        alert('send chat failed')
-        return
-      }
-      // 打包消息
-      const data = JSON.stringify({
-        name: name,
-        msg: msg,
-        room: 0,
-        type: 0 // 0=公共 1=私聊
-      })
-      this.chatConn.send(data)
     },
     errorConnect () {
       // 统计各种异常情况，然后直接退出
