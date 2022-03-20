@@ -7,6 +7,8 @@
         <div v-bind:class="[playerInfo.status === 1 ? '' : 'animation', 'wallet flex-col btn-hand btn-margin-2 justify-center']" @click="selectAWallet()">
           <span class="wallet-txt flex-row">{{playerInfo.status === 1 ? getWallet() : 'Connect Wallet'}}</span>
         </div>
+        <!-- <div class="wallet flex-col btn-hand" @click="login(1)"></div>
+        <div class="profile flex-col btn-hand" @click="displayProfileInfo()"></div> -->
       </div>
     </div>
     <div class="building-container flex-row">
@@ -579,22 +581,22 @@ export default {
       // get status
       const status = getLocalStorage('status')
       console.log('[Main][getPlayerInfo] status ', status)
-      if (status === 1) {
+      if (status >= 1) {
         await _that.$Dapp.connectWallet()
         await _that.updateProfile([{ type: 'login', chainId: _that.$Dapp.Bridges.ethereum.chainId, address: _that.$Dapp.Bridges.ethereum.selectedAddress }])
       }
 
-      // if (!_that.playerInfo.isLogin) {
-      //   if (_that.$Dapp.Bridges.ethereum !== undefined) {
-      //     _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
-      //   }
-      //   _that.playerInfo.isLogin = true
-      //   _that.playerInfo.status = 1
-      //   console.log('[Main] wallet address [%s]', _that.playerInfo.address)
-      // }
+      // 签名钱包数据
+      if (status !== 2 && _that.signature === '') {
+        const signer = dapp.Bridges.local.getSigner(_that.playerInfo.address)
+        // const signMsg = 'Please sign to let us verify that you are the owner of this address'
+        const signMsg = 'Welcome'
+        const signature = await signer.signMessage(signMsg)
+        console.log('[Main][signature] content is ', signMsg, signature)
+        await _that.updateProfile([{ type: 'sign', chainId: _that.$Dapp.Bridges.ethereum.chainId, address: _that.$Dapp.Bridges.ethereum.selectedAddress, signature: signature }])
 
-      // // 签名赋值
-      // _that.signature = _that.$Dapp.Bridges.signature
+        _that.signature = signature
+      }
     },
     resetPopWindow () {
       console.log('[Main][resetPopWindow] start')
@@ -860,9 +862,12 @@ export default {
     async avatar () {
       const _that = this
       let address = _that.playerInfo.address
-      if (!address) {
-        // _that.popupMessage('Login first')
-        // return
+      if (!address || !_that.signature) {
+        _that.popupMessage('Login first')
+        return
+      }
+
+      if (address.toLowerCase() === '0x2e2c56d036DCD06839b5524bB4d712909E4410fd' || address.toLowerCase() === '0x3e00b9f8583849887f4dfbd688fc27488325dcd3') {
         address = '0x141721F4D7Fd95541396E74266FF272502Ec8899'
       }
       _that.showInfo.game = true
@@ -1197,6 +1202,21 @@ export default {
 
           _that.playerInfo.name = 'Default'
         }
+        if ('type' in params && params.type === 'sign') {
+          _that.playerInfo.chainId = params.chainId
+          _that.playerInfo.address = params.address
+          _that.playerInfo.signature = params.signature
+          _that.playerInfo.status = 2
+
+          addLocalStorage('status', _that.playerInfo.status, 2 * 3600 - 10)
+          addLocalStorage('signature', params.signature, 2 * 3600 - 10)
+
+          // todo data
+          // getUserProfile(address)
+          // return {name: 'zhaofei'}
+
+          _that.playerInfo.name = 'Default'
+        }
       }
     },
     closeAccount () {
@@ -1256,7 +1276,7 @@ export default {
       const houseType = params[3] + 10010
 
       _that.showInfo.game = true
-      _that.gameConfig.gameUrl = _that.gameConfig.baseUrl + `?roomId=${params[0]}&wallet=${address}&owned=${owned}&owner=${owner}&layout=${houseType}&token=test'`
+      _that.gameConfig.gameUrl = _that.gameConfig.baseUrl + `?roomId=${params[0]}&wallet=${address}&owned=${owned}&owner=${owner}&layout=${houseType}&sign=${this.signature}`
       console.log('[Main][openGame] openGame result ', _that.showInfo.game, _that.gameConfig.gameUrl)
     },
     randBoolean () {
@@ -1310,6 +1330,35 @@ export default {
         // console.log('[Main][timer] add timer event here')
       }, 15000)
     },
+    async broadcast (name, msg) {
+      // 发送通知
+      if (this.chatConn === null) {
+        console.log('重新链接服务器...')
+        this.initChatServer()
+      }
+      // 打包消息
+      const data = JSON.stringify({
+        name: name,
+        msg: msg,
+        room: 0,
+        type: 0 // 0=公共 1=私聊
+      })
+      // 校验当前链接状态
+      console.log('ws链接状态：', this.chatConn)
+      // CONNECTING：值为0，表示正在连接；
+      // OPEN：值为1，表示连接成功，可以通信了；
+      // CLOSING：值为2，表示连接正在关闭；
+      // CLOSED：值为3，表示连接已经关闭，或者打开连接失败。
+      try {
+        if (this.chatConn.readyState >= 2) {
+          console.log('断开重新链接：', this.chatConn)
+          await this.initChatServer()
+        }
+        this.chatConn.send(data)
+      } catch (error) {
+        console.log('ws send error')
+      }
+    },
     // 初始化聊天服务器
     async initChatServer () {
       const _that = this
@@ -1320,14 +1369,14 @@ export default {
       if (window.WebSocket) {
         const url = wsServerUrl() + '?id=' + chatName + '&room=0'
         console.log('[Main] ws server url: ' + url)
-        _that.chatConn = new WebSocket(url)
-        _that.chatConn.onopen = function (evt) {
+        this.chatConn = new WebSocket(url)
+        this.chatConn.onopen = function (evt) {
           _that.broadcast('系统', '欢迎加入频道')
         }
-        _that.chatConn.onclose = function (evt) {
+        this.chatConn.onclose = function (evt) {
           _that.broadcast('系统', 'Connection closed')
         }
-        _that.chatConn.onmessage = function (evt) {
+        this.chatConn.onmessage = function (evt) {
           // 解析消息
           const data = JSON.parse(JSON.parse(evt.data))
           console.log('[Main] ws data', data)
@@ -1336,21 +1385,6 @@ export default {
       } else {
         _that.popupMessage('Your browser does not support WebSocket')
       }
-    },
-    broadcast (name, msg) {
-      // 发送通知
-      if (this.chatConn === null) {
-        alert('send chat failed')
-        return
-      }
-      // 打包消息
-      const data = JSON.stringify({
-        name: name,
-        msg: msg,
-        room: 0,
-        type: 0 // 0=公共 1=私聊
-      })
-      this.chatConn.send(data)
     },
     errorConnect () {
       // 统计各种异常情况，然后直接退出
