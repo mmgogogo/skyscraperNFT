@@ -4,8 +4,8 @@
       <div class="navigation flex-row">
         <div class="logo flex-col"></div>
         <div class="profile flex-col btn-hand btn-margin-1" @click="displayProfileInfo('account')"></div>
-        <div v-bind:class="[playerInfo.status === 1 ? '' : 'animation', 'wallet flex-col btn-hand btn-margin-2 justify-center']" @click="selectAWallet()">
-          <span class="wallet-txt flex-row">{{playerInfo.status === 1 ? getWallet() : 'Connect Wallet'}}</span>
+        <div v-bind:class="[playerInfo.status >= 1 ? '' : 'animation', 'wallet flex-col btn-hand btn-margin-2 justify-center']" @click="selectAWallet()">
+          <span class="wallet-txt flex-row">{{playerInfo.status >= 1 ? getWallet() : 'Connect Wallet'}}</span>
         </div>
         <!-- <div class="wallet flex-col btn-hand" @click="login(1)"></div>
         <div class="profile flex-col btn-hand" @click="displayProfileInfo()"></div> -->
@@ -452,6 +452,7 @@ export default {
         name: '',
         chainId: '',
         address: '',
+        signature: '',
         isLogin: false,
         status: 0, // 登录状态值 0: metamask未登录, 1: 登录metamask成功 2: 获取name数据成功
         allNfts: [], // all nft
@@ -540,9 +541,9 @@ export default {
     selectAWallet () {
       console.log('[Main][selectAWallet] start ', this.showInfo.login)
       const _that = this
-      if (_that.playerInfo.status !== 1) {
+      if (_that.playerInfo.status < 1) {
         _that.showInfo.login = true
-      } else if (_that.playerInfo.status === 1) {
+      } else if (_that.playerInfo.status >= 1) {
         _that.displayProfileInfo()
       }
       console.log('[Main][selectAWallet] end ', this.showInfo.login)
@@ -586,17 +587,17 @@ export default {
         await _that.updateProfile([{ type: 'login', chainId: _that.$Dapp.Bridges.ethereum.chainId, address: _that.$Dapp.Bridges.ethereum.selectedAddress }])
       }
 
-      // 签名钱包数据
-      if (status !== 2 && _that.signature === '') {
+      const signature = getLocalStorage('signature')
+      if (status !== 2 && !signature) {
         const signer = dapp.Bridges.local.getSigner(_that.playerInfo.address)
         // const signMsg = 'Please sign to let us verify that you are the owner of this address'
         const signMsg = 'Welcome'
-        const signature = await signer.signMessage(signMsg)
+        signature = await signer.signMessage(signMsg)
         console.log('[Main][signature] content is ', signMsg, signature)
         await _that.updateProfile([{ type: 'sign', chainId: _that.$Dapp.Bridges.ethereum.chainId, address: _that.$Dapp.Bridges.ethereum.selectedAddress, signature: signature }])
-
-        _that.signature = signature
       }
+      _that.playerInfo.signature = signature
+      _that.signature = signature
     },
     resetPopWindow () {
       console.log('[Main][resetPopWindow] start')
@@ -616,7 +617,7 @@ export default {
       const _that = this
       if (type === 'wallet') {
         // login wallet info
-        if (_that.playerInfo.status !== 1) {
+        if (_that.playerInfo.status < 1) {
           await _that.login()
         }
         _that.showInfo.profile = true
@@ -736,7 +737,7 @@ export default {
       this.resetMintFloor() // reset
       this.setting.loading = 'Loading...' // loading open
 
-      if (!_that.playerInfo.status) {
+      if (_that.playerInfo.status < 1) {
         this.popupMessage('Login wallet to loading floor information')
         return
       }
@@ -785,7 +786,7 @@ export default {
       _that.resetPopWindow() // reset
       console.log('[Main][myFollowing]click myFollowing')
 
-      if (!_that.playerInfo.status) {
+      if (_that.playerInfo.status < 1) {
         _that.popupMessage('Login wallet to loading following information')
         return
       }
@@ -1276,7 +1277,7 @@ export default {
       const houseType = params[3] + 10010
 
       _that.showInfo.game = true
-      _that.gameConfig.gameUrl = _that.gameConfig.baseUrl + `?roomId=${params[0]}&wallet=${address}&owned=${owned}&owner=${owner}&layout=${houseType}&sign=${this.signature}`
+      _that.gameConfig.gameUrl = _that.gameConfig.baseUrl + `?roomId=${params[0]}&wallet=${address}&owned=${owned}&owner=${owner}&layout=${houseType}&sign=${_that.signature}`
       console.log('[Main][openGame] openGame result ', _that.showInfo.game, _that.gameConfig.gameUrl)
     },
     randBoolean () {
