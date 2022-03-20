@@ -587,7 +587,7 @@ export default {
         await _that.updateProfile([{ type: 'login', chainId: _that.$Dapp.Bridges.ethereum.chainId, address: _that.$Dapp.Bridges.ethereum.selectedAddress }])
       }
 
-      const signature = getLocalStorage('signature')
+      let signature = getLocalStorage('signature')
       if (status !== 2 && !signature) {
         const signer = dapp.Bridges.local.getSigner(_that.playerInfo.address)
         // const signMsg = 'Please sign to let us verify that you are the owner of this address'
