@@ -1,102 +1,115 @@
 <template>
   <main class="main">
-    <div class="header flex-row justify-center">
+    <div class="header flex-col justify-center">
       <div class="navigation flex-row">
         <div class="logo flex-col"></div>
-        {{signature}}
-        <div class="wallet flex-col btn-hand" @click="login(1)"></div>
-        <div class="profile flex-col btn-hand" @click="displayProfileInfo()"></div>
+        <div class="profile flex-col btn-hand btn-margin-1" @click="displayProfileInfo()"></div>
+        <div v-bind:class="[playerInfo.status === 1 ? '' : 'animation', 'wallet flex-col btn-hand btn-margin-2 justify-center']" @click="selectAWallet()">
+          <span class="wallet-txt flex-row">{{playerInfo.status === 1 ? getWallet() : 'Connect Wallet'}}</span>
+        </div>
       </div>
     </div>
-    <div class="container flex-row">
+    <div class="building-container flex-row">
       <!-- nav start -->
       <div class="nav flex-col align-center">
         <div class="outer1 flex-col">
-          <div class="bd1 flex-col">
-            <div class="outer2 flex-col justify-between">
-              <span class="text tbox tline tcolor tprop tfont_m tfont_s26 tshadow" >{{ baseConfig.lang_001 }}</span>
-              <div class="box1 flex-row">
-                <img class="icon1" referrerpolicy="no-referrer" src="../assets/images/building_logo.png" alt="" />
-                <span class="box3 tfont_s30 tfont_m tleft tcolor tprop">{{ gameConfig.total }}</span>
+          <div class="bd1 flex-row justify-center">
+            <div class="outer2 flex-col align-center">
+              <span class="text tbox tline tcolor tprop tfont_m tfont_s26 tshadow tcenter" >{{ baseConfig.lang_001 }}</span>
+              <div class="box1 flex-row justify-center">
+                <img class="icon1 flex-col" referrerpolicy="no-referrer" src="../assets/images/building_logo.png" alt="" />
+                <span class="box3 tfont_s30 tfont_m tcenter tcolor tprop flex-col">{{ globalInfo.total }}</span>
               </div>
             </div>
           </div>
-          <div class="bd2 flex-row justify-between">
-            <div class="section2 flex-col">
-              <div class="section3 flex-row">
-                <div class="outer3 flex-col"></div>
-                <div class="outer4">
-                  <span class="info2">
-                    <input type="text" class="number" placeholder="Floor ID" v-model.number="gotoNum"  @keyup.enter="goto()"/>
+          <div class="bd2 flex-row justify-center">
+            <div class="search-container flex-row justify-between">
+              <div class="section2 flex-col">
+                <div class="section3 flex-row">
+                  <div class="outer3 flex-col"></div>
+                  <div class="outer4">
+                    <span class="info2">
+                      <input type="text" class="number" placeholder="Floor ID" v-model.number="gotoNum"  @keyup.enter="goto()"/>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="section4 flex-col justify-center">
+                <span class="txt2 btn-hand flex-col" @click="goto()" >{{ baseConfig.lang_003 }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="" v-bind:class="[!showInfo.myFloor ? '' : 'bgcolor_gray', 'nav-item flex-row justify-center nav-first']">
+            <div class="nav-container flex-row align-center">
+              <div v-bind:class="['layer1', 'flex-col', 'nav-margin']"></div>
+              <span
+                class="text tbox1 tline tprop tfont_m tfont_s24 tshadow btn-hand"
+                v-bind:class="['tcolor', 'flex-col']"
+                @click="myFloor()">
+                {{ baseConfig.lang_004 }}</span>
+            </div>
+          </div>
+          <div v-bind:class="[!showInfo.myFollowing ? '' : 'bgcolor_gray', 'nav-item flex-row justify-center nav-others']">
+            <div class="nav-container flex-row align-center">
+              <div v-bind:class="['bd5', 'flex-col', 'nav-margin']"></div>
+              <span
+                class="text tbox1 tline tprop tfont_m tfont_s24 tshadow btn-hand"
+                v-bind:class="['tcolor', 'flex-col']"
+                @click="myFollowing()"
+                >{{ baseConfig.lang_005 }}</span>
+              </div>
+          </div>
+          <div v-bind:class="[!showInfo.myFollowed ? '' : 'bgcolor_gray', 'nav-item flex-row justify-center nav-others']">
+            <div class="nav-container flex-row align-center">
+              <div v-bind:class="['group0', 'flex-col', 'nav-margin']"></div>
+              <span
+                class="text tbox1 tline tprop tfont_m tfont_s24 tshadow tcolor btn-hand"
+                v-bind:class="['tcolor', 'flex-col']"
+                @click="myFollowed()"
+                >{{ baseConfig.lang_006 }}</span>
+              </div>
+          </div>
+          <div v-bind:class="[!showInfo.hot ? '' : 'bgcolor_gray', 'nav-item flex-row justify-center nav-others']">
+            <div class="nav-container flex-row align-center">
+              <div v-bind:class="['group1', 'flex-col', 'nav-margin']"></div>
+              <span
+                class="text tbox1 tline tprop tfont_m tfont_s24 tshadow tcolor tleft btn-hand"
+                v-bind:class="['tcolor', 'flex-col']"
+                @click="hot()"
+                >{{ baseConfig.lang_007 }}</span>
+              </div>
+          </div>
+          <div class="button-list flex-row justify-center button-list-first">
+            <div class="btn-container justify-between">
+              <div class="layer2 flex-col align-center btn-hand" @click="displayMint()">
+                <div class="layer3 flex-col justify-between">
+                  <div class="layer4 flex-col"></div>
+                  <span class="txt3">
+                    {{ baseConfig.lang_008 }}
                   </span>
                 </div>
               </div>
-            </div>
-            <div class="section4 flex-col align-center">
-              <span class="txt2 btn-hand" @click="goto()" >{{ baseConfig.lang_003 }}</span>
-            </div>
-          </div>
-          <div class="bd3 flex-row justify-between">
-            <div v-bind:class="[!showInfo.myFloor ? 'layer1' : 'layer1_g', 'flex-col']"></div>
-            <span
-              class="text tbox1 tline tprop tfont_m tfont_s24 tshadow ttop btn-hand"
-              v-bind:class="[!showInfo.myFloor ? 'tcolor' : 'tcolor_gray0', 'flex-col']"
-              @click="myFloor()">
-              {{ baseConfig.lang_004 }}</span>
-          </div>
-          <div class="bd4 flex-row justify-between">
-            <div v-bind:class="[!showInfo.myFollowing ? 'bd5' : 'bd5_g', 'flex-col']"></div>
-            <span
-              class="text tbox1 tline tprop tfont_m tfont_s24 tshadow ttop btn-hand"
-              v-bind:class="[!showInfo.myFollowing ? 'tcolor' : 'tcolor_gray0', 'flex-col']"
-              @click="myFollowing()"
-              >{{ baseConfig.lang_005 }}</span
-            >
-          </div>
-          <div class="bd4 flex-row justify-between">
-            <div v-bind:class="[!showInfo.myFollowed ? 'group0' : 'group0_g', 'flex-col']"></div>
-            <span
-              class="text tbox1 tline tprop tfont_m tfont_s24 tshadow tcolor btn-hand"
-              v-bind:class="[!showInfo.myFollowed ? 'tcolor' : 'tcolor_gray0', 'flex-col']"
-              @click="myFollowed()"
-              >{{ baseConfig.lang_006 }}</span
-            >
-          </div>
-          <div class="bd4 flex-row justify-between">
-            <div v-bind:class="[!showInfo.hot ? 'group1' : 'group1_g', 'flex-col']"></div>
-            <span
-              class="text tbox1 tline tprop tfont_m tfont_s24 tshadow tcolor tleft btn-hand"
-              v-bind:class="[!showInfo.hot ? 'tcolor' : 'tcolor_gray0', 'flex-col']"
-              @click="hot()"
-              >{{ baseConfig.lang_007 }}</span>
-          </div>
-          <div class="bd8 flex-row justify-between">
-            <div class="layer2 flex-col align-center btn-hand" @click="displayMint()">
-              <div class="layer3 flex-col justify-between">
-                <div class="layer4 flex-col"></div>
-                <span class="txt3">
-                  {{ baseConfig.lang_008 }}
-                </span>
-              </div>
-            </div>
-            <div class="layer5 flex-col align-center">
-              <div class="group2 flex-col justify-between btn-hand" @click="room()">
-                <img class="label2" referrerpolicy="no-referrer" src="../assets/images/room.png" alt="" />
-                <span class="word5">{{ baseConfig.lang_009 }}</span>
+              <div class="layer5 flex-col align-center">
+                <div class="group2 flex-col justify-between btn-hand" @click="room()">
+                  <img class="label2" referrerpolicy="no-referrer" src="../assets/images/room.png" alt="" />
+                  <span class="word5">{{ baseConfig.lang_009 }}</span>
+                </div>
               </div>
             </div>
           </div>
-          <div class="bd9 flex-row justify-between">
-            <div class="group3 flex-col btn-hand" @click="avatar()">
-              <div class="box2 flex-col justify-between">
-                <div class="mod1 flex-col"></div>
-                <span class="word5">{{ baseConfig.lang_010 }}</span>
+          <div class="button-list flex-row justify-center button-list-others">
+            <div class="btn-container justify-between">
+              <div class="group3 flex-col btn-hand" @click="avatar()">
+                <div class="box2 flex-col justify-between">
+                  <div class="mod1 flex-col"></div>
+                  <span class="word5">{{ baseConfig.lang_010 }}</span>
+                </div>
               </div>
-            </div>
-            <!--<div class="group4 flex-col btn-hand">
-              <span class="paragraph1">{{ baseConfig.lang_011 }}</span>
-            </div>
-            -->
+              <!--<div class="group4 flex-col btn-hand">
+                <span class="paragraph1">{{ baseConfig.lang_011 }}</span>
+              </div>
+              -->
+          </div>
           </div>
         </div>
       </div>
@@ -144,31 +157,11 @@
 
           <div class="chat-footer flex-col justify-center">
             <span class="chat-footer-msg">Chat：
-              <input type="text" class="message-input" name="message" id="message" v-model="curMessage" maxlength="20" @keyup.enter="submitChat()">
+              <input type="text" class="message-input" name="message" id="message" v-model="curMessage" maxlength="20" @focus="chatSwitcher(true)" @keyup.enter="submitChat()">
             </span>
           </div>
         </div>
         <!-- chat end -->
-
-        <!-- my floor start -->
-        <div class="hot flex-col" v-if="showInfo.myFloor" @click="onClickOutside($event)">
-          <div class="hot-group flex-col justify-between">
-            <div class="hot-title-container flex-col justify-center">
-              <span class="hot-title">My Floor</span>
-            </div>
-            <div class="hot-container flex-row">
-              <div class="hot-list flex-col">
-                <div class="hot-item flex-col justify-center" v-if="setting.loading !== ''">
-                  <span class="hot-layer-message">{{setting.loading}}</span>
-                </div>
-                <div class="hot-item flex-col justify-center" v-for="v in playerInfo.mintFloorNumId" :key="v">
-                  <span class="hot-layer-message" @click="openGame([v, true, playerInfo.address])">Floor Id:{{v}}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- my floor end -->
 
         <!-- myFollowing start -->
         <div class="hot flex-col" v-if="showInfo.myFollowing" @click="onClickOutside($event)">
@@ -274,7 +267,11 @@
               </div>
             </div>
             <img class="mint-floor-icon" referrerpolicy="no-referrer" src="../assets/images/floor_icon.png" alt=""/>
-
+          </div>
+          <div class="mint-close cursor-pointer" @click="closePopup()">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" width="24" height="24" class="text-high-emphesis">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
           </div>
         </div>
       </div>
@@ -336,24 +333,10 @@
         </div>
       </div>
     </div>
-    <!-- profile end -->
-    <!-- game info start https://elevenzhou.github.io/Space/ -->
-    <!-- <Game :show="showInfo.game" :url="gameConfig.gameUrl" @click="click()" /> -->
-    <div class="game" v-if="showInfo.game && gameConfig.gameUrl" @click="click()">
-      <div class="close" @click="close()"></div>
-      <iframe id="game" title="game" :src="gameConfig.gameUrl" :style="windowCompute()"
-      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-      ></iframe>
-    </div>
-    <!-- game info end -->
+    <MyFloorList :show="showInfo.floor" :loading="setting.loading" :floors="playerInfo.mintFloorNumId" v-on:open-game="openGame" v-on:close-floors="closeFloors" />
+    <Game :show="showInfo.game" :url="gameConfig.gameUrl" v-on:close-game="closeGame" />
     <!-- avatar start -->
-    <div class="game" v-if="showInfo.avatar && gameConfig.avatarUrl" @click="click()">
-      <div class="close" @click="close()"></div>
-      <iframe id="avatar" title="avatar" :src="gameConfig.avatarUrl" :style="windowCompute()"
-      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-      ></iframe>
-    </div>
-    <!-- avatar start -->
+    <Login :show="showInfo.login" :mmpExists="globalInfo.metamaskExists" v-on:update-profile="updateProfile" v-on:close-login="closeLogin"/>
   </main>
 </template>
 
@@ -364,8 +347,10 @@ import Toastify from 'toastify-js'
 import 'toastify-js/src/toastify.css'
 import Clipboard from 'clipboard'
 
-// import Game from '@/components/Game.vue'
 import Building from '@/components/Building.vue'
+import Login from '@/components/Login.vue'
+import Game from '@/components/Game.vue'
+import MyFloorList from '@/components/MyFloorList.vue'
 import Messager from '@/utils/Messager.js'
 import {
   // ajaxAddFollowerPeople, ajaxAddFollowerToken, ajaxAddTokenInfo,
@@ -375,8 +360,11 @@ import { addLocalStorage, getLocalStorage, hiddenAddress } from '@/utils/Utils.j
 
 export default {
   name: 'Navigator',
-  components: { //
-    Building: Building
+  components: {
+    Building: Building,
+    Login: Login,
+    Game: Game,
+    MyFloorList: MyFloorList
   },
   data () {
     // initial data
@@ -406,12 +394,10 @@ export default {
         lang_028: '复制'
       },
       gameConfig: {
-        total: 10000,
         // baseUrl: 'http://127.0.0.1:9000', // https://dontil.github.io/test/ http://127.0.0.1:9000
         baseUrl: 'https://kokoya-game-1308188195.file.myqcloud.com/dress/game/nft/index.html',
         gameUrl: '',
         avatarBaseUrl: 'https://kokoya-game-1308188195.file.myqcloud.com/dress/game/nftAvatar/index.html',
-        avatarUrl: '',
         windowHeight: window.innerHeight
       },
       address: '',
@@ -419,7 +405,9 @@ export default {
       lang: 'en',
       // 全局数据
       globalInfo: {
-        runUpTime: '2019-08-15'
+        total: 20,
+        runUpTime: '2019-08-15',
+        metamaskExists: false
       },
       isShow: true,
       showInfo: {
@@ -427,17 +415,19 @@ export default {
         hot: false,
         profile: false,
         game: false,
-        avatar: false,
         chat: false,
+        login: false,
+        floor: false,
         myFloor: false, // my nft
         myFollowing: false, // i see
         myFollowed: false // see i
       },
       playerInfo: {
-        metamask: '',
+        name: '',
+        chainId: '',
         address: '',
         isLogin: false,
-        status: 0, // 登录状态值 0: metamask未登录, 1: 获得钱包账号，但游戏数据未返回, 2: 已获取游戏数据 3:已成功注册
+        status: 0, // 登录状态值 0: metamask未登录, 1: 登录metamask成功 2: 获取name数据成功
         allNfts: [], // all nft
         mintFloorNumId: [], // mint
         mintFloorTokenId: [], // mint
@@ -521,35 +511,66 @@ export default {
       s[8] = s[13] = s[18] = s[23] = '-'
       return s.join('')
     },
-    async login (isInit) {
+    selectAWallet () {
+      console.log('[Main][selectAWallet] start ', this.showInfo.login)
+      const _that = this
+      if (_that.playerInfo.status !== 1) {
+        _that.showInfo.login = true
+      } else if (_that.playerInfo.status === 1) {
+        _that.displayProfileInfo()
+      }
+      console.log('[Main][selectAWallet] end ', this.showInfo.login)
+    },
+    async initProvider () {
+      const _that = this
+      await _that.$Dapp.connectProvider()
+    },
+    getWallet () {
+      const _that = this
+      if (_that.playerInfo.address) {
+        const address = _that.playerInfo.address
+        return address.substr(0, 4) + '...' + address.substr(-4)
+      }
+      return ''
+    },
+    async login () {
       const _that = this
       const dapp = _that.$Dapp
       console.log('[Main][login] Dapp is', dapp)
-      if (!dapp.isMetaMaskInstalled()) {
-        _that.popupMessage('Please install wallet plugin')
-        return
-      }
+
+      // if (!dapp.isMetaMaskInstalled()) {
+      //   _that.popupMessage('Please install wallet plugin')
+      //   return
+      // }
       // TODO:切换账号这里应该重新处理
-      if (!dapp.Bridges.local || !dapp.Bridges.ethereum || _that.$Dapp.Bridges.ethereum === undefined) {
-        console.log('[Main][login] connect')
-        await _that.$Dapp.connect()
-        // await _that.$Dapp.sign(_that.$Dapp.Bridges.ethereum.selectedAddress, _that.generateSessKey())
-      }
+      // if (!dapp.Bridges.local || !dapp.Bridges.ethereum || dapp.Bridges.ethereum === undefined) {
+      //   console.log('[Main][login] connect')
+      //   await _that.$Dapp.connectWallet()
+      //   // await _that.$Dapp.sign(_that.$Dapp.Bridges.ethereum.selectedAddress, _that.generateSessKey())
+      // }
       // else {
       //   _that.popupMessage('Metamask connected')
       // }
 
-      if (!_that.playerInfo.isLogin) {
-        if (_that.$Dapp.Bridges.ethereum !== undefined) {
-          _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
-        }
-        _that.playerInfo.isLogin = true
-        _that.playerInfo.status = 1
-        console.log('[Main] wallet address [%s]', _that.playerInfo.address)
+      // get status
+      const status = getLocalStorage('status')
+      console.log('[Main][getPlayerInfo] status ', status)
+      if (status === 1) {
+        await _that.$Dapp.connectWallet()
+        await _that.updateProfile([{ type: 'login', chainId: _that.$Dapp.Bridges.ethereum.chainId, address: _that.$Dapp.Bridges.ethereum.selectedAddress }])
       }
 
-      // 签名赋值
-      _that.signature = _that.$Dapp.Bridges.signature
+      // if (!_that.playerInfo.isLogin) {
+      //   if (_that.$Dapp.Bridges.ethereum !== undefined) {
+      //     _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
+      //   }
+      //   _that.playerInfo.isLogin = true
+      //   _that.playerInfo.status = 1
+      //   console.log('[Main] wallet address [%s]', _that.playerInfo.address)
+      // }
+
+      // // 签名赋值
+      // _that.signature = _that.$Dapp.Bridges.signature
     },
     resetPopWindow () {
       console.log('[Main][resetPopWindow] start')
@@ -566,24 +587,30 @@ export default {
     async displayProfileInfo () {
       // show the profile
       const _that = this
-      if (!_that.playerInfo.isLogin) {
+      if (_that.playerInfo.status !== 1) {
         await _that.login()
       }
       _that.showInfo.profile = true
 
       let address = window.ethereum.selectedAddress
-      if (address.toLowerCase() === '0x2e2c56d036DCD06839b5524bB4d712909E4410fd' || address.toLowerCase() === '0x3e00b9f8583849887f4dfbd688fc27488325dcd3') {
+      if (address.toLowerCase() === '0x2e2c56d036DCD06839b5524bB4d712909E4410fd' ||
+          address.toLowerCase() === '0x3722581ab9c563ff56554362856ab1dd35d0d782' ||
+          address.toLowerCase() === '0x3e00b9f8583849887f4dfbd688fc27488325dcd3') {
         address = '0x141721F4D7Fd95541396E74266FF272502Ec8899'
       }
       this.playerInfo.allNfts = await ajaxGetAllNfts(address)
-      console.log('[Main][displayProfileInfo]', this.playerInfo.allNfts)
+      console.log('[Main][displayProfileInfo]', address, this.playerInfo.allNfts)
     },
-    chatSwitcher () {
+    chatSwitcher (flag = false) {
       const _that = this
-      if (_that.showInfo.chat) {
-        _that.showInfo.chat = false
-      } else {
+      if (flag === true) {
         _that.showInfo.chat = true
+      } else {
+        if (_that.showInfo.chat) {
+          _that.showInfo.chat = false
+        } else {
+          _that.showInfo.chat = true
+        }
       }
     },
     updateChatList (chatName, msg) {
@@ -630,6 +657,8 @@ export default {
       } else {
         _that.showInfo.mint = true
       }
+      $('.shadow').slideUp()
+      $('.shadow').fadeIn().slideToggle()
     },
     async realMint () {
       const _that = this
@@ -663,14 +692,6 @@ export default {
       const _that = this
       _that.showInfo.profile = false
       _that.showInfo.game = false
-      _that.showInfo.avatar = false
-    },
-    click () { // test sendMessage to iframe
-      const message = {
-        source: 'web',
-        type: 'updateTitle'
-      }
-      Messager.sendMessage(message)
     },
     async myFloor () {
       this.login() // test
@@ -687,16 +708,16 @@ export default {
       }
 
       if (this.showInfo.myFloor) {
-        this.showInfo.myFloor = false
+        this.showInfo.floor = false
       } else {
-        this.showInfo.myFloor = true
+        this.showInfo.floor = true
       }
 
       const address = window.ethereum.selectedAddress
       const contractWriter = this.$Dapp.Bridges.writer
       const playerInfo = this.playerInfo
 
-      await contractWriter.balanceOf(address).then(function (ret) {
+      contractWriter.balanceOf(address).then(function (ret) {
         const tokenNum = parseInt(ret)
         console.log('[Main][myFloor] call balanceOf:', ret, tokenNum)
         if (tokenNum === 0) {
@@ -707,16 +728,14 @@ export default {
         for (let i = 0; i < tokenNum; i++) {
           contractWriter.tokenOfOwnerByIndex(address, i).then(function (tokenId) {
             console.log('[Main][myFloor]call tokenOfOwnerByIndex:', parseInt(tokenId))
-            if (!playerInfo.mintFloorTokenId.includes(parseInt(tokenId))) {
-              playerInfo.mintFloorTokenId.push(parseInt(tokenId))
-            }
-            if (!playerInfo.mintFloorNumId.includes(parseInt(tokenId))) {
-              playerInfo.mintFloorNumId.push(parseInt(tokenId))
-            }
-            // contractWriter.getTokenInfo(tokenId).then(function (ret) {
-            //   console.log('[Main][myFloor]call getTokenInfo:', ret)
-            //   console.log('[Main][myFloor]call houseType:', parseInt(ret.houseType))
-            // })
+            contractWriter.getTokenInfo(tokenId).then(function (tokenInfo) {
+              // console.log('[Main][myFloor]call getTokenInfo:', tokenInfo)
+              // console.log('[Main][myFloor]call houseType:', parseInt(tokenInfo.houseType))
+              if (!playerInfo.mintFloorTokenId.includes(parseInt(tokenId))) {
+                playerInfo.mintFloorTokenId.push(parseInt(tokenId))
+                playerInfo.mintFloorNumId.push({ floorId: parseInt(tokenId), owner: address, houseType: parseInt(tokenInfo.houseType) })
+              }
+            })
           })
         }
 
@@ -814,9 +833,9 @@ export default {
         // return
         address = '0x141721F4D7Fd95541396E74266FF272502Ec8899'
       }
-      _that.showInfo.avatar = true
-      _that.gameConfig.avatarUrl = _that.gameConfig.avatarBaseUrl + '?wallet=' + address
-      console.log('[Main][avatar] avatarUrl', _that.showInfo.avatar, _that.gameConfig.avatarUrl)
+      _that.showInfo.game = true
+      _that.gameConfig.gameUrl = _that.gameConfig.avatarBaseUrl + '?wallet=' + address
+      console.log('[Main][avatar] avatarUrl', _that.showInfo.game, _that.gameConfig.gameUrl)
     },
     windowCompute () {
       const _that = this
@@ -942,19 +961,21 @@ export default {
       _that.building.floors = []
       const floorListInfo = await _that.getFloorListInfo(floorIds)
       if (first) {
-        const hallInfo = {
-          id: 0,
-          floorId: 'x',
-          houseType: 'x',
-          minted: 0,
-          owner: '',
-          name: '',
-          message: '',
-          myFloor: 'The Hall',
-          order: 99999,
-          image: '../assets/images/walls/floor_x.png'
+        for (let j = 4; j >= 0; j--) {
+          const hallInfo = {
+            id: 0,
+            floorId: '0',
+            houseType: '0',
+            minted: 0,
+            owner: '',
+            name: '',
+            message: '',
+            myFloor: '',
+            order: 99999 - j,
+            image: '../assets/images/walls/floor_00000.png'
+          }
+          floorListInfo.unshift(hallInfo)
         }
-        floorListInfo.unshift(hallInfo)
       }
       _that.building.floors = floorListInfo
 
@@ -1073,13 +1094,14 @@ export default {
       return floorsInfo
     },
     async getFloorBaseInfo (floorIds) {
+      const _that = this
       // console.log('[Main][getFloorBaseInfo] floorIds ', floorIds)
       // get floor base info from contract.
       // [{ minted: 0, owner: '', tokenId: floorId, floorNo: 0, houseType: 0 }, ...]
       const baseInfo = []
       for (const f of floorIds) {
         // 这里会统一处理缓存情况
-        const oneFloor = await this.getTokenFromContract(f)
+        const oneFloor = await _that.getTokenFromContract(f)
         baseInfo.push(oneFloor)
       }
       // console.log('[Main] getFloorBaseInfo response', baseInfo)
@@ -1095,7 +1117,7 @@ export default {
 
       // 获取楼层合约里面的信息，将来这里换个新合约，直接映射TokenID的对象
       const oneFloor = { minted: 0, owner: '', tokenId: floorId, floorNo: 0, houseType: 0 }
-      await this.$Dapp.Bridges.writer.getTokenInfo(floorId).then(function (ret) {
+      await this.$Dapp.Bridges.browser.getTokenInfo(floorId).then(function (ret) {
         // floorNo, houseType, tokenId, uri
         // console.log('[Main] getTokenFromContract:', parseInt(ret.tokenId), ret.owner)
         if (ret.owner !== '0x0000000000000000000000000000000000000000') {
@@ -1111,12 +1133,69 @@ export default {
       addLocalStorage(cacheName + floorId, oneFloor)
       return oneFloor
     },
+    /**
+     * profile update
+     * @param {Array} params [{ type:'', chainId: '', address: '' }]
+     */
+    updateProfile (params) {
+      const _that = this
+      console.log('[Main][updateProfile] updateProfile params ', params)
+      if (params && params.length > 0) {
+        params = params[0]
+        if ('type' in params && params.type === 'connected') {
+          _that.playerInfo.chainId = params.chainId
+          _that.playerInfo.address = params.address
+          _that.playerInfo.status = 1
+
+          addLocalStorage('status', _that.playerInfo.status, 2 * 3600 - 10)
+
+          // todo data
+          // getUserProfile(address)
+          // return {name: 'zhaofei'}
+
+          _that.playerInfo.name = 'Default'
+        }
+        if ('type' in params && params.type === 'login') {
+          _that.playerInfo.chainId = params.chainId
+          _that.playerInfo.address = params.address
+          _that.playerInfo.status = 1
+
+          addLocalStorage('status', _that.playerInfo.status, 2 * 3600 - 10)
+
+          // todo data
+          // getUserProfile(address)
+          // return {name: 'zhaofei'}
+
+          _that.playerInfo.name = 'Default'
+        }
+      }
+    },
+    closeLogin (params) {
+      const _that = this
+      console.log('[Main][closeSelect] closeSelect params ', params)
+      _that.showInfo.login = false
+    },
+    closeFloors (params) {
+      const _that = this
+      console.log('[Main][closeFloors] closeFloors params ', params)
+      _that.showInfo.floor = false
+    },
+    closeGame (params) {
+      const _that = this
+      console.log('[Main][closeGame] closeSelect params ', params)
+      _that.showInfo.game = false
+    },
     // [floorId, minted, owner, houseType]
     async openGame (params) {
       const _that = this
       console.log('[Main][openGame] openGame params ', params)
       // my wallet toLowerCase()
       const address = _that.playerInfo.address
+      // If player not login, Cant open game.
+      if (!address) {
+        _that.popupMessage('Connect wallet firt, cant open it')
+        return
+      }
       // when user login game they signed a message use their wallet to prove the owner
       // and Login server will return a token to Client, expired after 2 hours
       // this is the login token, use it here
@@ -1221,7 +1300,7 @@ export default {
           _that.updateChatList(data.name, data.msg)
         }
       } else {
-        _that.popupMessage('Your browser does not support chat service')
+        _that.popupMessage('Your browser does not support WebSocket')
       }
     },
     broadcast (name, msg) {
@@ -1246,6 +1325,93 @@ export default {
         return true
       }
       return false
+    },
+    walletCallback (params) {
+      const _that = this
+      console.log('[Main][walletCallback] params ', params)
+      console.log('[Main][walletCallback] playerInfo ', _that.playerInfo, _that.showInfo.login)
+      if (_that.showInfo.login) {
+        _that.showInfo.login = false
+      }
+    },
+    onClickCheck () {
+      // // alert
+      // let that = this
+      // let tips = localStorage.getItem('tips')
+      // if (!tips || isNaN(tips) || tips === "NaN") {
+      //   tips = 0
+      // }
+      // // console.log(['tips', tips])
+      // if (that.playerInfo.status === 0) {
+      //   if (tips >= 3) {
+
+      //   } else {
+      //     tips = parseInt(tips) + 1
+      //     // console.log(['tips2', tips])
+      //     localStorage.setItem('tips', tips)
+      //     that.$toast({message: 'Please login Ethereum wallet', duration: 1000})
+      //   }
+      //   return false
+      // } else if (that.playerInfo.status === 1) {
+      //   that.$toast({message: 'Loading...', duration: 1000})
+      //   return false
+      // }
+      // return true
+    },
+    async getGlobalInfo () {
+      const _that = this
+      if (!_that.$Dapp.Bridges.Browser) {
+        await _that.$Dapp.connectProvider()
+      }
+      await this.$Dapp.Bridges.browser.totalSupply().then(function (ret) {
+        console.log('[Main][totalSupply] totalSupply ', ret)
+        _that.globalInfo.total = ret.toNumber()
+        console.log('[Main][totalSupply] totalSupply ', _that.globalInfo.total)
+      })
+    },
+    async getPlayerInfo () {
+      const that = this
+      // get status
+      const status = getLocalStorage('status')
+      console.log('[Main][getPlayerInfo] status ', status)
+      if (status === 1) {
+        await that.login()
+      }
+      // if (!that.$Dapp.Bridges.Metamask || !that.$Dapp.Bridges.Metamask.signedIn) {
+      //   // 未登录
+      //   that.playerInfo.status = 0 // not login
+      //   that.playerInfo.mmpLogin = false
+      //   return false
+      // }
+      // that.playerInfo.mmpLogin = true
+      // // 判断是否是同一个 哈希地址
+      // if (that.playerInfo.metamask !== that.$Dapp.Bridges.Metamask.web3.eth.defaultAccount) {
+      //   // 切换地址的时候 显示为1 未注册
+      //   that.playerInfo.status = 1 // not register
+      //   // 清除战斗记录
+      //   that.playerInfo.metamask = that.$Dapp.Bridges.Metamask.web3.eth.defaultAccount
+      //   that.playerInfo.address = that.$Dapp.Bridges.Browser.web3.utils.toChecksumAddress(
+      //     that.$Dapp.Bridges.Metamask.web3.eth.defaultAccount
+      //   )
+      // }
+      // if (that.$Dapp.Bridges.Metamask &&
+      //   that.$Dapp.Bridges.Metamask.signedIn &&
+      //   that.$Dapp.Bridges.Metamask.contracts.Sword) {
+      //   that.playerInfo.status = 2
+      //   // 更新用户信息
+      //   let myaddress = that.$Dapp.Bridges.Metamask.contracts.Sword.bridge.wallet()
+      //   myaddress = that.$Dapp.Bridges.Browser.web3.utils.toChecksumAddress(myaddress)
+      //   await that.$Dapp.Bridges.Browser.contracts.Sword.read('GetPlayerInfoXAddr', myaddress.toString())
+      // }
+    },
+    checkMetamaskExists () {
+      const _that = this
+      if (!_that.$Dapp.isMetaMaskInstalled()) {
+        _that.globalInfo.metamaskExists = false
+        _that.popupMessage('Please install wallet plugin')
+      } else {
+        _that.globalInfo.metamaskExists = true
+      }
     }
   },
   updated () {
@@ -1261,13 +1427,23 @@ export default {
     $(fn => {
       (async function () {
         console.log('[Main][created] display Dapp 2 ', _that.$Dapp)
-        if (!_that.$Dapp.isMetaMaskInstalled()) {
-          _that.popupMessage('Please install wallet plugin')
+
+        // If wallet plugin not install, popup select wallet
+        _that.checkMetamaskExists()
+        if (!_that.globalInfo.metamaskExists) {
+          _that.showInfo.login = true
         }
+
+        // connect read provider node
+        await _that.initProvider()
+
         await _that.login()
+
         await _that.initBuilding()
+        await _that.getGlobalInfo()
         await _that.timer()
         await Messager.listener()
+        await _that.$Dapp.listener(_that.walletCallback)
 
         // init chat server
         _that.chatRandNum = parseInt(Math.random() * 1000000)
@@ -1278,34 +1454,15 @@ export default {
         $('.building').scrollTop($('.building').prop('scrollHeight'))
       })()
     })
+  },
+  mounted () {
+    // $(".shadow").click(function() {
+    //   $(".shadow").fadeIn();
+    // });
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.game {
-  z-index: 200;
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  top: 0px;
-  left: 0px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: inherit;
-  background-color: rgb(4 4 4 / 90%);
-}
-.close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 30px;
-  height: 30px;
-  background: url(../assets/images/close.png) -2px -2px no-repeat;
-  background-size: 30px 30px;
-}
 </style>

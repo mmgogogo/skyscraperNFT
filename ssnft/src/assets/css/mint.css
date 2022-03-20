@@ -35,8 +35,9 @@
     display: block;
     overflow-wrap: break-word;
     color: rgba(255, 255, 255, 1);
-    font-size: 16px;
+    font-size: 22px;
     font-family: SFProDisplay-Semibold;
+    font-weight: 600;
     white-space: nowrap;
     line-height: 19px;
     text-align: left;
@@ -46,7 +47,7 @@
 
 .mint-desc-content {
     width: 545px;
-    height: 157px;
+    height: 184px;
     /* display: block; */
     overflow-wrap: break-word;
     color: rgba(255, 255, 255, 0.7);
@@ -100,21 +101,19 @@
     background-color: rgba(252, 132, 76, 1);
     box-shadow: inset 1px 1px 1px 0px rgb(0 0 0 / 20%);
     margin-top: 32px;
-    padding-left: 44px;
     width: 130px;
 }
 
 .mint-btn-txt {
-    width: 41px;
-    height: 24px;
-    display: block;
     overflow-wrap: break-word;
     color: rgba(255, 255, 255, 1);
     font-size: 20px;
     font-family: SFProDisplay-Bold;
     white-space: nowrap;
+    font-weight: 600;
     line-height: 24px;
     text-align: center;
+    margin: 0 auto;
     text-shadow: 1px 1px 1px rgb(0 0 0 / 20%);
 }
 
@@ -149,6 +148,7 @@
 .mint-price-txt {
     font-size: 18px;
     font-family: SFProDisplay-Medium;
+    font-weight: 600;
     color: rgba(255, 255, 255, 1);
     line-height: 21px;
     overflow: hidden;
@@ -179,6 +179,7 @@
 .mint-price-unit {
     font-size: 18px;
     font-family: SFProDisplay-Medium;
+    font-weight: 600;
     color: rgba(255, 255, 255, 1);
     line-height: 21px;
     overflow: hidden;
@@ -198,6 +199,7 @@
     color: rgba(255, 255, 255, 1);
     font-size: 18px;
     font-family: SFProDisplay-Medium;
+    font-weight: 600;
     white-space: nowrap;
     line-height: 21px;
     text-align: left;
@@ -222,4 +224,14 @@
     top: 0;
     width: 245px;
     height: 260px;
+}
+
+.mint-close {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+}
+
+.cursor-pointer {
+    cursor: pointer;
 }

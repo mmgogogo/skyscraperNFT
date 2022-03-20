@@ -63,6 +63,7 @@
     background-color: #fff;
     border-radius: 1.25px 1.25px 5px 5px;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 .hot-layer-message {
     font-size: 18px;

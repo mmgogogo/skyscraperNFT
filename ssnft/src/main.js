@@ -13,5 +13,6 @@ import './assets/css/ladder.css'
 import './assets/css/game.css'
 import './assets/css/chat.css'
 import './assets/css/mint.css'
+import './assets/css/tw.css'
 
 createApp(<App />).use(Web3Component).use(store).use(router).mount('#app')

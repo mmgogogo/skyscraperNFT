@@ -1,5 +1,5 @@
 .chat-container {
-    z-index: 1600;
+    z-index: 100;
     border-radius: 5px 0 0 0;
     background-color: rgba(43, 46, 53, 1);
     box-shadow: 0px -3px 14px 0px rgb(0 0 0 / 30%);
@@ -11,7 +11,7 @@
 }
 
 .chat-height-30 {
-    height: 19px;
+    height: 68px;
 }
 
 .chat-height-360 {
@@ -75,9 +75,9 @@
     box-shadow: -1px -1px 3px 0px rgb(0 0 0 / 15%);
     padding-left: 24px;
     width: 374px;
-    /* position: absolute; */
-    left: 10px;
-    bottom: 2px;
+    position: absolute;
+    left: 13px;
+    bottom: 0px;
 }
 .chat-footer-msg {
     width: 49px;

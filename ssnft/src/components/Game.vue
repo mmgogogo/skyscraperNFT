@@ -1,10 +1,16 @@
 <template>
-  <div class="game" v-if="game">
+  <!-- <div class="game" v-if="game">
     <div class="close" @click="close()"></div>
     <iframe id="game" title="game" :src="url"
     style="min-height:500px;height:768px;width:1080px;"
     allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
     ></iframe>
+  </div> -->
+  <div class="game" v-if="display">
+      <div class="close" @click="close()"></div>
+      <iframe :id="gameType" :title="gameType" :src="gameUrl" :style="windowCompute()"
+      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+      ></iframe>
   </div>
 </template>
 
@@ -14,29 +20,55 @@ export default {
   data () {
     // initial data
     return {
-      game: false
+      windowHeight: window.innerHeight,
+      display: false,
+      gameUrl: '',
+      name: ''
     }
   },
   props: {
     show: Boolean,
-    url: String
+    url: String,
+    gameType: String
   },
   methods: {
     close () {
       const _that = this
-      _that.game = false
+      _that.$emit('close-game', [])
+    },
+    windowCompute () {
+      const _that = this
+      console.log('[Game][windowCompute] windowHeight', _that.windowHeight)
+      const wHeight = _that.windowHeight
+      return {
+        'min-height': '500px',
+        'box-sizing': 'content-box',
+        'border-width': '0px',
+        height: wHeight ? wHeight + 'px' : '768px',
+        width: wHeight ? wHeight * 1.7778 + 'px' : '1024px'
+      }
     }
   },
-  mounted () {
-    console.log(`The initial count is ${this.count}.`)
+  updated () {
+    console.log('[Game][updated] start', this.show)
     const _that = this
-    _that.game = _that.show
+    _that.display = _that.show
+    _that.gameUrl = _that.url
+    _that.name = _that.gameType
+  },
+  mounted () {
+    console.log('[Game][mounted] start', this.show)
+    const _that = this
+    _that.display = _that.show
+    _that.gameUrl = _that.url
+    _that.name = _that.gameType
   },
   created () {
-    console.log('[Game] created start!')
+    console.log('[Game][created] start', this.show)
     const _that = this
-    console.log('[Game] that ', _that.$Dapp)
-    _that.game = _that.show
+    _that.display = _that.show
+    _that.gameUrl = _that.url
+    _that.name = _that.gameType
   }
 }
 </script>

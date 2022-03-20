@@ -30,6 +30,6 @@ export function getLocalStorage (key) {
 
 // 隐藏太长的钱包地址
 export function hiddenAddress (address) {
-  var reg = /^(\w{4})\w+(\w{4})$/
+  const reg = /^(\w{4})\w+(\w{4})$/
   return address.replace(reg, '$1****$2')
 }

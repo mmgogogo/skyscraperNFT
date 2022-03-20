@@ -40,40 +40,48 @@ input:focus
   overflow: hidden;
 }
 
-.container {
-  height: 92vh;
+.building-container {
+  height: 100vh;
   /* background: url(../images/building_floors.png) 100% no-repeat; */
   background-size: 100%;
   width: 100%;
-  overflow-x: auto;
+  overflow-x: hidden;
 }
 
 .nav {
-  height: 100%;
-  /* background-color: rgba(43, 46, 53, 1); */
-  background-color: rgb(0 2 6 / 83%);
-  box-shadow: 3px 0px 18px 0px rgba(0, 0, 0, 0.3);
-  width: 20%;
+  /* height: 100%; */
+  background-color: rgba(43, 46, 53, 1);
+  /* background-color: rgb(0 2 6 / 83%);
+  box-shadow: 3px 0px 18px 0px rgba(0, 0, 0, 0.3); */
+  width: 18%;
+  overflow-y:scroll;
+  padding-top: 9vh;
+  z-index: 100;
+  
+}
+.nav::-webkit-scrollbar {
+  width: 2px;
 }
 
 .outer1 {
-  /* width: 236px; */
+  width: 100%;
   /* height: 896px; */
   padding-top: 20px;
 }
 
 .bd1 {
-  height: 112px;
+  /* height: 112px;
   border-radius: 5px;
   background-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 3px 3px 6px 0px rgba(0, 0, 0, 0.2);
-  width: 236px;
-  padding: 9px 0 0 59px;
+  box-shadow: 3px 3px 6px 0px rgba(0, 0, 0, 0.2); */
+  width: 100%;
+  /* padding: 9px 0 0 59px; */
 }
 
 .outer2 {
-  width: 119px;
-  height: 95px;
+  width: 80%;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 5px;
 }
 
 .text {
@@ -120,7 +128,7 @@ input:focus
 }
 
 .box1 {
-  width: 100px;
+  width: 100%;
   height: 56px;
   margin: 8px 0 0 0px;
 }
@@ -132,10 +140,8 @@ input:focus
 }
 
 .box3 {
-  width: 100px;
-  height: 40px;
-  margin-top:3px;
-  margin-left:10px;
+  width: 50%;
+  margin-left: 10px;
 }
 
 .tfont_s30 {
@@ -143,18 +149,25 @@ input:focus
 }
 
 .bd2 {
-  width: 236px;
+  /* width: 236px;
   height: 50px;
-  margin-top: 56px;
+  margin-top: 56px; */
+  width: 100%;
+  /* height: 50px; */
+  margin-top: 20px;
+}
+
+.search-container {
+  width: 80%;
 }
 
 .section2 {
-  height: 58px;
+  height: 50px;
   border-radius: 5px;
   background-color: rgba(36, 37, 43, 1);
-  box-shadow: inset 2px 2px 1px 0px rgba(0, 0, 0, 0.2);
-  width: 159px;
-  padding: 11px 0 0 16px;
+  box-shadow: inset 2px 2px 1px 0px rgb(0 0 0 / 20%);
+  width: 70%;
+  padding: 8px 0 0 10px;
 }
 
 .section3 {
@@ -199,42 +212,56 @@ input:focus
 }
 
 .section4 {
-  height: 58px;
+  height: 50px;
   background: url(../images/go_bg.png) -1px -1px no-repeat;
-  padding-top: 12px;
-  width: 69px;
+  background-size: 50px 50px;
 }
 
 .txt2 {
-  width: 37px;
-  height: 35px;
-  display: block;
+  width: 50px;
   overflow-wrap: break-word;
   color: rgba(255, 255, 255, 1);
-  font-size: 30px;
+  font-size: 25px;
   font-family: DINAlternate-Bold;
   white-space: nowrap;
-  line-height: 35px;
   text-align: center;
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+  text-shadow: 2px 1px 1px rgb(0 0 0 / 20%);
 }
 
-.bd3 {
-  width: 150px;
-  height: 40px;
-  margin: 60px 0 0 43px;
+.nav-item {
+  width: 100%;
+  height: 60px;
+}
+
+.nav-container {
+  width: 80%;
+}
+
+.nav-first {
+  margin-top: 40px;
+}
+
+.nav-others {
+  margin-top: 0px;
+}
+
+.nav-margin {
+  margin-left: 10%;
+  margin-right: 10%;
 }
 
 .layer1 {
   width: 35px;
   height: 35px;
   background: url(../images/home.png) -2px -2px no-repeat;
+  background-size: 35px 35px;
 }
 
 .layer1_g {
   width: 35px;
   height: 35px;
   background: url(../images/home_gray.png) -2px -2px no-repeat;
+  background-size: 35px 35px;
 }
 
 .tbox1 {
@@ -252,6 +279,11 @@ input:focus
   color: rgba(107, 109, 113, 1);
 }
 
+.bgcolor_gray {
+  background-color: rgba(107, 109, 113, 1);
+}
+
+
 .bd4 {
   width: 150px;
   height: 35px;
@@ -262,12 +294,14 @@ input:focus
   width: 35px;
   height: 35px;
   background: url(../images/following.png) -2px -2px no-repeat;
+  background-size: 35px 35px;
 }
 
 .bd5_g {
   width: 35px;
   height: 35px;
   background: url(../images/following_gray.png) -2px -2px no-repeat;
+  background-size: 35px 35px;
 }
 
 .bd6 {
@@ -291,23 +325,27 @@ input:focus
   width: 35px;
   height: 35px;
   background: url(../images/followed.png) -2px -2px no-repeat;
+  background-size: 35px 35px;
 }
 
 .group0_g {
   width: 35px;
   height: 35px;
   background: url(../images/followed_gray.png) -2px -2px no-repeat;
+  background-size: 35px 35px;
 }
 
 .group1 {
   width: 35px;
   height: 35px;
   background: url(../images/hot.png) -2px -2px no-repeat;
+  background-size: 35px 35px;
 }
 .group1_g {
   width: 35px;
   height: 35px;
   background: url(../images/hot_gray.png) -2px -2px no-repeat;
+  background-size: 35px 35px;
 }
 
 .info4 {
@@ -325,10 +363,20 @@ input:focus
   margin-top: 1px;
 }
 
-.bd8 {
-  width: 192px;
-  height: 68px;
-  margin: 60px 0 0 22px;
+.button-list {
+  width: 100%;
+}
+
+.button-list-first {
+  margin-top: 60px;
+}
+
+.button-list-others {
+  margin-top: 40px;
+}
+
+.btn-container {
+  width: 70%;
 }
 
 .layer2 {
@@ -500,22 +548,22 @@ input:focus
 
 .header {
   z-index: 18;
-  /* height: 75px; */
-  height: 8vh;
+  height: 9vh;
   background-color: rgba(43, 46, 53, 1);
   box-shadow: 0px 3px 18px 0px rgb(0 0 0 / 30%);
   padding-left: 44px;
   width: 100%;
-  /* position: absolute; */
   left: 0;
   top: 0;
+  position: fixed;
+  z-index: 102;
 }
 
 .navigation {
   width: 100%;
-  height: 60px;
+  /* height: 60px;
   overflow-x: auto;
-  margin-top: 10px;
+  margin-top: 10px; */
 }
 
 .logo {
@@ -526,17 +574,34 @@ input:focus
 }
 
 .wallet {
-  width: 64px;
+  width: 145px;
   height: 58px;
-  background: url(../images/wallet.png) -1px -1px no-repeat;
+  /* background: url(../images/wallet.png) -1px -1px no-repeat; */
   border-radius: 10px;
-  margin-left: 60%;
+  background-color: #6B6D71;
+  
+}
+
+.wallet-txt {
+  font-size: 18px;
+  margin: 0 auto;
+  font-family: PingFangSC-Semibold, PingFang SC;
+  /* -webkit-background-clip: text; */
+  /* -webkit-text-fill-color: transparent; */
 }
 
 .profile {
   width: 60px;
   height: 60px;
   background: url(../images/profile.png) 0px 0px no-repeat;
+  
+}
+
+.btn-margin-1 {
+  margin-left: 60%;
+}
+
+.btn-margin-2 {
   margin-left: 40px;
 }
 
@@ -654,4 +719,17 @@ input:focus
 .btn-hand {
   cursor: pointer;
   /* border: 1 solid red; */
+}
+
+@keyframes glow {
+  from {
+      box-shadow: 0 0 10px -10px #a3da0c;
+  }
+  to {
+      box-shadow: 0 0 40px 10px #e73f0ce0;
+  }
+}
+
+.animation {
+  animation: glow 2s infinite alternate;
 }
