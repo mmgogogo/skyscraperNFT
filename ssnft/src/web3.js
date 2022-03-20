@@ -141,6 +141,7 @@ const Dapp = {
           background: 'linear-gradient(to right, #00b09b, #96c93d)'
         }
       }).showToast()
+      return null
     } catch (e) {
       console.log(['dapp exception ', e])
       throw e
@@ -213,6 +214,7 @@ const Dapp = {
           background: 'linear-gradient(to right, #00b09b, #96c93d)'
         }
       }).showToast()
+      return null
     }
   },
   addChain: async (chainId) => {

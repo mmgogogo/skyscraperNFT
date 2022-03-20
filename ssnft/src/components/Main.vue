@@ -3,7 +3,7 @@
     <div class="header flex-col justify-center">
       <div class="navigation flex-row">
         <div class="logo flex-col"></div>
-        <div class="profile flex-col btn-hand btn-margin-1" @click="displayProfileInfo()"></div>
+        <div class="profile flex-col btn-hand btn-margin-1" @click="displayProfileInfo('account')"></div>
         <div v-bind:class="[playerInfo.status === 1 ? '' : 'animation', 'wallet flex-col btn-hand btn-margin-2 justify-center']" @click="selectAWallet()">
           <span class="wallet-txt flex-row">{{playerInfo.status === 1 ? getWallet() : 'Connect Wallet'}}</span>
         </div>
@@ -39,7 +39,7 @@
               </div>
             </div>
           </div>
-          <div class="" v-bind:class="[!showInfo.myFloor ? '' : 'bgcolor_gray', 'nav-item flex-row justify-center nav-first']">
+          <div class="" v-bind:class="[!showInfo.floor ? '' : 'bgcolor_gray', 'nav-item flex-row justify-center nav-first']">
             <div class="nav-container flex-row align-center">
               <div v-bind:class="['layer1', 'flex-col', 'nav-margin']"></div>
               <span
@@ -291,18 +291,17 @@
               </div>
             </div>
           </div>
-          <div class="pwallet flex-col justify-center align-center">
+          <!-- <div class="pwallet flex-col justify-center align-center">
             <div class="pwlayer8 flex-row">
               <div class="pwlogowrapper flex-col">
                 <div class="pwlogo flex-col"></div>
               </div>
               <span class="pwaddr">
-                <!-- {{ playerInfo.address }} -->
                 <input type="text" name="address" id="msg" v-model="playerInfo.address" readonly>
                 <input type="button" class="copy" @click="copy" data-clipboard-target="#msg" :value="baseConfig.lang_028" />
               </span>
             </div>
-          </div>
+          </div> -->
           <div class="player10 flex-row">
             <img class="picon2" referrerpolicy="no-referrer" src="../assets/images/collected.png" alt="" />
             <!-- <div class="pgroup3 flex-col"></div> -->
@@ -319,20 +318,42 @@
           </div>
           <div class="player12 flex-col"></div>
           <div class="player13 flex-col"></div>
-          <div class="player14 flex-container" v-for="item in playerInfo.allNfts" :key="item.id">
+          <div class="player14 flex-container">
+            <div class="pblock4" v-for="item in playerInfo.allNfts" :key="item.id">
+              <div class="player17 flex-col" v-if="item.image">
+                <!-- {{item.tokenId}} -->
+                <!-- {{item.name}} -->
+                <!-- <p v-if="item.image"> -->
+                <img class="pimg1" referrerpolicy="no-referrer" :src="item.image" alt="" />
+                <!-- </p> -->
+              </div>
+            </div>
             <div class="pblock4">
               <div class="player17 flex-col">
-                {{item.tokenId}}
-                {{item.name}}
-                <p v-if="item.image">
-                  <img class="pimg1" referrerpolicy="no-referrer" :src="item.image" alt="" />
-                </p>
+                <img class="pimg1" referrerpolicy="no-referrer" src="../assets/images/nft_example001.png" alt="" />
               </div>
-          </div>
+            </div>
+            <div class="pblock4">
+              <div class="player17 flex-col">
+                <img class="pimg1" referrerpolicy="no-referrer" src="../assets/images/nft_example002.png" alt="" />
+              </div>
+            </div>
+            <div class="pblock4">
+              <div class="player17 flex-col">
+                <img class="pimg1" referrerpolicy="no-referrer" src="../assets/images/nft_example003.png" alt="" />
+              </div>
+            </div>
+            <div class="pblock4">
+              <div class="player17 flex-col">
+                <img class="pimg1" referrerpolicy="no-referrer" src="../assets/images/nft_example004.png" alt="" />
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
     </div>
+    <Account :show="showInfo.account" v-on:close-account="closeAccount" />
     <MyFloorList :show="showInfo.floor" :loading="setting.loading" :floors="playerInfo.mintFloorNumId" v-on:open-game="openGame" v-on:close-floors="closeFloors" />
     <Game :show="showInfo.game" :url="gameConfig.gameUrl" v-on:close-game="closeGame" />
     <!-- avatar start -->
@@ -351,6 +372,7 @@ import Building from '@/components/Building.vue'
 import Login from '@/components/Login.vue'
 import Game from '@/components/Game.vue'
 import MyFloorList from '@/components/MyFloorList.vue'
+import Account from '@/components/Account.vue'
 import Messager from '@/utils/Messager.js'
 import {
   // ajaxAddFollowerPeople, ajaxAddFollowerToken, ajaxAddTokenInfo,
@@ -364,7 +386,8 @@ export default {
     Building: Building,
     Login: Login,
     Game: Game,
-    MyFloorList: MyFloorList
+    MyFloorList: MyFloorList,
+    Account: Account
   },
   data () {
     // initial data
@@ -418,6 +441,7 @@ export default {
         chat: false,
         login: false,
         floor: false,
+        account: false,
         myFloor: false, // my nft
         myFollowing: false, // i see
         myFollowed: false // see i
@@ -584,22 +608,30 @@ export default {
       this.playerInfo.mintFloorNumId = []
       this.playerInfo.mintFloorTokenId = []
     },
-    async displayProfileInfo () {
+    async displayProfileInfo (type = 'wallet') {
       // show the profile
+      console.log('[Main][displayProfileInfo] type is ', type)
       const _that = this
-      if (_that.playerInfo.status !== 1) {
-        await _that.login()
-      }
-      _that.showInfo.profile = true
+      if (type === 'wallet') {
+        // login wallet info
+        if (_that.playerInfo.status !== 1) {
+          await _that.login()
+        }
+        _that.showInfo.profile = true
 
-      let address = window.ethereum.selectedAddress
-      if (address.toLowerCase() === '0x2e2c56d036DCD06839b5524bB4d712909E4410fd' ||
-          address.toLowerCase() === '0x3722581ab9c563ff56554362856ab1dd35d0d782' ||
-          address.toLowerCase() === '0x3e00b9f8583849887f4dfbd688fc27488325dcd3') {
-        address = '0x141721F4D7Fd95541396E74266FF272502Ec8899'
+        let address = window.ethereum.selectedAddress
+        if (address.toLowerCase() === '0x2e2c56d036DCD06839b5524bB4d712909E4410fd' ||
+            address.toLowerCase() === '0x3722581ab9c563ff56554362856ab1dd35d0d782' ||
+            address.toLowerCase() === '0x3e00b9f8583849887f4dfbd688fc27488325dcd3') {
+          address = '0x141721F4D7Fd95541396E74266FF272502Ec8899'
+        }
+        this.playerInfo.allNfts = await ajaxGetAllNfts(address)
+        console.log('[Main][displayProfileInfo]', address, this.playerInfo.allNfts)
+      } else {
+        // get account info
+        _that.showInfo.account = true
+        console.log('[Main][displayProfileInfo] showInfo.account ', _that.showInfo.account)
       }
-      this.playerInfo.allNfts = await ajaxGetAllNfts(address)
-      console.log('[Main][displayProfileInfo]', address, this.playerInfo.allNfts)
     },
     chatSwitcher (flag = false) {
       const _that = this
@@ -694,7 +726,7 @@ export default {
       _that.showInfo.game = false
     },
     async myFloor () {
-      this.login() // test
+      // this.login() // test
       const _that = this
       console.log('[Main] myFloor click')
 
@@ -702,7 +734,7 @@ export default {
       this.resetMintFloor() // reset
       this.setting.loading = 'Loading...' // loading open
 
-      if (!_that.playerInfo.isLogin) {
+      if (!_that.playerInfo.status) {
         this.popupMessage('Login wallet to loading floor information')
         return
       }
@@ -751,7 +783,7 @@ export default {
       _that.resetPopWindow() // reset
       console.log('[Main][myFollowing]click myFollowing')
 
-      if (!_that.playerInfo.isLogin) {
+      if (!_that.playerInfo.status) {
         _that.popupMessage('Login wallet to loading following information')
         return
       }
@@ -778,7 +810,7 @@ export default {
       _that.resetPopWindow() // reset
       console.log('[Main][myFollowed] click myFollowed')
 
-      if (!_that.playerInfo.isLogin) {
+      if (!_that.playerInfo.status) {
         _that.popupMessage('Login wallet to loading followed information')
         return
       }
@@ -950,9 +982,7 @@ export default {
     },
     async updateBuilding (start, first = false) {
       console.log('[Main][updateBuilding] start')
-
       const _that = this
-
       _that.building.height = Math.ceil(start / 500) + 1
       if (start <= _that.building.min) {
         first = true
@@ -978,7 +1008,6 @@ export default {
         }
       }
       _that.building.floors = floorListInfo
-
       console.log('[Main] building floors', _that.building.floors)
     },
     async floorScroll (event) {
@@ -1169,6 +1198,11 @@ export default {
           _that.playerInfo.name = 'Default'
         }
       }
+    },
+    closeAccount () {
+      const _that = this
+      console.log('[Main][closeAccount] closeAccount start')
+      _that.showInfo.account = false
     },
     closeLogin (params) {
       const _that = this

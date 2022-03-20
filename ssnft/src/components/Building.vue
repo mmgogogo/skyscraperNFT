@@ -25,11 +25,14 @@
     </div>
     <div class="others flex-col justify-center">
       <div class="board flex-row align-center">
-        <div class="board-container flex-container align-center">
-          <div class="board-icon flex-col"></div>
-          <span class="board-word flex-col">{{ floorInfo.id || '' }}</span>
+        <div class="board2 flex-row align-center">
+          <div class="board-container flex-container align-center">
+            <div class="board-icon flex-col"></div>
+            <span class="board-word flex-col">{{ floorInfo.id || '' }}</span>
+            <span class="board-message">{{ floorInfo.message || defaultMsg }}</span>
+          </div>
         </div>
-        <span class="board-message">{{ floorInfo.message || defaultMsg }}</span>
+        <div class="ic-edit flex-row align-center" @click="editMessage"></div>
       </div>
     </div>
   </div>
@@ -130,6 +133,10 @@ export default {
     },
     hiddenAddress (address) {
       return hiddenAddress(address)
+    },
+    editMessage () {
+      // const _that = this
+      // console.log('[Buiding] that ', _that.$Dapp)
     }
   },
   created () {

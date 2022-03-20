@@ -73,6 +73,7 @@
 
 .others {
     /* height: 5vw; */
+    height: 100%;
     /* padding-top: 12px; */
     /* background-color: #1adbdb4a; */
     /* width: 12vw; */
@@ -170,9 +171,23 @@
 }
 
 .board {
+    /* background-color: #544c4c;
+    border-radius: 5px; */
+    padding:5px;
+}
+
+.board2 {
     background-color: #544c4c;
     border-radius: 5px;
-    padding:5px;
+    padding: 5px;
+}
+
+.ic-edit {
+    width: 30px;
+    height: 30px;
+    background: url(../images/ic_edit.png) 0px 0px no-repeat;
+    background-size: 30px 30px;
+    margin-left: 10px;
 }
 
 .board-container {
@@ -222,4 +237,5 @@
     position: fixed;
     left: 0px;
     bottom: -1px;
+    display: none;
 }

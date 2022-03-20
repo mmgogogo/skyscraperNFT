@@ -3,29 +3,29 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     right: 0px;
-    width: 400px;
+    width: 360px;
     position: absolute;
     top: 0px;
 }
 
 .pcontent .player5 {
-z-index: 182;
-height: 100%;
-background-color: rgba(255, 255, 255, 1);
-width: 400px;
-position: relative;
+    z-index: 182;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 1);
+    width: 360px;
+    position: relative;
 }
 
 .pcontent .player6 {
-width: 400px;
-height: 610px;
+    width: 360px;
+    height: 100%;
 }
 
 .pcontent .player7 {
 height: 60px;
 background-color: rgba(43, 46, 53, 1);
 box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.3);
-width: 400px;
+width: 360px;
 }
 
 .pcontent .player8 {
@@ -34,19 +34,22 @@ height: 38px;
 }
 
 .pcontent .pmod6 {
-height: 38px;
-border: 0.6551724137931034px solid rgba(255, 255, 255, 1);
-box-shadow: inset 1px 1px 1px 0px rgba(0, 0, 0, 0.2);
-border-radius: 50%;
-/* background: url(./img/SketchPng69854f0fe7105094b6d3d948e0e7dd4c637bd3cd27310e4e2e79e5a4de7ab310.png) -1px -1px no-repeat; */
-width: 38px;
-padding: 9px 0 0 10px;
+    height: 38px;
+    /* border: 0.6551724137931034px solid rgba(255, 255, 255, 1); */
+    box-shadow: inset 1px 1px 1px 0px rgb(0 0 0 / 20%);
+    border-radius: 50%;
+    /* background: url(./img/SketchPng69854f0….png) -1px -1px no-repeat; */
+    width: 38px;
+    /* padding: 9px 0 0 10px;*/
 }
 
 .pcontent .psection11 {
-width: 19px;
-height: 22px;
-background: url(../images/people.png) -3px -3px no-repeat;
+    /* width: 19px;
+    height: 22px; */
+    width: 38px;
+    height: 38px;
+    background: url(../images/wallet.png) 0px 0px no-repeat;
+    background-size: 38px 38px;
 }
 
 .pcontent .pinfo4 {
@@ -178,9 +181,22 @@ margin:0 auto;
 }
 
 .pcontent .player14 {
-width: 327px;
-height: 224px;
-margin: 31px auto;
+    width: 327px;
+    height: 75%;
+    margin: 9px auto;
+    overflow-y: auto;
+}
+
+.pcontent .player14::-webkit-scrollbar {
+    width: 2px;
+}
+.pcontent .player14::-webkit-scrollbar-thumb {
+    background-color: #2B2E35;
+    border-radius: 2px;
+    border: 1px solid #2B2E35;
+}
+.pcontent .player14::-webkit-scrollbar-track {
+    background: #FC844C;
 }
 
 .pcontent .pblock4 {
@@ -242,7 +258,7 @@ background: url(../images/card_shadow.png) 100% no-repeat;
     height: 60px;
     /* background-color: rgba(43, 46, 53, 1); */
     box-shadow: 0px 1px 3px 0px rgb(0 0 0 / 30%);
-    width: 400px;
+    width: 360px;
 }
 
 .pwlayer8 {
