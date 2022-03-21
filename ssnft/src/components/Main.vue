@@ -588,7 +588,7 @@ export default {
       }
 
       let signature = getLocalStorage('signature')
-      if (status !== 2 && !signature) {
+      if (status && status !== 2 && !signature) {
         const signer = dapp.Bridges.local.getSigner(_that.playerInfo.address)
         // const signMsg = 'Please sign to let us verify that you are the owner of this address'
         const signMsg = 'Welcome'
@@ -1189,6 +1189,7 @@ export default {
           // return {name: 'zhaofei'}
 
           _that.playerInfo.name = 'Default'
+          _that.showInfo.login = false
         }
         if ('type' in params && params.type === 'login') {
           _that.playerInfo.chainId = params.chainId
