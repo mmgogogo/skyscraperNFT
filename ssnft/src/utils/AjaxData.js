@@ -92,11 +92,7 @@ export async function ajaxAddTokenInfo (tokenId, remark) {
     const data = response.data
 
     console.log('[AjaxData] ajaxAddTokenInfo response-2:', data)
-    if (data.Code !== 0) {
-      alert('bind error')
-    } else {
-      alert('bind success')
-    }
+    return data.Code
   })
 }
 

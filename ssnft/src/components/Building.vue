@@ -135,11 +135,18 @@ export default {
     hiddenAddress (address) {
       return hiddenAddress(address)
     },
-    editMessage (tokenId, remark) {
-      // const _that = this
+    async editMessage (tokenId, remark) {
+      const _that = this
       console.log('[Buiding] editMessage ', tokenId, remark)
       // 判断楼层归属
-      ajaxAddTokenInfo(tokenId, remark)
+      const resCode = await ajaxAddTokenInfo(tokenId, remark)
+      if (resCode !== 0) {
+        // alert('bind faild')
+        _that.popupMessage('Remark faild')
+      } else {
+        // alert('bind success')
+        _that.popupMessage('Remark success')
+      }
     }
   },
   created () {
