@@ -585,19 +585,10 @@ export default {
       if (status >= 1) {
         await _that.$Dapp.connectWallet()
         await _that.updateProfile([{ type: 'login', chainId: _that.$Dapp.Bridges.ethereum.chainId, address: _that.$Dapp.Bridges.ethereum.selectedAddress }])
+        // _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
       }
-
-      let signature = getLocalStorage('signature')
-      if (status && status !== 2 && !signature) {
-        const signer = dapp.Bridges.local.getSigner(_that.playerInfo.address)
-        // const signMsg = 'Please sign to let us verify that you are the owner of this address'
-        const signMsg = 'Welcome'
-        signature = await signer.signMessage(signMsg)
-        console.log('[Main][signature] content is ', signMsg, signature)
-        await _that.updateProfile([{ type: 'sign', chainId: _that.$Dapp.Bridges.ethereum.chainId, address: _that.$Dapp.Bridges.ethereum.selectedAddress, signature: signature }])
-      }
-      _that.playerInfo.signature = signature
-      _that.signature = signature
+      // check sign
+      await _that.signAddress()
     },
     resetPopWindow () {
       console.log('[Main][resetPopWindow] start')
@@ -681,12 +672,10 @@ export default {
     async displayMint () {
       console.log('[Main][mint] start')
       const _that = this
-      if (!_that.playerInfo.isLogin) {
+      console.log('[Main][displayMint] playerInfo ', _that.playerInfo)
+      if (!_that.playerInfo.status) {
         await _that.login()
       }
-      // setTimeout(function () {
-      //   _that.showInfo.mint = false
-      // }, 5000)
       if (_that.showInfo.mint) {
         _that.showInfo.mint = false
       } else {
@@ -697,7 +686,8 @@ export default {
     },
     async realMint () {
       const _that = this
-      if (!_that.playerInfo.isLogin) {
+      console.log('[Main][realMint] playerInfo ', _that.playerInfo)
+      if (!_that.playerInfo.status) {
         _that.popupMessage('please login wallet', 'top', 'right')
         return
       }
@@ -862,7 +852,11 @@ export default {
     },
     async avatar () {
       const _that = this
+
+      await _that.signAddress()
+
       let address = _that.playerInfo.address
+      console.log('[Main][avatar] address ', address, _that.signature)
       if (!address || !_that.signature) {
         _that.popupMessage('Login first')
         return
@@ -872,7 +866,7 @@ export default {
         address = '0x141721F4D7Fd95541396E74266FF272502Ec8899'
       }
       _that.showInfo.game = true
-      _that.gameConfig.gameUrl = _that.gameConfig.avatarBaseUrl + '?wallet=' + address
+      _that.gameConfig.gameUrl = _that.gameConfig.avatarBaseUrl + '?wallet=' + address + '&sign=' + _that.signature
       console.log('[Main][avatar] avatarUrl', _that.showInfo.game, _that.gameConfig.gameUrl)
     },
     windowCompute () {
@@ -1172,7 +1166,7 @@ export default {
      * profile update
      * @param {Array} params [{ type:'', chainId: '', address: '' }]
      */
-    updateProfile (params) {
+    async updateProfile (params) {
       const _that = this
       console.log('[Main][updateProfile] updateProfile params ', params)
       if (params && params.length > 0) {
@@ -1190,6 +1184,7 @@ export default {
 
           _that.playerInfo.name = 'Default'
           _that.showInfo.login = false
+          await _that.signAddress()
         }
         if ('type' in params && params.type === 'login') {
           _that.playerInfo.chainId = params.chainId
@@ -1219,6 +1214,25 @@ export default {
 
           _that.playerInfo.name = 'Default'
         }
+      }
+    },
+    async signAddress () {
+      const _that = this
+
+      let signature = getLocalStorage('signature')
+      console.log('[Main][login] signature is ', signature)
+
+      if (_that.playerInfo.status && _that.playerInfo.status === 1 && !signature) {
+        const signer = _that.$Dapp.Bridges.local.getSigner(_that.playerInfo.address)
+        const signMsg = 'Welcome'
+        signature = await signer.signMessage(signMsg)
+        console.log('[Main][signature] content is ', signMsg, signature)
+        await _that.updateProfile([{ type: 'sign', chainId: _that.$Dapp.Bridges.ethereum.chainId, address: _that.$Dapp.Bridges.ethereum.selectedAddress, signature: signature }])
+        _that.playerInfo.signature = signature
+        _that.signature = signature
+      } else {
+        _that.playerInfo.signature = signature
+        _that.signature = signature
       }
     },
     closeAccount () {
@@ -1252,6 +1266,8 @@ export default {
         _that.popupMessage('Connect wallet firt, cant open it')
         return
       }
+
+      await _that.signAddress()
       // when user login game they signed a message use their wallet to prove the owner
       // and Login server will return a token to Client, expired after 2 hours
       // this is the login token, use it here
