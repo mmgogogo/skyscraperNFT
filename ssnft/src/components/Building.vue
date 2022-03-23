@@ -67,6 +67,7 @@ import floor00016 from '../assets/images/walls/floor_00016.png'
 import floor00017 from '../assets/images/walls/floor_00017.png'
 import floorx from '../assets/images/walls/floor_x.png'
 import { hiddenAddress } from '@/utils/Utils.js'
+import { ajaxAddTokenInfo } from '@/utils/AjaxData.js'
 
 export default {
   name: 'Building',
@@ -134,9 +135,11 @@ export default {
     hiddenAddress (address) {
       return hiddenAddress(address)
     },
-    editMessage () {
+    editMessage (tokenId, remark) {
       // const _that = this
-      // console.log('[Buiding] that ', _that.$Dapp)
+      console.log('[Buiding] editMessage ', tokenId, remark)
+      // 判断楼层归属
+      ajaxAddTokenInfo(tokenId, remark)
     }
   },
   created () {
