@@ -79,7 +79,7 @@ export default {
     }
   },
   updated () {
-    console.log('[Game][updated] start', this.show)
+    // console.log('[Game][updated] start', this.show)
     const _that = this
     _that.display = _that.show
     _that.loadingInfo = _that.loading

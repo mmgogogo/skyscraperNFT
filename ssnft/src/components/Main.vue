@@ -752,7 +752,7 @@ export default {
 
         for (let i = 0; i < tokenNum; i++) {
           contractWriter.tokenOfOwnerByIndex(address, i).then(function (tokenId) {
-            console.log('[Main][myFloor]call tokenOfOwnerByIndex:', parseInt(tokenId))
+            // console.log('[Main][myFloor]call tokenOfOwnerByIndex:', parseInt(tokenId))
             contractWriter.getTokenInfo(tokenId).then(function (tokenInfo) {
               // console.log('[Main][myFloor]call getTokenInfo:', tokenInfo)
               // console.log('[Main][myFloor]call houseType:', parseInt(tokenInfo.houseType))
