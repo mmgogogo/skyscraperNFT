@@ -225,3 +225,42 @@ export async function ajaxGetTokenHotNum (tokenIds) {
 
   return result
 }
+
+// 读取玩家个人信息
+export async function ajaxGetProfile (address) {
+  console.log('[AjaxData] call ajaxGetProfile:')
+
+  let result = {}
+  const url = apiServer + '/user/get?address=' + address
+  await axios.post(url).then(response => {
+    const data = response.data
+
+    console.log('[AjaxData] ajaxGetProfile response-2:', data)
+    if (data.Code === 0) {
+      result = data.Data
+    }
+  })
+
+  return result
+}
+
+// 读取玩家个人信息
+export async function ajaxUpdateProfile (address, name, loveNum) {
+  console.log('[AjaxData] call ajaxUpdateProfile:')
+
+  let result = 200
+  const url = apiServer + '/user/update'
+  const params = {
+    address: address,
+    name: name,
+    loveNum: loveNum
+  }
+  await axios.post(url, qs.stringify(params)).then(response => {
+    const data = response.data
+
+    console.log('[AjaxData] ajaxUpdateProfile response-2:', data)
+    result = data.Code
+  })
+
+  return result
+}
