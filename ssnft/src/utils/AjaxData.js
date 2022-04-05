@@ -264,3 +264,31 @@ export async function ajaxUpdateProfile (address, name, loveNum) {
 
   return result
 }
+
+// 获取用户表
+export async function ajaxGetUserInfo (allAddress) {
+  const result = {}
+
+  if (allAddress === '') {
+    return result
+  }
+  // URL
+  const url = apiServer + '/user/listbyaddress'
+  const params = {
+    address: allAddress.join(',')
+  }
+  await axios.post(url, qs.stringify(params)).then(response => {
+    const data = response.data
+
+    // console.log('[AjaxData] ajaxGetUserInfo response:', data)
+    if (data.Code === 0) {
+      const items = data.Data
+      for (var i in items) {
+        result[items[i].Address] = { address: items[i].Address, name: items[i].Name }
+      }
+    }
+  })
+
+  // console.log('[AjaxData] ajaxGetUserInfo result:', result)
+  return result
+}
