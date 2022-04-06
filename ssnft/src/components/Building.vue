@@ -1,7 +1,7 @@
 <template>
-<div class="building flex-container align-end scroll" @wheel="handleWheel($event)">
-  <div class="floor flex-row align-start" v-for="(floorInfo, index) in floors" :key="index" :style="orderStyle(floorInfo.order)">
-    <div class="owner owner-hidden flex-col justify-center">
+<div class="building flex-container align-end scroll" @wheel="handleWheel($event)" @click="onClick($event)">
+  <div class="floor flex-row align-start" v-for="(floorInfo, index) in floorList" :key="index" :style="orderStyle(floorInfo.order)">
+    <div class="owner owner-hidden flex-col justify-center" :style="hidden(floorInfo.id)">
       <div class="owner-card flex-col align-center">
         <div class="owner-card-section flex-col justify-center">
           <span class="owner-card-name flex-row">{{ floorInfo.name || hiddenAddress(floorInfo.owner) || defaultName }}</span>
@@ -23,16 +23,26 @@
         <img class="floor-img flex-row" referrerpolicy="no-referrer" v-bind:src="requireImg(floorInfo.houseType)" alt="" />
       </div>
     </div>
-    <div class="others flex-col justify-center">
+    <div class="others flex-col justify-center" :id="floorInfo.floorId" :style="hidden(floorInfo.id)" @click="onClickOutside($event, floorInfo.floorId)">
       <div class="board flex-row align-center">
         <div class="board2 flex-row align-center">
           <div class="board-container flex-container align-center">
             <div class="board-icon flex-col"></div>
             <span class="board-word flex-col">{{ floorInfo.id || '' }}</span>
-            <span class="board-message">{{ floorInfo.message || defaultMsg }}</span>
+            <span class="board-message" v-if="editId === floorInfo.floorId">
+              <input class="account-address remark flex-col" type="text" name="address"
+                :id="'remarkInfo_' + floorInfo.floorId"
+                v-model="remarkMessage"
+                @keyup.enter="submitRemark(floorInfo.floorId)"
+                @keyup="computeWords(floorInfo.floorId)"
+                />
+            </span>
+            <span class="board-message" v-else>
+              {{ floorInfo.message || defaultMsg }}
+            </span>
           </div>
         </div>
-        <div class="ic-edit flex-row align-center" @click="editMessage"></div>
+        <div class="ic-edit flex-row align-center" @click="displayEdit(floorInfo.floorId)" :style="hidden(floorInfo.minted)"></div>
       </div>
     </div>
   </div>
@@ -46,7 +56,7 @@
 
 <script>
 // import { ref } from 'vue'
-// import $ from 'jquery'
+import $ from 'jquery'
 import floor00000 from '../assets/images/walls/floor_00000.png'
 import floor00001 from '../assets/images/walls/floor_00001.png'
 import floor00002 from '../assets/images/walls/floor_00002.png'
@@ -66,16 +76,21 @@ import floor00015 from '../assets/images/walls/floor_00015.png'
 import floor00016 from '../assets/images/walls/floor_00016.png'
 import floor00017 from '../assets/images/walls/floor_00017.png'
 import floorx from '../assets/images/walls/floor_x.png'
-import { hiddenAddress } from '@/utils/Utils.js'
+import { hiddenAddress, popupMessage } from '@/utils/Utils.js'
 import { ajaxAddTokenInfo } from '@/utils/AjaxData.js'
 
 export default {
   name: 'Building',
   data () {
     return {
+      maxChar: 60,
+      count: 0,
       defaultMsg: '欢迎来我家',
       defaultName: '空置房',
-      scrolled: false
+      scrolled: false,
+      floorList: [],
+      editId: 0,
+      remarkMessage: ''
     }
   },
   props: {
@@ -83,6 +98,18 @@ export default {
     floors: Array
   },
   methods: {
+    onClick () {
+      const _that = this
+      _that.remarkMessage = ''
+      _that.editId = 0
+    },
+    onClickOutside (event, floorId) {
+      const _that = this
+      console.log('[Building] onclick outside event ', event)
+      if (floorId === _that.editId) {
+        event.stopPropagation()
+      }
+    },
     close () {
       const _that = this
       _that.game = false
@@ -90,6 +117,15 @@ export default {
     orderStyle (i) {
       return {
         order: i
+      }
+    },
+    hidden (id) {
+      if (!id) {
+        return {
+          visibility: 'hidden'
+        }
+      } else {
+        return {}
       }
     },
     strPadLeft (str, chr = '0', len = 5) {
@@ -129,25 +165,104 @@ export default {
     handleWheel (event) {
       event.preventDefault()
       console.log('[Building][handleWheel] emit event ', event.deltaY)
-
+      this.count++
       this.$emit('floor-scroll', event)
+      console.log('[Building][handleWheel] this.count ', this.count, event)
     },
     hiddenAddress (address) {
       return hiddenAddress(address)
     },
-    async editMessage (tokenId, remark) {
+    async getRemarkInfo (tokenId) {
+      const _that = this
+      let message = _that.defaultMsg
+      for (const floorInfo of _that.floors) {
+        if (floorInfo.floorId === tokenId) {
+          message = floorInfo.message
+        }
+      }
+      return message
+    },
+    computeWords (tokenId) {
+      const _that = this
+      function getByteLen (data) {
+        let len = 0
+        let newData = ''
+        for (let i = 0; i < data.length; i++) {
+          const ch = data.charCodeAt(i)
+          if (len <= _that.maxChar) {
+            newData += data[i]
+          }
+          console.log('data ch ', ch)
+          if ((ch >= 0x0001 && ch <= 0x007e) || (ch >= 0xff60 && ch <= 0xff9f)) {
+            len++
+          } else {
+            len += 2
+          }
+        }
+        return [len, newData]
+      }
+      const content = $('#remarkInfo_' + tokenId).val()
+      const lenArr = getByteLen(content)
+      if (lenArr[0] > _that.maxChar) {
+        $('#remarkInfo_' + tokenId).val(lenArr[1])
+        _that.remarkMessage = $('#remarkInfo_' + tokenId).val()
+        popupMessage('Max message 30 chars')
+      }
+      console.log('[Building] computeWords length is ', lenArr)
+      return lenArr[0]
+    },
+    async displayEdit (tokenId) {
+      const _that = this
+      if (_that.editId > 0) {
+        if (_that.editId !== tokenId) {
+          _that.remarkMessage = ''
+        } else {
+          await _that.submitRemark(tokenId)
+          return
+        }
+      }
+      _that.editId = tokenId
+      setTimeout(function () {
+        $('#remarkInfo_' + tokenId).focus()
+      })
+      console.log('[Buiding] displayEdit ', _that.editId)
+    },
+    async submitRemark (tokenId) {
+      const _that = this
+      _that.updateMessage(tokenId, _that.remarkMessage)
+      _that.editId = 0
+    },
+    async updateMessage (tokenId, remark) {
       const _that = this
       console.log('[Buiding] editMessage ', tokenId, remark)
+
+      // update floor message local
+      _that.updateFloorsInfo(tokenId, remark)
+
       // 判断楼层归属
       const resCode = await ajaxAddTokenInfo(tokenId, remark)
       if (resCode !== 0) {
         // alert('bind faild')
-        _that.popupMessage('Remark faild')
+        popupMessage('Remark faild')
       } else {
-        // alert('bind success')
-        _that.popupMessage('Remark success')
+        popupMessage('Remark success')
       }
+    },
+    updateFloorsInfo (floorId, message) {
+      const _that = this
+      for (let i = 0; i < _that.floorList.length; i++) {
+        const floorInfo = _that.floorList[i]
+        if (floorInfo.floorId === floorId) {
+          _that.floorList[i].message = message
+        }
+      }
+      _that.remarkMessage = ''
     }
+  },
+  updated () {
+    console.log('[Buiding] updated start!')
+    const _that = this
+    _that.floorList = _that.floors
   },
   created () {
     console.log('[Buiding] created start!')

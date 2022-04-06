@@ -1,3 +1,6 @@
+import Toastify from 'toastify-js'
+import 'toastify-js/src/toastify.css'
+
 // 获取当前时间戳
 export function curTimeSe () {
   return parseInt((new Date()).valueOf() / 1000)
@@ -32,4 +35,19 @@ export function getLocalStorage (key) {
 export function hiddenAddress (address) {
   const reg = /^(\w{4})\w+(\w{4})$/
   return address.replace(reg, '$1****$2')
+}
+
+export function popupMessage (message, gravity = 'top', position = 'center') {
+  Toastify({
+    text: message,
+    duration: 3000,
+    newWindow: true,
+    close: true,
+    gravity: gravity, // `top` or `bottom`
+    position: position, // `left`, `center` or `right`
+    stopOnFocus: true, // Prevents dismissing of toast on hover
+    style: {
+      background: 'linear-gradient(to right, #00b09b, #96c93d)'
+    }
+  }).showToast()
 }

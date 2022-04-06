@@ -107,10 +107,9 @@
                   <span class="word5">{{ baseConfig.lang_010 }}</span>
                 </div>
               </div>
-              <!--<div class="group4 flex-col btn-hand">
+              <div class="group4 flex-col btn-hand">
                 <span class="paragraph1">{{ baseConfig.lang_011 }}</span>
               </div>
-              -->
           </div>
           </div>
         </div>
@@ -415,7 +414,7 @@ export default {
         lang_008: 'Mint',
         lang_009: 'Room',
         lang_010: 'Avatar',
-        lang_011: 'Not \n open',
+        lang_011: 'DAO',
         lang_028: '复制'
       },
       gameConfig: {
@@ -430,7 +429,7 @@ export default {
       lang: 'en',
       // 全局数据
       globalInfo: {
-        total: 20,
+        total: 10000,
         runUpTime: '2019-08-15',
         metamaskExists: false
       },
@@ -754,8 +753,6 @@ export default {
           contractWriter.tokenOfOwnerByIndex(address, i).then(function (tokenId) {
             // console.log('[Main][myFloor]call tokenOfOwnerByIndex:', parseInt(tokenId))
             contractWriter.getTokenInfo(tokenId).then(function (tokenInfo) {
-              // console.log('[Main][myFloor]call getTokenInfo:', tokenInfo)
-              // console.log('[Main][myFloor]call houseType:', parseInt(tokenInfo.houseType))
               if (!playerInfo.mintFloorTokenId.includes(parseInt(tokenId))) {
                 playerInfo.mintFloorTokenId.push(parseInt(tokenId))
                 playerInfo.mintFloorNumId.push({ floorId: parseInt(tokenId), owner: address, houseType: parseInt(tokenInfo.houseType) })
@@ -964,7 +961,7 @@ export default {
         'padding-top': (22.71 - (22.71 * start) / 10000) + 'vw'
       }
     },
-    async initBuilding () {
+    initBuilding () {
       console.log('[Main][initBuilding] init start')
       const _that = this
       const start = _that.getStart()
@@ -975,12 +972,31 @@ export default {
       }
       _that.building.start = start
       console.log('[Main][created] building ', _that.building)
-      await _that.updateBuilding(start, _that.building.first)
+      _that.updateBuilding(start, _that.building.first)
     },
     range (start, end) {
       return Array(end - start + 1).fill().map((_, idx) => start + idx)
     },
-    async updateBuilding (start, first = false) {
+    defaultBuildings (floorIds) {
+      const floorList = []
+      for (const floorId of floorIds) {
+        const floorInfo = {
+          id: floorId,
+          floorId: floorId,
+          houseType: '0',
+          minted: 0,
+          owner: '',
+          name: '',
+          message: '',
+          myFloor: '',
+          order: 99999 - parseInt(floorId),
+          image: '../assets/images/walls/floor_00000.png'
+        }
+        floorList.push(floorInfo)
+      }
+      return floorList
+    },
+    updateBuilding (start, first = false) {
       console.log('[Main][updateBuilding] start')
       const _that = this
       _that.building.height = Math.ceil(start / 500) + 1
@@ -988,39 +1004,49 @@ export default {
         first = true
       }
       const floorIds = _that.range(start, start + _that.building.page - 1)
-      _that.building.floors = []
-      const floorListInfo = await _that.getFloorListInfo(floorIds)
-      if (first) {
-        for (let j = 4; j >= 0; j--) {
-          const hallInfo = {
-            id: 0,
-            floorId: '0',
-            houseType: '0',
-            minted: 0,
-            owner: '',
-            name: '',
-            message: '',
-            myFloor: '',
-            order: 99999 - j,
-            image: '../assets/images/walls/floor_00000.png'
+      _that.building.floors = _that.defaultBuildings(floorIds)
+      // const floorListInfo = await _that.getFloorListInfo(floorIds)
+      _that.getFloorListInfo(floorIds).then(function (response) {
+        console.log('[Main][updateBuilding] getFloorListInfo response ', response)
+        const floorListInfo = response
+        if (first) {
+          for (let j = 4; j >= 0; j--) {
+            const hallInfo = {
+              id: 0,
+              floorId: '0',
+              houseType: '0',
+              minted: 0,
+              owner: '',
+              name: '',
+              message: '',
+              myFloor: '',
+              order: 99999 - j,
+              image: '../assets/images/walls/floor_00000.png'
+            }
+            floorListInfo.unshift(hallInfo)
           }
-          floorListInfo.unshift(hallInfo)
         }
-      }
-      _that.building.floors = floorListInfo
+        _that.building.floors = floorListInfo
+      })
       console.log('[Main] building floors', _that.building.floors)
     },
-    async floorScroll (event) {
+    floorScroll (event) {
       const _that = this
       const deltaY = event.deltaY
-      // console.log('[Main][floorScroll] wheel event ', deltaY)
+      console.log('[Main][floorScroll] wheel event ', deltaY)
       let step = Math.floor(deltaY / 8)
-      if (step < 1) {
-        step = Math.ceil(deltaY / 4)
+      if (Math.abs(step) < 1) {
+        step = Math.floor(deltaY / 4)
       }
-      // console.log('[Main][floorScroll] wheel step ', step)
+      if (Math.abs(step) >= 4) {
+        step = (step / Math.abs(step)) * 2
+      }
+      if (Math.abs(step) <= 0) {
+        return
+      }
+      console.log('[Main][floorScroll] wheel step ', step)
       let start = _that.getStart()
-      // console.log('[Main][floorScroll] wheel start start ', start)
+      console.log('[Main][floorScroll] wheel start start ', start)
       const speed = _that.building.wstep
       // < 0 scroll upper, > 0 scroll down
       if (deltaY < 0) {
@@ -1039,7 +1065,7 @@ export default {
           }
         }
       }
-      // console.log('[Main][floorScroll] wheel end start ', start)
+      console.log('[Main][floorScroll] wheel end start ', start)
       _that.building.start = start
       localStorage.setItem('buildingStart', start)
       _that.updateBuilding(start)

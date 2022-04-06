@@ -72,6 +72,7 @@
 }
 
 .others {
+    z-index: 17;
     /* height: 5vw; */
     height: 100%;
     /* padding-top: 12px; */
@@ -238,4 +239,13 @@
     left: 0px;
     bottom: -1px;
     display: none;
+}
+
+.remark {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    box-shadow: none;
+    outline: none;
+    line-height: normal;
 }

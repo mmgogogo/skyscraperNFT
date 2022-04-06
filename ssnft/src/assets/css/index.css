@@ -528,12 +528,12 @@ input:focus
   background-color: rgba(107, 109, 113, 1);
   box-shadow: inset 2px 2px 1px 0px rgba(0, 0, 0, 0.2);
   width: 68px;
-  padding: 14px 0 0 13px;
+  /* padding: 14px 0 0 13px; */
 }
 
 .paragraph1 {
-  width: 41px;
-  height: 40px;
+  width: 68px;
+  height: 20px;
   display: block;
   overflow-wrap: break-word;
   color: rgba(255, 255, 255, 1);
@@ -541,9 +541,10 @@ input:focus
   font-family: SFProDisplay-Semibold;
   line-height: 20px;
   text-align: center;
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+  text-shadow: 1px 1px 1px rgb(0 0 0 / 30%);
   overflow: hidden;
   text-overflow: ellipsis;
+  margin: auto 0;
 }
 
 .header {
