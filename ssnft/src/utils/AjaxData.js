@@ -62,21 +62,22 @@ export async function ajaxAddFollowerToken (address, tokenId) {
 // 添加关注楼层
 export async function ajaxGetHotToken (signature) {
   console.log('[AjaxData] call ajaxGetHotToken:', signature)
-
-  let result = []
   const url = apiServer + '/followertoken/hot?signature=' + signature
-  await axios.post(url).then(response => {
-    const data = response.data
-
-    console.log('[AjaxData] ajaxGetHotToken response-2:', data)
-    if (data.Code !== 0) {
-      console.log('[AjaxData] ajaxGetHotToken failed,' + data.Msg)
-    } else {
-      result = data.Data
-    }
-  })
-
-  return result
+  return new Promise(
+    (resolve, reject) => axios.post(url).then(response => {
+      console.log('[AjaxData][ajaxGetHotToken][Response] is ', [response])
+      const data = response.data
+      let result = {}
+      console.log('[AjaxData] ajaxGetHotToken response:', data)
+      if (data.Code === 0) {
+        result = data.Data
+        console.log('[AjaxData] ajaxGetHotToken result:', result)
+        resolve(result)
+      } else {
+        reject(new Error('return empty'))
+      }
+    })
+  )
 }
 
 // 添加楼层留言
@@ -99,26 +100,22 @@ export async function ajaxAddTokenInfo (tokenId, remark) {
 // 获取我的关注列表
 export async function ajaxGetMyFollower (type, address) {
   console.log('[AjaxData] call ajaxGetMyFollower:', type, address)
-
   const url = apiServer + '/followerpeople/' + type + '?from=' + address
-  let result = []
-
-  await axios.post(url).then(response => {
-    const data = response.data
-
-    console.log('[AjaxData] ajaxGetMyFollower response-2:', data)
-    if (data.Code !== 0) {
-      console.log('[AjaxData] get error, please try again')
-    } else {
-      for (var v in data.Data) {
-        console.log('[AjaxData] 获取我的关注列表', data.Data[v])
+  return new Promise(
+    (resolve, reject) => axios.post(url).then(response => {
+      console.log('[AjaxData][ajaxGetMyFollower][Response] is ', [response])
+      const data = response.data
+      let result = {}
+      console.log('[AjaxData] ajaxGetMyFollower response:', data)
+      if (data.Code === 0) {
+        result = data.Data
+        console.log('[AjaxData] ajaxGetMyFollower result:', result)
+        resolve(result)
+      } else {
+        reject(new Error('return empty'))
       }
-
-      result = data.Data
-    }
-  })
-
-  return result
+    })
+  )
 }
 
 // 获取个人nft列表
@@ -203,20 +200,6 @@ export async function ajaxGetTokenInfo (tokenIds) {
       }
     })
   )
-  // URL
-  // const url = apiServer + '/token/listbytokenids?tokenIds=' + tokenIds.join(',')
-  // await axios.post(url).then(response => {
-  //   const data = response.data
-
-  //   console.log('[AjaxData] ajaxGetTokenInfo response:', data)
-  //   if (data.Code === 0) {
-  //     const items = data.Data
-  //     for (var i in items) {
-  //       const oneToken = { from: items[i].Address, msg: items[i].Remark }
-  //       result[items[i].TokenId] = oneToken
-  //     }
-  //   }
-  // })
 }
 
 // 获取楼层热度
@@ -242,38 +225,27 @@ export async function ajaxGetTokenHotNum (tokenIds) {
       }
     })
   )
-  // const result = []
-  // const url = apiServer + '/followertoken/listbytokenids?tokenIds=' + tokenIds.join(',')
-  // await axios.post(url).then(response => {
-  //   const data = response.data
-
-  //   console.log('[AjaxData] ajaxGetTokenHotNum response-2:', data)
-  //   if (data.Code === 0) {
-  //     const items = data.Data
-  //     for (var i in items) {
-  //       const oneToken = { tokenId: items[i].TokenId, num: items[i].Num }
-  //       result[items[i].TokenId] = oneToken
-  //     }
-  //   }
-  // })
 }
 
 // 读取玩家个人信息
 export async function ajaxGetProfile (address) {
   console.log('[AjaxData] call ajaxGetProfile ', address)
-
-  let result = {}
   const url = apiServer + '/user/get?address=' + address
-  await axios.post(url).then(response => {
-    const data = response.data
-
-    console.log('[AjaxData] ajaxGetProfile response-2:', data)
-    if (data.Code === 0) {
-      result = data.Data
-    }
-  })
-
-  return result
+  return new Promise(
+    (resolve, reject) => axios.post(url).then(response => {
+      console.log('[AjaxData][ajaxGetProfile][Response] is ', [response])
+      const data = response.data
+      let result = {}
+      console.log('[AjaxData] ajaxGetProfile response:', data)
+      if (data.Code === 0) {
+        result = data.Data
+        console.log('[AjaxData] ajaxGetProfile result:', result)
+        resolve(result)
+      } else {
+        reject(new Error('return empty'))
+      }
+    })
+  )
 }
 
 // 读取玩家个人信息
@@ -300,28 +272,29 @@ export async function ajaxUpdateProfile (address, name, loveNum) {
 // 获取用户表
 export async function ajaxGetUserInfo (allAddress) {
   console.log('[AjaxData] ajaxGetUserInfo allAddress ', allAddress)
-  const result = {}
-
   if (allAddress === '') {
-    return result
+    return {}
   }
-  // URL
   const url = apiServer + '/user/listbyaddress'
   const params = {
     address: allAddress.join(',')
   }
-  await axios.post(url, qs.stringify(params)).then(response => {
-    const data = response.data
-
-    // console.log('[AjaxData] ajaxGetUserInfo response:', data)
-    if (data.Code === 0) {
-      const items = data.Data
-      for (var i in items) {
-        result[items[i].Address] = { address: items[i].Address, name: items[i].Name }
+  return new Promise(
+    (resolve, reject) => axios.post(url, qs.stringify(params)).then(response => {
+      console.log('[AjaxData][ajaxGetUserInfo][Response] is ', [response])
+      const result = {}
+      const data = response.data
+      console.log('[AjaxData] ajaxGetUserInfo response:', data)
+      if (data.Code === 0) {
+        const items = data.Data
+        for (var i in items) {
+          result[items[i].Address] = { address: items[i].Address, name: items[i].Name }
+        }
+        console.log('[AjaxData] ajaxGetUserInfo result:', result)
+        resolve(result)
+      } else {
+        reject(new Error('return empty'))
       }
-    }
-  })
-
-  // console.log('[AjaxData] ajaxGetUserInfo result:', result)
-  return result
+    })
+  )
 }
