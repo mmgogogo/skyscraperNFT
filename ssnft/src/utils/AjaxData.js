@@ -260,7 +260,7 @@ export async function ajaxGetTokenHotNum (tokenIds) {
 
 // 读取玩家个人信息
 export async function ajaxGetProfile (address) {
-  console.log('[AjaxData] call ajaxGetProfile:')
+  console.log('[AjaxData] call ajaxGetProfile ', address)
 
   let result = {}
   const url = apiServer + '/user/get?address=' + address
@@ -299,6 +299,7 @@ export async function ajaxUpdateProfile (address, name, loveNum) {
 
 // 获取用户表
 export async function ajaxGetUserInfo (allAddress) {
+  console.log('[AjaxData] ajaxGetUserInfo allAddress ', allAddress)
   const result = {}
 
   if (allAddress === '') {

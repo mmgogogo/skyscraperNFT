@@ -69,6 +69,9 @@ $ yarn deploy
 # 把路由改造一下，/二级目录/
 # { path: '/skyscraper', redirect: { name: 'Home' } }, // 重定向
 
+
+# 从链上拉取的钱包地址非小写
+# 从metamask钱包得到的地址为小写
 ```
 
 #### Install dependencies

@@ -92,6 +92,7 @@ export default {
       const _that = this
       const clipboard = new Clipboard('.account-address-copy')
       clipboard.on('success', e => {
+        console.log('[Account] copy address is', e)
         _that.popupMessage('Copied !')
       })
       clipboard.on('error', e => {
@@ -128,6 +129,8 @@ export default {
     const _that = this
     console.log('[Account][updated] updated start!', _that.$Dapp.Bridges, _that.name, _that.count)
     _that.display = _that.show
+    _that.playerInfo.address = _that.profileAddr
+
     if (('ethereum' in _that.$Dapp.Bridges) && ('selectedAddress' in _that.$Dapp.Bridges.ethereum)) {
       _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
     }
@@ -137,6 +140,7 @@ export default {
       _that.count++
 
       if (_that.name === '') {
+        console.log('[Account][updated] _that.playerInfo.address ', _that.playerInfo.address)
         const result = await ajaxGetProfile(_that.playerInfo.address)
         console.log('[Account][updated] result: ', result)
         _that.name = result.Name
@@ -153,6 +157,7 @@ export default {
     if (_that.playerInfo.address) {
       _that.name = getLocalStorage('username' + _that.playerInfo.address)
     }
+    console.log('[Account][created] created end ', _that.name, _that.playerInfo)
   }
 }
 </script>

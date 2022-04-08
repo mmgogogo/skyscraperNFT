@@ -356,7 +356,7 @@
         </div>
       </div>
     </div>
-    <Account :show="showInfo.account" v-on:close-account="closeAccount" />
+    <Account :show="showInfo.account" v-on:close-account="closeAccount" :profileAddr="playerInfo.address" />
     <MyFloorList :show="showInfo.floor" :loading="setting.loading" :floors="playerInfo.mintFloorNumId" v-on:open-game="openGame" v-on:close-floors="closeFloors" />
     <Game :show="showInfo.game" :url="gameConfig.gameUrl" v-on:close-game="closeGame" />
     <!-- avatar start -->
@@ -1159,7 +1159,7 @@ export default {
       const ownerAddress = []
       for (let k = 0; k < floorIds.length; k++) {
         if (f1[k].owner) {
-          ownerAddress.push(f1[k].owner)
+          ownerAddress.push((f1[k].owner).toLowerCase())
         }
       }
       const f4 = await ajaxGetUserInfo(ownerAddress) // get floor hot info from server
@@ -1181,9 +1181,9 @@ export default {
           image: image
         }
         if (floorInfo.owner !== '') {
-          floorInfo.name = f4[floorInfo.owner] !== undefined ? f4[floorInfo.owner].name : floorInfo.owner
+          floorInfo.name = f4[floorInfo.owner.toLowerCase()] !== undefined ? f4[floorInfo.owner.toLowerCase()].name : floorInfo.owner.toLowerCase()
         } else {
-          floorInfo.name = floorInfo.owner
+          floorInfo.name = floorInfo.owner.toLowerCase()
         }
         floorsInfo.push(floorInfo)
       }
