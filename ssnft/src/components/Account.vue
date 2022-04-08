@@ -52,6 +52,7 @@
 import Clipboard from 'clipboard'
 import Toastify from 'toastify-js'
 import { addLocalStorage, getLocalStorage } from '../utils/Utils'
+import { ajaxGetProfile, ajaxUpdateProfile } from '../utils/AjaxData'
 
 export default {
   name: 'Account',
@@ -100,7 +101,7 @@ export default {
     close () {
       this.$emit('close-account')
     },
-    submitName (chatName) {
+    async submitName (chatName) {
       const _that = this
       if (!_that.playerInfo.address) {
         _that.popupMessage('Login wallet first')
@@ -109,25 +110,37 @@ export default {
       if (chatName === undefined) {
         chatName = this.playerInfo.address
       }
-
       console.log('[Account] name is', _that.name)
       if (_that.name) {
         addLocalStorage('username' + chatName, _that.name, 2 * 3600)
-        _that.popupMessage('Username updated!', 'top', 'right')
+        // 入库
+        const res = await ajaxUpdateProfile(this.playerInfo.address, _that.name, 0)
+        console.log('[Account] code', res)
+        if (res !== 0) {
+          _that.popupMessage('Username updated faild!', 'top', 'right')
+        } else {
+          _that.popupMessage('Username updated!', 'top', 'right')
+        }
       }
     }
   },
-  updated () {
+  async updated () {
     const _that = this
-    console.log('[Account][updated] updated start!', _that.$Dapp.Bridges)
+    console.log('[Account][updated] updated start!', _that.$Dapp.Bridges, _that.name, _that.count)
     _that.display = _that.show
     if (('ethereum' in _that.$Dapp.Bridges) && ('selectedAddress' in _that.$Dapp.Bridges.ethereum)) {
       _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
     }
 
     if (_that.playerInfo.address && !_that.name && _that.count <= 1) {
-      _that.name = getLocalStorage('username' + _that.playerInfo.address)
+      // _that.name = getLocalStorage('username' + _that.playerInfo.address)
       _that.count++
+
+      if (_that.name === '') {
+        const result = await ajaxGetProfile(_that.playerInfo.address)
+        console.log('[Account][updated] result: ', result)
+        _that.name = result.Name
+      }
     }
     console.log('[Account][updated] updated end!', _that)
   },

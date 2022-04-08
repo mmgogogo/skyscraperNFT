@@ -144,6 +144,7 @@
         </div>
         <!-- ladder end -->
         <!-- chat start -->
+        <!--
         <div v-bind:class="[!showInfo.chat ? 'chat-height-30' : 'chat-height-360', 'chat-container', 'flex-col', 'align-center']">
           <div v-bind:class="[!showInfo.chat ? 'chat-header-up' : 'chat-header-down', 'flex-col']" @click="chatSwitcher()"></div>
           <div class="chat-body flex-col justify-between">
@@ -162,6 +163,7 @@
             </span>
           </div>
         </div>
+        -->
         <!-- chat end -->
 
         <!-- myFollowing start -->
@@ -377,7 +379,7 @@ import Account from '@/components/Account.vue'
 import Messager from '@/utils/Messager.js'
 import {
   // ajaxAddFollowerPeople, ajaxAddFollowerToken, ajaxAddTokenInfo,
-  ajaxGetHotToken, ajaxGetMyFollower, ajaxGetAllNfts, ajaxGetTokenInfo, ajaxGetTokenHotNum, wsServerUrl
+  ajaxGetHotToken, ajaxGetMyFollower, ajaxGetAllNfts, ajaxGetTokenInfo, ajaxGetTokenHotNum, wsServerUrl, ajaxGetUserInfo
 } from '@/utils/AjaxData.js'
 import { addLocalStorage, getLocalStorage, hiddenAddress } from '@/utils/Utils.js'
 
@@ -1154,6 +1156,13 @@ export default {
       const f3 = await ajaxGetTokenHotNum(floorIds) // get floor hot info from server
       const floorsInfo = []
       console.log('[Main][getFloorListInfo] floorBaseInfo ', f1, f2, f3)
+      const ownerAddress = []
+      for (let k = 0; k < floorIds.length; k++) {
+        if (f1[k].owner) {
+          ownerAddress.push(f1[k].owner)
+        }
+      }
+      const f4 = await ajaxGetUserInfo(ownerAddress) // get floor hot info from server
       for (let k = 0; k < floorIds.length; k++) {
         const minted = parseInt(f1[k].minted)
         const houseType = minted > 0 ? parseInt(f1[k].houseType) + 1 : 0
@@ -1170,6 +1179,11 @@ export default {
           myFloor: f3[k] !== undefined ? f3[k].num : 0,
           order: 10 - k,
           image: image
+        }
+        if (floorInfo.owner !== '') {
+          floorInfo.name = f4[floorInfo.owner] !== undefined ? f4[floorInfo.owner].name : floorInfo.owner
+        } else {
+          floorInfo.name = floorInfo.owner
         }
         floorsInfo.push(floorInfo)
       }
