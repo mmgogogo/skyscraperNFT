@@ -37,6 +37,14 @@ export function hiddenAddress (address) {
   return address.replace(reg, '$1****$2')
 }
 
+export function hiddenName (name) {
+  if (name.length > 8) {
+    const len = name.length
+    return name.substring(0, 4) + '...' + name.substring(len - 4)
+  }
+  return name
+}
+
 export function popupMessage (message, gravity = 'top', position = 'center') {
   Toastify({
     text: message,

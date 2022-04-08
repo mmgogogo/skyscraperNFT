@@ -1457,10 +1457,12 @@ export default {
       })
     },
     timer () {
+      const _that = this
       // loop 1 time per 8 seconds
       setInterval(function () {
         // console.log('[Main][timer] add timer event here')
-      }, 15000)
+        _that.getGlobalInfo()
+      }, 8000)
     },
     async broadcast (name, msg) {
       // 发送通知

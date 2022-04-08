@@ -4,7 +4,7 @@
     <div class="owner owner-hidden flex-col justify-center" :style="hidden(floorInfo.id)">
       <div class="owner-card flex-col align-center">
         <div class="owner-card-section flex-col justify-center">
-          <span class="owner-card-name flex-row">{{ floorInfo.name || hiddenAddress(floorInfo.owner) || defaultName }}</span>
+          <span class="owner-card-name flex-row">{{ hiddenName(floorInfo.name) || hiddenAddress(floorInfo.owner) || defaultName }}</span>
           <div class="owner-card-line flex-row"></div>
           <div class="owner-card-value flex-row align-center">
             <div class="owner-container flex-row justify-around">
@@ -76,7 +76,7 @@ import floor00015 from '../assets/images/walls/floor_00015.png'
 import floor00016 from '../assets/images/walls/floor_00016.png'
 import floor00017 from '../assets/images/walls/floor_00017.png'
 import floorx from '../assets/images/walls/floor_x.png'
-import { hiddenAddress, popupMessage } from '@/utils/Utils.js'
+import { hiddenAddress, hiddenName, popupMessage } from '@/utils/Utils.js'
 import { ajaxAddTokenInfo } from '@/utils/AjaxData.js'
 
 export default {
@@ -202,6 +202,9 @@ export default {
     },
     hiddenAddress (address) {
       return hiddenAddress(address)
+    },
+    hiddenName (username) {
+      return hiddenName(username)
     },
     async getRemarkInfo (tokenId) {
       const _that = this
