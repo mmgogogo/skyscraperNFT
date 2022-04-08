@@ -118,7 +118,7 @@
 
       <!-- content start -->
       <div class="content flex-col" @click="onClick($event)">
-        <Building :floors="building.floors" :first="building.first" v-on:open-game="openGame"  v-on:floor-scroll="floorScroll"/>
+        <Building :floors="building.floors" :first="building.first" :profileAddr="playerInfo.address" v-on:open-game="openGame"  v-on:floor-scroll="floorScroll"/>
         <!-- ladder start -->
         <div class="ladder flex-col">
           <div class="lmain6 flex-row justify-between">
@@ -471,8 +471,8 @@ export default {
       curMessage: '',
       building: {
         first: true,
-        page: 12, // max floors per page
-        min: 6, // curser min value
+        page: 15, // max floors per page
+        min: 4, // curser min value
         max: 9995, // curser max value
         total: 10000, // total floors
         wstep: 1, // wheel step per scroll
@@ -907,11 +907,12 @@ export default {
     search (floorId) {
       const _that = this
       let start = 0
-      if (floorId > 0 && floorId <= _that.building.total) {
+      // globalInfo.total
+      if (floorId > 0 && floorId <= _that.globalInfo.total) {
         if (floorId <= _that.building.page / 2) {
           // start = 0
-        } else if (floorId >= _that.building.max) {
-          start = _that.building.total - _that.building.page
+        } else if (floorId >= (_that.globalInfo.total - 5)) {
+          start = _that.globalInfo.total - _that.building.page
         } else {
           start = floorId - _that.building.page / 2
         }
@@ -924,8 +925,8 @@ export default {
       const _that = this
       let start = _that.getStart()
       // start = Math.ceil( start / 500 )
-      if (start + _that.building.liftStep >= _that.building.total) {
-        start = _that.building.total - 11
+      if (start + _that.building.liftStep >= _that.globalInfo.total) {
+        start = _that.globalInfo.total - 14
       } else {
         start += _that.building.liftStep
       }
@@ -978,39 +979,63 @@ export default {
       return Array(end - start + 1).fill().map((_, idx) => start + idx)
     },
     defaultBuildings (floorIds) {
-      const floorList = []
-      for (const floorId of floorIds) {
-        const floorInfo = {
-          id: floorId,
-          floorId: floorId,
-          houseType: '0',
-          minted: 0,
-          owner: '',
-          name: '',
-          message: '',
-          myFloor: '',
-          order: 99999 - parseInt(floorId),
-          image: '../assets/images/walls/floor_00000.png'
-        }
-        floorList.push(floorInfo)
-      }
-      return floorList
+      // const floorList = []
+      // floorList =
+      // for (const floorId of floorIds) {
+      //   const floorInfo = {
+      //     id: floorId,
+      //     floorId: floorId,
+      //     houseType: '0',
+      //     minted: 0,
+      //     owner: '',
+      //     name: '',
+      //     message: '',
+      //     myFloor: '',
+      //     order: 99999 - parseInt(floorId),
+      //     image: '../assets/images/walls/floor_00000.png'
+      //   }
+      //   floorList.push(floorInfo)
+      // }
+      return this.getFloorInfoFromCache(floorIds)
     },
-    updateBuilding (start, first = false) {
+    updateBuilding (start, first = false, direct = 0) {
       console.log('[Main][updateBuilding] start')
       const _that = this
       _that.building.height = Math.ceil(start / 500) + 1
       if (start <= _that.building.min) {
         first = true
       }
-      const floorIds = _that.range(start, start + _that.building.page - 1)
+      let newStart = start
+      if (first) {
+        newStart = 1
+      } else {
+        newStart = start
+      }
+      const floorIds = _that.range(newStart, start + _that.building.page - 1)
       _that.building.floors = _that.defaultBuildings(floorIds)
-      // const floorListInfo = await _that.getFloorListInfo(floorIds)
+      if (first && (5 - start) >= 0) {
+        for (let j = 5 - start; j >= 0; j--) {
+          const hallInfo = {
+            id: 0,
+            floorId: '0',
+            houseType: '0',
+            minted: 0,
+            owner: '',
+            name: '',
+            message: '',
+            myFloor: '',
+            order: 99999 - j,
+            image: '../assets/images/walls/floor_00000.png'
+          }
+          _that.building.floors.unshift(hallInfo)
+        }
+      }
+
       _that.getFloorListInfo(floorIds).then(function (response) {
         console.log('[Main][updateBuilding] getFloorListInfo response ', response)
         const floorListInfo = response
-        if (first) {
-          for (let j = 4; j >= 0; j--) {
+        if (first && (5 - start) >= 0) {
+          for (let j = (5 - start); j >= 0; j--) {
             const hallInfo = {
               id: 0,
               floorId: '0',
@@ -1034,7 +1059,7 @@ export default {
       const _that = this
       const deltaY = event.deltaY
       console.log('[Main][floorScroll] wheel event ', deltaY)
-      let step = Math.floor(deltaY / 8)
+      let step = Math.sign(deltaY / 8)
       if (Math.abs(step) < 1) {
         step = Math.floor(deltaY / 4)
       }
@@ -1046,12 +1071,13 @@ export default {
       }
       console.log('[Main][floorScroll] wheel step ', step)
       let start = _that.getStart()
-      console.log('[Main][floorScroll] wheel start start ', start)
+      const startVal = start
+      console.log('[Main][floorScroll] wheel start start ', start, _that.globalInfo.total)
       const speed = _that.building.wstep
       // < 0 scroll upper, > 0 scroll down
       if (deltaY < 0) {
-        if (start + Math.abs(step) * speed >= 10000) {
-          start = _that.building.total - 11
+        if (start + Math.abs(step) * speed >= (_that.globalInfo.total - 9)) {
+          start = _that.globalInfo.total - 9
         } else {
           start += Math.abs(step) * speed
         }
@@ -1067,8 +1093,10 @@ export default {
       }
       console.log('[Main][floorScroll] wheel end start ', start)
       _that.building.start = start
-      localStorage.setItem('buildingStart', start)
-      _that.updateBuilding(start)
+      if (startVal !== start) {
+        localStorage.setItem('buildingStart', start)
+        _that.updateBuilding(start, false, startVal - start)
+      }
     },
     async getFloorListInfo (floorIds) {
       console.log('[Main][getFloorListInfo] start')
@@ -1125,7 +1153,7 @@ export default {
       const f2 = await ajaxGetTokenInfo(floorIds) // get floor message info from server
       const f3 = await ajaxGetTokenHotNum(floorIds) // get floor hot info from server
       const floorsInfo = []
-      console.log('[Main][getFloorListInfo] floorBaseInfo ', f1)
+      console.log('[Main][getFloorListInfo] floorBaseInfo ', f1, f2, f3)
       for (let k = 0; k < floorIds.length; k++) {
         const minted = parseInt(f1[k].minted)
         const houseType = minted > 0 ? parseInt(f1[k].houseType) + 1 : 0
@@ -1162,9 +1190,55 @@ export default {
       // console.log('[Main] getFloorBaseInfo response', baseInfo)
       return baseInfo
     },
+    getFloorInfoFromCache (floorIds) {
+      const _that = this
+      const floorsInfo = []
+      const baseCacheKey = 'FC:'
+      const msgCacheKey = 'FMC:'
+      const hotCacheKey = 'FHC:'
+      for (const f of floorIds) {
+        let oneFloor = { minted: 0, owner: '', tokenId: f, floorNo: 0, houseType: 0 }
+        const oneFloorCache = getLocalStorage(baseCacheKey + f)
+        if (oneFloorCache !== null) {
+          oneFloor = oneFloorCache
+        }
+
+        let floorMsgInfo = { from: '', msg: '' }
+        const msgCache = getLocalStorage(msgCacheKey + f)
+        if (msgCache !== null) {
+          floorMsgInfo = msgCache
+        }
+
+        let floorHotInfo = { from: '', msg: '' }
+        const hotCache = getLocalStorage(hotCacheKey + f)
+        if (hotCache !== null) {
+          floorHotInfo = hotCache
+        }
+
+        const minted = parseInt(oneFloor.minted)
+        const houseType = minted > 0 ? parseInt(oneFloor.houseType) + 1 : 0
+        const houseTypeStr = _that.strPadLeft(houseType)
+        const image = '../assets/images/walls/floor_' + houseTypeStr + '.png'
+        const floorInfo = {
+          id: f,
+          floorId: f,
+          houseType: houseType,
+          minted: oneFloor.minted,
+          owner: oneFloor.owner,
+          name: '',
+          message: floorMsgInfo ? floorMsgInfo.msg : '',
+          myFloor: floorHotInfo ? floorHotInfo.num : 0,
+          order: 15 - f,
+          image: image
+        }
+        floorsInfo.push(floorInfo)
+      }
+      console.log('[Main][getFloorInfoFromCache] floorsInfo ', floorsInfo)
+      return floorsInfo
+    },
     async getTokenFromContract (floorId) {
       // 判断是否有缓存
-      const cacheName = 'FloorCache:'
+      const cacheName = 'FC:'
       const oneFloorCache = getLocalStorage(cacheName + floorId)
       if (oneFloorCache !== null) {
         return oneFloorCache
@@ -1564,6 +1638,18 @@ export default {
 
         console.log('building', $('.building').prop('scrollHeight'))
         $('.building').scrollTop($('.building').prop('scrollHeight'))
+
+        const onwheel = function (e) {
+          let _log = ''
+          const _ie9 = navigator.userAgent.indexOf('MSIE 9.0') > 0
+          const _h = _ie9 ? window.innerHeight : document.body.clientHeight // 兼容IE9
+          _log += 'deltaY:' + e.deltaY
+          _log += '|wheelDelta:' + e.wheelDelta
+          _log += '|detail:' + e.detail
+          _log += '|H:' + _h
+          console.log(_log)
+        }
+        document.addEventListener('wheel', onwheel, false)
       })()
     })
   },

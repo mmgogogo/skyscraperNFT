@@ -119,13 +119,17 @@ export default {
   },
   updated () {
     const _that = this
-    console.log('[Account][updated] updated start!')
+    console.log('[Account][updated] updated start!', _that.$Dapp.Bridges)
     _that.display = _that.show
-    _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
+    if (('ethereum' in _that.$Dapp.Bridges) && ('selectedAddress' in _that.$Dapp.Bridges.ethereum)) {
+      _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
+    }
+
     if (_that.playerInfo.address && !_that.name && _that.count <= 1) {
       _that.name = getLocalStorage('username' + _that.playerInfo.address)
       _that.count++
     }
+    console.log('[Account][updated] updated end!', _that)
   },
   mounted () {
     console.log('[Account][mounted] mounted start!')

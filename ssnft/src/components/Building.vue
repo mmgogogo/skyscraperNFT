@@ -1,6 +1,6 @@
 <template>
 <div class="building flex-container align-end scroll" @wheel="handleWheel($event)" @click="onClick($event)">
-  <div class="floor flex-row align-start" v-for="(floorInfo, index) in floorList" :key="index" :style="orderStyle(floorInfo.order)">
+  <div class="floor flex-row align-center" v-for="(floorInfo, index) in floorList" :key="index" :style="orderStyle(floorInfo.order)">
     <div class="owner owner-hidden flex-col justify-center" :style="hidden(floorInfo.id)">
       <div class="owner-card flex-col align-center">
         <div class="owner-card-section flex-col justify-center">
@@ -42,7 +42,7 @@
             </span>
           </div>
         </div>
-        <div class="ic-edit flex-row align-center" @click="displayEdit(floorInfo.floorId)" :style="hidden(floorInfo.minted)"></div>
+        <div class="ic-edit flex-row align-center" @click="displayEdit(floorInfo.floorId)" :style="editHidden(floorInfo.minted,floorInfo.owner)"></div>
       </div>
     </div>
   </div>
@@ -85,17 +85,21 @@ export default {
     return {
       maxChar: 60,
       count: 0,
+      timearea: 0,
+      startTime: 0,
       defaultMsg: '欢迎来我家',
       defaultName: '空置房',
       scrolled: false,
       floorList: [],
       editId: 0,
-      remarkMessage: ''
+      remarkMessage: '',
+      address: ''
     }
   },
   props: {
     first: Boolean,
-    floors: Array
+    floors: Array,
+    profileAddr: String
   },
   methods: {
     onClick () {
@@ -126,6 +130,22 @@ export default {
         }
       } else {
         return {}
+      }
+    },
+    editHidden (id, address) {
+      console.log('[Building][editHidden] start ', id, address, this.address)
+      if (!id) {
+        return {
+          visibility: 'hidden'
+        }
+      } else {
+        if (!address || !this.address || (address && address.toLowerCase() !== this.address.toLowerCase())) {
+          return {
+            visibility: 'hidden'
+          }
+        } else {
+          return {}
+        }
       }
     },
     strPadLeft (str, chr = '0', len = 5) {
@@ -164,10 +184,21 @@ export default {
     },
     handleWheel (event) {
       event.preventDefault()
-      console.log('[Building][handleWheel] emit event ', event.deltaY)
-      this.count++
-      this.$emit('floor-scroll', event)
-      console.log('[Building][handleWheel] this.count ', this.count, event)
+      const _that = this
+      console.log('[Building][handleWheel] emit event ', event.deltaY, event.timeStamp)
+      _that.count++
+      if (!_that.startTime || ((event.timeStamp - _that.startTime) > 200)) {
+        _that.startTime = event.timeStamp
+      }
+      const timearea = Math.ceil(event.timeStamp - _that.startTime)
+      setTimeout(function () {
+        console.log('[Building][handleWheel] settimeout count ', _that.count, ' timearea ', timearea)
+        if (_that.count >= 15 || timearea > 200) {
+          _that.$emit('floor-scroll', event)
+          _that.count = 0
+        }
+      }, 200)
+      console.log('[Building][handleWheel] this.count ', _that.count, timearea, event)
     },
     hiddenAddress (address) {
       return hiddenAddress(address)
@@ -263,6 +294,10 @@ export default {
     console.log('[Buiding] updated start!')
     const _that = this
     _that.floorList = _that.floors
+    _that.address = _that.profileAddr
+    if (('ethereum' in _that.$Dapp.Bridges) && ('selectedAddress' in _that.$Dapp.Bridges.ethereum)) {
+      _that.address = _that.$Dapp.Bridges.ethereum.selectedAddress
+    }
   },
   created () {
     console.log('[Buiding] created start!')

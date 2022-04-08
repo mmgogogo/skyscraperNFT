@@ -10,12 +10,10 @@
     width: 60vw;
     height: 100%;
     padding: 0px;
-    margin: 0 auto;
-    /* margin-left: 20px; */
+    margin-left: 5%;
     /* background-color: #bf8e8e36; */
     overflow-y: visible;
     overflow-x: hidden;
-    
 }
 
 .building::-webkit-scrollbar {
@@ -24,7 +22,7 @@
 
 .floor {
     width: 60vw;
-    height: 5vw;
+    /* height: 5vw; */
     /* margin-top: 20px; */
 }
 
@@ -33,7 +31,7 @@
 }
 
 .owner {
-    height: 5vw;
+    /* height: 5vw; */
     /* border-radius: 5px; */
     /* background-color: rgb(196 199 223); */
     /* box-shadow: inset 2px 2px 1px 0px rgb(0 0 0 / 20%); */
@@ -46,9 +44,9 @@
 }
 
 .room {
-    height: 5vw;
+    /* height: 5vw; */
     /* background-color: aliceblue; */
-    background-color: rgb(26, 29, 30);
+    /* background-color: rgb(26, 29, 30); */
     padding: 0px;
     /* width: 36vw; */
 }
@@ -74,7 +72,7 @@
 .others {
     z-index: 17;
     /* height: 5vw; */
-    height: 100%;
+    /* height: 100%; */
     /* padding-top: 12px; */
     /* background-color: #1adbdb4a; */
     /* width: 12vw; */
@@ -175,6 +173,7 @@
     /* background-color: #544c4c;
     border-radius: 5px; */
     padding:5px;
+    margin:auto 0;
 }
 
 .board2 {

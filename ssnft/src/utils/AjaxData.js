@@ -183,45 +183,77 @@ export async function ajaxGetAllNfts (address) {
 
 // 获取token的留言
 export async function ajaxGetTokenInfo (tokenIds) {
-  const result = {}
-
-  // URL
   const url = apiServer + '/token/listbytokenids?tokenIds=' + tokenIds.join(',')
-  await axios.post(url).then(response => {
-    const data = response.data
-
-    console.log('[AjaxData] ajaxGetTokenInfo response:', data)
-    if (data.Code === 0) {
-      const items = data.Data
-      for (var i in items) {
-        const oneToken = { from: items[i].Address, msg: items[i].Remark }
-        result[items[i].TokenId] = oneToken
+  return new Promise(
+    (resolve, reject) => axios.post(url).then(response => {
+      console.log('[Web][Ajax][Response] is ', [response])
+      const data = response.data
+      const result = {}
+      console.log('[AjaxData] ajaxGetTokenInfo response:', data)
+      if (data.Code === 0) {
+        const items = data.Data
+        for (const i in items) {
+          const oneToken = { from: items[i].Address, msg: items[i].Remark }
+          result[items[i].TokenId] = oneToken
+        }
+        console.log('[AjaxData] ajaxGetTokenInfo result:', result)
+        resolve(result)
+      } else {
+        reject(new Error('return empty'))
       }
-    }
-  })
+    })
+  )
+  // URL
+  // const url = apiServer + '/token/listbytokenids?tokenIds=' + tokenIds.join(',')
+  // await axios.post(url).then(response => {
+  //   const data = response.data
 
-  console.log('[AjaxData] ajaxGetTokenInfo result:', result)
-  return result
+  //   console.log('[AjaxData] ajaxGetTokenInfo response:', data)
+  //   if (data.Code === 0) {
+  //     const items = data.Data
+  //     for (var i in items) {
+  //       const oneToken = { from: items[i].Address, msg: items[i].Remark }
+  //       result[items[i].TokenId] = oneToken
+  //     }
+  //   }
+  // })
 }
 
 // 获取楼层热度
 export async function ajaxGetTokenHotNum (tokenIds) {
-  console.log('[AjaxData] call ajaxGetTokenHotNum:')
-
-  const result = []
+  console.log('[AjaxData] call ajaxGetTokenHotNum start')
   const url = apiServer + '/followertoken/listbytokenids?tokenIds=' + tokenIds.join(',')
-  await axios.post(url).then(response => {
-    const data = response.data
-
-    console.log('[AjaxData] ajaxGetTokenHotNum response-2:', data)
-    if (data.Code === 0) {
-      const items = data.Data
-      for (var i in items) {
-        const oneToken = { tokenId: items[i].TokenId, num: items[i].Num }
-        result[items[i].TokenId] = oneToken
+  return new Promise(
+    (resolve, reject) => axios.post(url).then(response => {
+      console.log('[AjaxData][ajaxGetTokenHotNum][Response] is ', [response])
+      const data = response.data
+      const result = {}
+      console.log('[AjaxData] ajaxGetTokenHotNum response:', data)
+      if (data.Code === 0) {
+        const items = data.Data
+        for (const i in items) {
+          const oneToken = { tokenId: items[i].TokenId, num: items[i].Num }
+          result[items[i].TokenId] = oneToken
+        }
+        console.log('[AjaxData] ajaxGetTokenHotNum result:', result)
+        resolve(result)
+      } else {
+        reject(new Error('return empty'))
       }
-    }
-  })
+    })
+  )
+  // const result = []
+  // const url = apiServer + '/followertoken/listbytokenids?tokenIds=' + tokenIds.join(',')
+  // await axios.post(url).then(response => {
+  //   const data = response.data
 
-  return result
+  //   console.log('[AjaxData] ajaxGetTokenHotNum response-2:', data)
+  //   if (data.Code === 0) {
+  //     const items = data.Data
+  //     for (var i in items) {
+  //       const oneToken = { tokenId: items[i].TokenId, num: items[i].Num }
+  //       result[items[i].TokenId] = oneToken
+  //     }
+  //   }
+  // })
 }
