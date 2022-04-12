@@ -1175,11 +1175,11 @@ export default {
           minted: f1[k].minted,
           owner: f1[k].owner,
           name: '',
-          message: f2[k] !== undefined ? f2[k].msg : '',
           myFloor: f3[k] !== undefined ? f3[k].num : 0,
           order: 10 - k,
           image: image
         }
+        floorInfo.message = f2[floorInfo.id] !== undefined ? f2[floorInfo.id].msg : ''
         if (floorInfo.owner !== '') {
           floorInfo.name = f4[floorInfo.owner.toLowerCase()] !== undefined ? f4[floorInfo.owner.toLowerCase()].name : floorInfo.owner.toLowerCase()
         } else {
