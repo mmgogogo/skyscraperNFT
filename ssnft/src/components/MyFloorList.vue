@@ -5,9 +5,11 @@
     <div class="fc-title flex-row justify-center">
       <span class="fc-title-word">My&nbsp;Floors</span>
     </div>
-    <div class="floors-container flex-row">
+    <div class="floors-container flex-row"><!--  -->
       <div class="floor-loading flex-col justify-center" v-if="loading !== ''">
-        <span class="floor-loading-message">{{loading}}</span>
+        <span class="floor-loading-message">
+          <img class="floor-loading-img flex-row" referrerpolicy="no-referrer" alt="" src="../assets/images/walls/loading.gif" />
+        </span>
       </div>
       <div class="floor-card flex-col" v-else v-for="(floorInfo, index) in floorList" :key="index" v-on:click="$emit('open-game', [floorInfo.floorId, 1, floorInfo.owner, floorInfo.houseType])">
         <img class="floor-icon flex-row" referrerpolicy="no-referrer" alt="" src="../assets/images/floor_icon.png" />
@@ -211,6 +213,11 @@ export default {
   background-color: #4b4d53;
   height: 100%;
   border-radius: 5px;
+}
+
+.floor-loading-img {
+  width: 50%;
+  margin: 0 auto;
 }
 
 .floor-loading-message {

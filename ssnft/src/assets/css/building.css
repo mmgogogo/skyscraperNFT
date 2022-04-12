@@ -10,7 +10,8 @@
     width: 60vw;
     height: 100%;
     padding: 0px;
-    margin-left: 5%;
+    /* margin-left: 5%; */
+    margin: 0 auto;
     /* background-color: #bf8e8e36; */
     overflow-y: visible;
     overflow-x: hidden;

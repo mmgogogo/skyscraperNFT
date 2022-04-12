@@ -911,12 +911,12 @@ export default {
       let start = 0
       // globalInfo.total
       if (floorId > 0 && floorId <= _that.globalInfo.total) {
-        if (floorId <= _that.building.page / 2) {
+        if (floorId <= Math.floor(_that.building.page / 2)) {
           // start = 0
         } else if (floorId >= (_that.globalInfo.total - 5)) {
           start = _that.globalInfo.total - _that.building.page
         } else {
-          start = floorId - _that.building.page / 2
+          start = floorId - Math.floor(_that.building.page / 2)
         }
       }
       _that.building.start = start
@@ -1628,7 +1628,14 @@ export default {
     console.log('[Main][created] display Dapp 1 ', _that.$Dapp)
     $(fn => {
       (async function () {
-        console.log('[Main][created] display Dapp 2 ', _that.$Dapp)
+        console.log('[Main][created] display Dapp 2 ', _that.$Dapp, window.innerHeight)
+        const innerHeight = window.innerHeight
+        if (innerHeight) {
+          const tempFloors = Math.ceil(innerHeight / 75)
+          if (tempFloors > _that.building.page) {
+            _that.building.page = tempFloors
+          }
+        }
 
         // If wallet plugin not install, popup select wallet
         _that.checkMetamaskExists()

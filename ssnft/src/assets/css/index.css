@@ -569,9 +569,10 @@ input:focus
 
 .logo {
   width: 20%;
-  height: 22px;
-  background: url(../images/logo.png) -4px -4px no-repeat;
-  margin-top: 18px;
+  height: 60px;
+  background: url(../images/logo.png) 0px 0px no-repeat;
+  background-size: auto 60px;
+  margin-top: 0px;
 }
 
 .wallet {
