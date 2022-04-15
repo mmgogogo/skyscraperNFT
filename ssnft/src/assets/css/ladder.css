@@ -2,15 +2,15 @@
     z-index: 16;
     height: 100%;
     /* background: url(../images/ladder/background.png) 100% no-repeat; */
-    width: 0vw;
+    /* width: 0vw; */
     position: absolute;
     right: 0px;
     /* top: 0; */
-    padding: 10vw 15vw 0 0;
+    padding: 10vw 20px;
 }
 
 .lmain6 {
-    width: 0vw;
+    /* width: 0vw; */
     height: 32vw;
 }
 

@@ -70,8 +70,14 @@ export async function ajaxGetHotToken (signature) {
       let result = {}
       console.log('[AjaxData] ajaxGetHotToken response:', data)
       if (data.Code === 0) {
+        // Array[{TokenId:,Num:}]
         result = data.Data
         console.log('[AjaxData] ajaxGetHotToken result:', result)
+        if (result && result.length > 0) {
+          result.sort(function (a, b) {
+            return b.TokenId - a.TokenId
+          })
+        }
         resolve(result)
       } else {
         reject(new Error('return empty'))
@@ -108,8 +114,14 @@ export async function ajaxGetMyFollower (type, address) {
       let result = {}
       console.log('[AjaxData] ajaxGetMyFollower response:', data)
       if (data.Code === 0) {
+        // Array [{AddressFrom:3724,AddressTo:小写,CreateTime}]
         result = data.Data
         console.log('[AjaxData] ajaxGetMyFollower result:', result)
+        if (result && result.length > 0) {
+          result.sort(function (a, b) {
+            return b.AddressFrom - a.AddressFrom
+          })
+        }
         resolve(result)
       } else {
         reject(new Error('return empty'))

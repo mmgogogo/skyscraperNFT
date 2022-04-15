@@ -1,7 +1,11 @@
 <template>
 <div class="building flex-container align-end scroll" @wheel="handleWheel($event)" @click="onClick($event)">
   <div class="floor flex-row align-center" v-for="(floorInfo, index) in floorList" :key="index" :style="orderStyle(floorInfo.order)">
-    <div class="owner owner-hidden flex-col justify-center" :style="hidden(floorInfo.id)">
+    <div class="owner base-floor flex-col align-end" v-if="floorInfo.houseType === 0"></div>
+    <div class="owner flex-col align-end" v-else-if="floorInfo.houseType < 0">
+      <img class="ower-img flex-row" referrerpolicy="no-referrer" v-bind:src="leftImg(floorInfo.houseType)" alt="" />
+    </div>
+    <div class="owner owner-hidden flex-col align-end" :style="hidden(floorInfo.id)" v-else>
       <div class="owner-card flex-col align-center">
         <div class="owner-card-section flex-col justify-center">
           <span class="owner-card-name flex-row">{{ hiddenName(floorInfo.name) || hiddenAddress(floorInfo.owner) || defaultName }}</span>
@@ -17,13 +21,29 @@
         </div>
       </div>
     </div>
-    <div class="room flex-col align-center" v-bind:class="[floorInfo.isFirst?'first':'']">
+    <!-- maxFloor >= floorInfo.floorId -->
+    <div class="room base-floor flex-col align-center" v-if="floorInfo.houseType === 0"></div>
+    <div class="room flex-col align-center" v-else-if="floorInfo.houseType !== 0 && maxFloor >= floorInfo.floorId">
       <div class="decoration flex-container align-start" v-on:click="$emit('open-game', [floorInfo.floorId, floorInfo.minted, floorInfo.owner, floorInfo.houseType])">
         <!-- <img class="floor-area flex-row" referrerpolicy="no-referrer" src="../assets/images/walls/floor_area.png" alt="" /> -->
         <img class="floor-img flex-row" referrerpolicy="no-referrer" v-bind:src="requireImg(floorInfo.houseType)" alt="" />
       </div>
     </div>
-    <div class="others flex-col justify-center" :id="floorInfo.floorId" :style="hidden(floorInfo.id)" @click="onClickOutside($event, floorInfo.floorId)">
+    <div class="room flex-col align-center" v-else-if="floorInfo.houseType !== 0 && maxFloor < floorInfo.floorId">
+      <div class="decoration flex-container align-start">
+        <div class="mint-btn-container flex-col jusity-center align-center">
+          <div class="mint-btn-wrapper flex-row justify-center align-center" v-on:click="$emit('mint-floor',[1])">
+            <img class="mint-icon flex-col" referrerpolicy="no-referrer" src="../assets/images/ic_build2x.png" alt="" />
+            <span class="mint-message flex-col">mint</span>
+          </div>
+         </div>
+      </div>
+    </div>
+    <div class="others base-floor flex-col justify-center" v-if="floorInfo.houseType === 0"></div>
+    <div class="others flex-col justify-center" v-else-if="floorInfo.houseType < 0">
+      <img class="others-img flex-row" referrerpolicy="no-referrer" v-bind:src="rightImg(floorInfo.houseType)" alt="" />
+    </div>
+    <div class="others flex-col justify-center" :id="floorInfo.floorId" :style="hidden(floorInfo.id)" @click="onClickOutside($event, floorInfo.floorId)" v-else>
       <div class="board flex-row align-center">
         <div class="board2 flex-row align-center">
           <div class="board-container flex-container align-center">
@@ -76,6 +96,21 @@ import floor00015 from '../assets/images/walls/floor_00015.png'
 import floor00016 from '../assets/images/walls/floor_00016.png'
 import floor00017 from '../assets/images/walls/floor_00017.png'
 import floorx from '../assets/images/walls/floor_x.png'
+import facade0001 from '../assets/images/base/Facade-1.png'
+import facade0002 from '../assets/images/base/Facade-2.png'
+import facade0003 from '../assets/images/base/Facade-3.png'
+import facade0004 from '../assets/images/base/Facade-4.png'
+import facade0005 from '../assets/images/base/Facade-5.png'
+import facade0001l from '../assets/images/base/Facade-1-l.png'
+import facade0002l from '../assets/images/base/Facade-2-l.png'
+import facade0003l from '../assets/images/base/Facade-3-l.png'
+import facade0004l from '../assets/images/base/Facade-4-l.png'
+import facade0005l from '../assets/images/base/Facade-5-l.png'
+import facade0001r from '../assets/images/base/Facade-1-r.png'
+import facade0002r from '../assets/images/base/Facade-2-r.png'
+import facade0003r from '../assets/images/base/Facade-3-r.png'
+import facade0004r from '../assets/images/base/Facade-4-r.png'
+import facade0005r from '../assets/images/base/Facade-5-r.png'
 import { hiddenAddress, hiddenName, popupMessage } from '@/utils/Utils.js'
 import { ajaxAddTokenInfo } from '@/utils/AjaxData.js'
 
@@ -99,7 +134,8 @@ export default {
   props: {
     first: Boolean,
     floors: Array,
-    profileAddr: String
+    profileAddr: String,
+    maxFloor: Number
   },
   methods: {
     onClick () {
@@ -133,7 +169,7 @@ export default {
       }
     },
     editHidden (id, address) {
-      console.log('[Building][editHidden] start ', id, address, this.address)
+      // console.log('[Building][editHidden] start ', id, address, this.address)
       if (!id) {
         return {
           visibility: 'hidden'
@@ -154,10 +190,11 @@ export default {
     },
     requireImg (houseType) {
       if (houseType !== 'x') {
-        if (houseType > 10) {
-          houseType = 10
+        if (houseType > 0) {
+          houseType = this.strPadLeft(houseType)
+        } else {
+          houseType = 'f000' + (Math.abs(houseType)).toString()
         }
-        houseType = this.strPadLeft(houseType)
       }
       const imageCfg = {
         '00000': floor00000,
@@ -178,7 +215,35 @@ export default {
         '00015': floor00015,
         '00016': floor00016,
         '00017': floor00017,
+        f0001: facade0001,
+        f0002: facade0002,
+        f0003: facade0003,
+        f0004: facade0004,
+        f0005: facade0005,
+        // mint: notmintfloor,
         x: floorx
+      }
+      return imageCfg[houseType]
+    },
+    leftImg (houseType, d = 'left') {
+      houseType = 'f000' + (Math.abs(houseType)).toString() + 'l'
+      const imageCfg = {
+        f0001l: facade0001l,
+        f0002l: facade0002l,
+        f0003l: facade0003l,
+        f0004l: facade0004l,
+        f0005l: facade0005l
+      }
+      return imageCfg[houseType]
+    },
+    rightImg (houseType) {
+      houseType = 'f000' + (Math.abs(houseType)).toString() + 'r'
+      const imageCfg = {
+        f0001r: facade0001r,
+        f0002r: facade0002r,
+        f0003r: facade0003r,
+        f0004r: facade0004r,
+        f0005r: facade0005r
       }
       return imageCfg[houseType]
     },

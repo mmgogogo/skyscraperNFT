@@ -21,7 +21,7 @@
   /* border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133)); */
   border-image: initial;
   height: 36px;
-  width: 115px;
+  width: 100%;
   -webkit-rtl-ordering: logical;
   -webkit-writing-mode: horizontal-tb !important;
 }
@@ -49,13 +49,14 @@ input:focus
 }
 
 .nav {
-  /* height: 100%; */
+  position:absolute;
+  height: 100%;
   background-color: rgba(43, 46, 53, 1);
   /* background-color: rgb(0 2 6 / 83%);
   box-shadow: 3px 0px 18px 0px rgba(0, 0, 0, 0.3); */
   width: 18%;
-  /* overflow-y:scroll; */
-  padding-top: 9vh;
+  overflow-y:scroll;
+  padding-top: 75px;
   z-index: 100;
   
 }
@@ -82,6 +83,7 @@ input:focus
   width: 80%;
   background-color: rgba(255, 255, 255, 0.15);
   border-radius: 5px;
+  padding: 20px;
 }
 
 .text {
@@ -89,9 +91,9 @@ input:focus
 }
 
 .tbox {
-  width: 150px;
+  /* width: 150px; */
   height: 35px;
-  margin-top:8px;
+  /* margin-top:8px; */
 }
 
 .tline {
@@ -129,8 +131,8 @@ input:focus
 
 .box1 {
   width: 100%;
-  height: 56px;
-  margin: 8px 0 0 0px;
+  /* height: 56px; */
+  /* margin: 8px 0 0 0px; */
 }
 
 .icon1 {
@@ -162,34 +164,31 @@ input:focus
 }
 
 .section2 {
-  height: 50px;
+  height: 60px;
   border-radius: 5px;
   background-color: rgba(36, 37, 43, 1);
   box-shadow: inset 2px 2px 1px 0px rgb(0 0 0 / 20%);
   width: 70%;
-  padding: 8px 0 0 10px;
+  padding: 5px;
 }
 
 .section3 {
   width: 100%;
-  height: 25px;
 }
 
 .outer3 {
-  width: 25px;
-  height: 25px;
+  width: 22px;
+  height: 22px;
   background: url(../images/fangdajing.png) 0px 0px no-repeat;
-  margin-top: 4px;
-  background-size: 25px 25px;
+  background-size: 22px 22px;
 }
 
 .outer4 {
-  width: 60px;
-  height: 45px;
   overflow-wrap: break-word;
   text-align: center;
   white-space: nowrap;
   font-size: 20px;
+  width: 100%;
 }
 
 .info2 {
@@ -212,13 +211,14 @@ input:focus
 }
 
 .section4 {
-  height: 50px;
-  background: url(../images/go_bg.png) -1px -1px no-repeat;
-  background-size: 50px 50px;
+  height: 60px;
+  width: 71px;
+  background: url(../images/go_bg.png) 0px 0px no-repeat;
+  background-size: 71px 60px;
 }
 
 .txt2 {
-  width: 50px;
+  width: 71px;
   overflow-wrap: break-word;
   color: rgba(255, 255, 255, 1);
   font-size: 25px;
@@ -395,15 +395,8 @@ input:focus
   height: 46px;
 }
 
-.layer4 {
-  width: 22px;
-  height: 22px;
-  background: url(../images/mint.png) -2px -2px no-repeat;
-  margin-left: 6px;
-}
-
 .txt3 {
-  width: 32px;
+  width: 60px;
   height: 19px;
   display: block;
   overflow-wrap: break-word;
@@ -412,7 +405,7 @@ input:focus
   font-family: SFProDisplay-Semibold;
   white-space: nowrap;
   line-height: 19px;
-  text-align: left;
+  text-align: center;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.6);
   margin-top: 5px;
 }
@@ -459,7 +452,7 @@ input:focus
 .label2 {
   width: 27px;
   height: 27px;
-  margin-left: 10px;
+  /* margin-left: 10px; */
 }
 
 .word1 {
@@ -497,13 +490,6 @@ input:focus
 .box2 {
   width: 47px;
   height: 47px;
-}
-
-.mod1 {
-  width: 26px;
-  height: 21px;
-  background: url(../images/avatar.png) -3px -3px no-repeat;
-  margin-left: 10px;
 }
 
 .word5 {
@@ -549,10 +535,10 @@ input:focus
 
 .header {
   z-index: 18;
-  height: 9vh;
+  /* height: 9vh; */
   background-color: rgba(43, 46, 53, 1);
   box-shadow: 0px 3px 18px 0px rgb(0 0 0 / 30%);
-  padding-left: 44px;
+  /* padding-left: 44px; */
   width: 100%;
   left: 0;
   top: 0;
@@ -561,23 +547,26 @@ input:focus
 }
 
 .navigation {
-  width: 100%;
+  width: 50%;
+  display: flex;
+  justify-content: flex-end;
+  align-content: center;
   /* height: 60px;
   overflow-x: auto;
   margin-top: 10px; */
 }
 
 .logo {
-  width: 20%;
-  height: 60px;
-  background: url(../images/logo.png) 0px 0px no-repeat;
-  background-size: auto 60px;
+  width: 50%;
+  height: 75px;
+  background: url(../images/logo.png) 40px 0px no-repeat;
+  background-size: auto 66px;
   margin-top: 0px;
 }
 
 .wallet {
   width: 145px;
-  height: 58px;
+  height: 50px;
   /* background: url(../images/wallet.png) -1px -1px no-repeat; */
   border-radius: 10px;
   background-color: #6B6D71;
@@ -596,15 +585,16 @@ input:focus
   width: 60px;
   height: 60px;
   background: url(../images/profile.png) 0px 0px no-repeat;
-  
+  background-size: 58px 58px;
+  margin: auto 0;
 }
 
 .btn-margin-1 {
-  margin-left: 60%;
+  /* margin-left: 60%; */
 }
 
 .btn-margin-2 {
-  margin-left: 40px;
+  margin: auto 40px;
 }
 
 .img1 {
@@ -720,15 +710,14 @@ input:focus
 
 .btn-hand {
   cursor: pointer;
-  /* border: 1 solid red; */
 }
 
 @keyframes glow {
   from {
-      box-shadow: 0 0 10px -10px #a3da0c;
+    box-shadow: 0 0 10px -10px #a3da0c;
   }
   to {
-      box-shadow: 0 0 40px 10px #e73f0ce0;
+    box-shadow: 0 0 40px 10px #e73f0ce0;
   }
 }
 

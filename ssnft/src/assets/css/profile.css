@@ -1,58 +1,54 @@
-.pcontent {
+.wallet-main {
     z-index: 181;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgb(21 20 20 / 80%);
     right: 0px;
-    width: 360px;
+    width: 100%;
     position: absolute;
     top: 0px;
 }
 
-.pcontent .player5 {
-    z-index: 182;
+.wallet-wrapper {
     height: 100%;
     background-color: rgba(255, 255, 255, 1);
-    width: 360px;
-    position: relative;
+    right: 0px;
+    width: 20%;
+    position: absolute;
+    top: 0px;
 }
 
-.pcontent .player6 {
-    width: 360px;
+.wallet-container {
+    width: 100%;
     height: 100%;
 }
 
-.pcontent .player7 {
-height: 60px;
-background-color: rgba(43, 46, 53, 1);
-box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.3);
-width: 360px;
+.wallet-header {
+    height: 75px;
+    background-color: rgba(43, 46, 53, 1);
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.3);
+    width: 100%;
 }
 
-.pcontent .player8 {
-width: 327px;
-height: 38px;
+.wallet-header-container {
+    width: 90%;
+    height: 75px;
 }
 
-.pcontent .pmod6 {
-    height: 38px;
-    /* border: 0.6551724137931034px solid rgba(255, 255, 255, 1); */
+.wallet-icon {
+    height: 58px;
     box-shadow: inset 1px 1px 1px 0px rgb(0 0 0 / 20%);
     border-radius: 50%;
-    /* background: url(./img/SketchPng69854f0….png) -1px -1px no-repeat; */
-    width: 38px;
-    /* padding: 9px 0 0 10px;*/
+    width: 58px;
 }
 
-.pcontent .psection11 {
-    /* width: 19px;
-    height: 22px; */
-    width: 38px;
-    height: 38px;
+.wallet-icon-img {
+    width: 58px;
+    height: 58px;
     background: url(../images/wallet.png) 0px 0px no-repeat;
-    background-size: 38px 38px;
+    background-size: 58px 58px;
 }
 
-.pcontent .pinfo4 {
+.wallet-title {
 width: 78px;
 height: 21px;
 display: block;
@@ -64,142 +60,114 @@ white-space: nowrap;
 line-height: 21px;
 text-align: center;
 text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
-margin: 9px 0 0 8px;
+margin-left: 20px;
 }
 
-.pcontent .pmod7 {
-height: 16px;
-background-color: rgba(0, 0, 0, 0);
-width: 16px;
-margin: 11px 0 0 187px;
+.wallet-close {
+    height: 20px;
+    background-color: rgba(0, 0, 0, 0);
+    width: 20px;
+    right: 20px;
+    position:absolute;
 }
 
-.pcontent .player9 {
-width: 16px;
-height: 16px;
-background: url(../images/close.png) -2px -2px no-repeat;
-background-size: 16px 16px;
+.wallet-close-img {
+    width: 20px;
+    height: 20px;
+    background: url(../images/close.png) 0px 0px no-repeat;
+    background-size: 20px 20px;
 }
 
-.pcontent .player10 {
-width: 320px;
-height: 12px;
-margin: 8px auto;
+.wallet-collect-icons {
+    /* width: 100%; */
+    height: 12px;
+    /* margin: 8px auto; */
 }
 
-.pcontent .picon2 {
-width: 10px;
-height: 10px;
-margin-top: 1px;
+.wallet-group-icon {
+    width: 12px;
+    height: 12px;
 }
 
-.pcontent .pgroup3 {
-width: 12px;
-height: 12px;
-margin-left: 105px;
+.wallet-gray-icons {
+    width: 320px;
+    height: 16px;
+    margin: 5px auto;
 }
 
-.pcontent .plabel2 {
-width: 12px;
-height: 11px;
-margin-left: 94px;
+.wallet-word {
+    overflow-wrap: break-word;
+    color: rgba(170, 170, 170, 1);
+    font-size: 14px;
+    font-family: SFProDisplay-Regular;
+    white-space: nowrap;
+    line-height: 16px;
+    margin-left: 5px;
 }
 
-.pcontent .player11 {
-width: 320px;
-height: 16px;
-margin: 5px auto;
+.wallet-word-block {
+    width: 56px;
+    height: 16px;
+    display: block;
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    text-align: center;
 }
 
-.pcontent .plabel3 {
-width: 10px;
-height: 10px;
-margin-top: 4px;
+.wallet-line {
+    width: 24%;
+    border-radius: 1px;
+    margin: 0 2%;
+    /* border-bottom: 1px solid rgba(43,46,53,1); */
 }
 
-.pcontent .pword7 {
-width: 56px;
-height: 16px;
-display: block;
-overflow-wrap: break-word;
-color: rgba(51, 51, 51, 1);
-font-size: 14px;
-font-family: SFProDisplay-Medium;
-white-space: nowrap;
-line-height: 16px;
-text-align: center;
-margin-left: 4px;
+.wallet-display {
+    border-bottom: 1px solid rgba(43,46,53,1);
 }
 
-.pcontent .pword8 {
-width: 45px;
-height: 16px;
-display: block;
-overflow-wrap: break-word;
-color: rgba(170, 170, 170, 1);
-font-size: 14px;
-font-family: SFProDisplay-Regular;
-white-space: nowrap;
-line-height: 16px;
-text-align: center;
-margin-left: 5px;
+.wallet-hidden {
+    border-bottom: 0px solid rgba(43,46,53,1);
 }
 
-.pcontent .picon3 {
-width: 12px;
-height: 12px;
-margin: 3px 0 0 45px;
+.wallet-empty {
+    height: 50px;
+    width: 100%;
+}
+.wallet-message {
+    width: 100%;
+    height: 50px;
+    margin: 0 auto;
+    text-align: center;
+    color: rgba(43,46,43,1);
 }
 
-.pcontent .pword9 {
-width: 52px;
-height: 16px;
-display: block;
-overflow-wrap: break-word;
-color: rgba(170, 170, 170, 1);
-font-size: 14px;
-font-family: SFProDisplay-Regular;
-white-space: nowrap;
-line-height: 16px;
-text-align: left;
-margin-left: 5px;
+.wallet-line2 {
+    width: 100%;
+    height: 75px;
+    border-bottom: 1px solid rgba(230, 230, 230, 1);
+    margin: 0 auto;
 }
 
-.pcontent .player12 {
-width: 109px;
-height: 2px;
-border-radius: 1px;
-background-color: rgba(43, 46, 53, 1);
-margin: 11px 0 0 36px;
-}
-
-.pcontent .player13 {
-width: 327px;
-height: 1px;
-background-color: rgba(230, 230, 230, 1);
-margin:0 auto;
-}
-
-.pcontent .player14 {
-    width: 327px;
-    height: 75%;
-    margin: 9px auto;
+.wallet-nfts {
+    width: 100%;
+    /* height: 75%; */
+    margin: 10px auto;
     overflow-y: auto;
 }
 
-.pcontent .player14::-webkit-scrollbar {
+.wallet-nfts-list::-webkit-scrollbar {
     width: 2px;
 }
-.pcontent .player14::-webkit-scrollbar-thumb {
+.wallet-nfts-list::-webkit-scrollbar-thumb {
     background-color: #2B2E35;
     border-radius: 2px;
     border: 1px solid #2B2E35;
 }
-.pcontent .player14::-webkit-scrollbar-track {
+.wallet-nfts-list::-webkit-scrollbar-track {
     background: #FC844C;
 }
 
-.pcontent .pblock4 {
+.wallet-nfts-list {
 width: 139px;
 height: 224px;
 border-radius: 5px;
@@ -207,106 +175,20 @@ background: url(../images/bg_shader.png) -22px -22px no-repeat;
 margin: 5px auto;
 }
 
-.pcontent .pblock5 {
-width: 139px;
-height: 224px;
-border-radius: 5px;
-background: url(../images/bg_shader.png) -22px -22px no-repeat;
+.wallet-nft-img {
+    z-index: 197;
+    left: 0;
+    top: 0;
+    width: 139px;
 }
 
-.pcontent .player15 {
-width: 311px;
-height: 224px;
-margin: 16px 0 0 32px;
-}
-
-.pcontent .pouter2 {
-width: 139px;
-height: 224px;
-border-radius: 5px;
-background: url(../images/bg_shader.png) -22px -22px
-    no-repeat;
-}
-
-.pcontent .pouter3 {
-width: 139px;
-height: 224px;
-border-radius: 5px;
-background: url(../images/bg_shader.png) -22px -22px no-repeat;
-}
-
-.pcontent .pimg1 {
-z-index: 197;
-left: 0;
-top: 0;
-width: 139px;
-/* height: 155px; */
-}
-
-.pcontent .player17 {
-z-index: 186;
-left: 0;
-top: 0;
-width: 139px;
-height: 224px;
-border-radius: 5px;
-overflow: hidden;
-background: url(../images/card_shadow.png) 100% no-repeat;
-}
-
-.pwallet {
-    height: 60px;
-    /* background-color: rgba(43, 46, 53, 1); */
-    box-shadow: 0px 1px 3px 0px rgb(0 0 0 / 30%);
-    width: 360px;
-}
-
-.pwlayer8 {
-    width: 370px;
-    height: 38px;
-}
-
-.pwlogowrapper {
-    height: 38px;
-    width: 38px;
-    padding: 0;
-}
-
-.pwlogo {
-    width: 32px;
-    height: 32px;
-    background: url(../images/wallet.png) 0px 0px no-repeat;
-    background-size: 32px 32px;
-}
-
-.pwaddr {
-    width: 380px;
-    height: 21px;
-    display: block;
-    overflow-wrap: break-word;
-    /* color: rgba(255, 255, 255, 1); */
-    font-size: 14px;
-    /* font-family: SFProDisplay-Medium; */
-    white-space: normal;
-    line-height: 21px;
-    text-align: center;
-    text-shadow: 1px 1px 1px rgb(0 0 0 / 30%);
-    margin: 5px 0 0 -15px;
-}
-
-#msg {
-    width: 295px;
-    height: 20px;
-    color: #070012;
-    text-align: center;
-    font-size: 10px;
-    margin-right: 5px;
-}
-.copy {
-    height: 20px;
-    border-radius: 4px;
-    background-color: #ef4f4f;
-    color: #fff;
-    border: 0;
-    width: 40px;
+.wallet-nft-container {
+    z-index: 186;
+    left: 0;
+    top: 0;
+    width: 139px;
+    height: 224px;
+    border-radius: 5px;
+    overflow: hidden;
+    background: url(../images/card_shadow.png) 100% no-repeat;
 }

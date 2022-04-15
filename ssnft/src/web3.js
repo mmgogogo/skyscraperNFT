@@ -68,6 +68,9 @@ Nonce:
 
 const Dapp = {
   Bridges: {},
+  checksumAddr: (address) => {
+    return ethers.utils.getAddress(address)
+  },
   isMetaMaskInstalled: () => {
     const { ethereum } = window
     return Boolean(ethereum && ethereum.isMetaMask)

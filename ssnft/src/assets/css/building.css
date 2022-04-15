@@ -3,11 +3,11 @@
     /* background-color: rgb(255, 255, 255); */
     background-color: rgb(114, 195, 240);
     /* box-shadow: 3px 0px 18px 0px rgba(0, 0, 0, 0.3); */
-    width: 82%;
+    width: 100%;
 }
 
 .building {
-    width: 60vw;
+    width: 100vw;
     height: 100%;
     padding: 0px;
     /* margin-left: 5%; */
@@ -22,9 +22,7 @@
 }
 
 .floor {
-    width: 60vw;
-    /* height: 5vw; */
-    /* margin-top: 20px; */
+    width: 100vw;
 }
 
 .floor:hover .owner-hidden {
@@ -32,12 +30,7 @@
 }
 
 .owner {
-    /* height: 5vw; */
-    /* border-radius: 5px; */
-    /* background-color: rgb(196 199 223); */
-    /* box-shadow: inset 2px 2px 1px 0px rgb(0 0 0 / 20%); */
-    /* width: 12vw; */
-    /* padding: 19px 0 0 8px; */
+    width: 32vw;
 }
 
 .owner-hidden {
@@ -45,7 +38,7 @@
 }
 
 .room {
-    /* height: 5vw; */
+    max-height: 75px;
     /* background-color: aliceblue; */
     /* background-color: rgb(26, 29, 30); */
     padding: 0px;
@@ -55,6 +48,60 @@
 .decoration {
     width:auto;
     height: 100%;
+}
+
+.mint-btn-container {
+    /* background: url(../images/walls/notmint.png) 0px 0px no-repeat; */
+    /* background-size: 100% auto; */
+    height: 75px;
+    width: 574px;
+    background: url(../images/walls/notmint.png) 0px 0px no-repeat;
+    background-size: 574px 75px;
+}
+
+.mint-btn-wrapper {
+    height: 30px;
+    width: auto;
+    background-color: #fe864b;
+    margin: auto 0;
+    border-radius: 5px;
+    padding: 0 5px;
+    cursor: pointer;
+}
+
+.mint-icon {
+    width: 9px;
+    height: 12px;
+}
+
+.mint-message {
+    width: 31px;
+    height: 16px;
+    font-size: 14px;
+    font-family: SFProDisplay-Medium, SFProDisplay;
+    font-weight: 500;
+    color: #FFFFFF;
+    line-height: 16px;
+    text-align: center;
+}
+
+.base-floor {
+    height: 27px;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    background-color: #292727;
+}
+
+.ower-img {
+    height: 75px;
+    margin: 0px;
+    padding: 0px;
+}
+.others-img {
+    height: 75px;
+    margin: 0px;
+    padding: 0px;
 }
 
 .floor-img {

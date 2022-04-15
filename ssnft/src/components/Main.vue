@@ -1,8 +1,8 @@
 <template>
   <main class="main">
-    <div class="header flex-col justify-center">
-      <div class="navigation flex-row">
-        <div class="logo flex-col"></div>
+    <div class="header flex-row justify-center">
+      <div class="logo flex-col"></div>
+      <div class="navigation">
         <div class="profile flex-col btn-hand btn-margin-1" @click="displayProfileInfo('account')"></div>
         <div v-bind:class="[playerInfo.status >= 1 ? '' : 'animation', 'wallet flex-col btn-hand btn-margin-2 justify-center']" @click="selectAWallet()">
           <span class="wallet-txt flex-row">{{playerInfo.status >= 1 ? getWallet() : 'Connect Wallet'}}</span>
@@ -16,20 +16,20 @@
       <div class="nav flex-col align-center">
         <div class="outer1 flex-col">
           <div class="bd1 flex-row justify-center">
-            <div class="outer2 flex-col align-center">
-              <span class="text tbox tline tcolor tprop tfont_m tfont_s26 tshadow tcenter" >{{ baseConfig.lang_001 }}</span>
-              <div class="box1 flex-row justify-center">
+            <div class="outer2 flex-col align-left">
+              <span class="text tbox tline tcolor tprop tfont_m tfont_s26 tshadow tleft" >{{ baseConfig.lang_001 }}</span>
+              <div class="box1 flex-row justify-bewteen">
                 <img class="icon1 flex-col" referrerpolicy="no-referrer" src="../assets/images/building_logo.png" alt="" />
                 <span class="box3 tfont_s30 tfont_m tcenter tcolor tprop flex-col">{{ globalInfo.total }}</span>
               </div>
             </div>
           </div>
           <div class="bd2 flex-row justify-center">
-            <div class="search-container flex-row justify-between">
-              <div class="section2 flex-col">
-                <div class="section3 flex-row">
+            <div class="search-container flex-row align-center justify-between">
+              <div class="section2 flex-col align-center justify-center">
+                <div class="section3 flex-row align-center">
                   <div class="outer3 flex-col"></div>
-                  <div class="outer4">
+                  <div class="outer4 flex-col justify-center">
                     <span class="info2">
                       <input type="text" class="number" placeholder="Floor ID" v-model.number="gotoNum"  @keyup.enter="goto()"/>
                     </span>
@@ -47,59 +47,68 @@
               <span
                 class="text tbox1 tline tprop tfont_m tfont_s24 tshadow btn-hand"
                 v-bind:class="['tcolor', 'flex-col']"
-                @click="myFloor()">
+                @click="myFloor(this)">
                 {{ baseConfig.lang_004 }}</span>
             </div>
           </div>
-          <div v-bind:class="[!showInfo.myFollowing ? '' : 'bgcolor_gray', 'nav-item flex-row justify-center nav-others']">
+          <div id="myFollowing" v-bind:class="[!showInfo.myFollowing ? '' : 'bgcolor_gray', 'nav-item flex-row justify-center nav-others']">
             <div class="nav-container flex-row align-center">
               <div v-bind:class="['bd5', 'flex-col', 'nav-margin']"></div>
               <span
                 class="text tbox1 tline tprop tfont_m tfont_s24 tshadow btn-hand"
                 v-bind:class="['tcolor', 'flex-col']"
-                @click="myFollowing()"
+                @click="myFollowing('myFollowing')"
                 >{{ baseConfig.lang_005 }}</span>
               </div>
           </div>
-          <div v-bind:class="[!showInfo.myFollowed ? '' : 'bgcolor_gray', 'nav-item flex-row justify-center nav-others']">
+          <div id="myFollowed" v-bind:class="[!showInfo.myFollowed ? '' : 'bgcolor_gray', 'nav-item flex-row justify-center nav-others']">
             <div class="nav-container flex-row align-center">
               <div v-bind:class="['group0', 'flex-col', 'nav-margin']"></div>
               <span
                 class="text tbox1 tline tprop tfont_m tfont_s24 tshadow tcolor btn-hand"
                 v-bind:class="['tcolor', 'flex-col']"
-                @click="myFollowed()"
+                @click="myFollowed('myFollowed')"
                 >{{ baseConfig.lang_006 }}</span>
               </div>
           </div>
-          <div v-bind:class="[!showInfo.hot ? '' : 'bgcolor_gray', 'nav-item flex-row justify-center nav-others']">
+          <div id="hot" v-bind:class="[!showInfo.hot ? '' : 'bgcolor_gray', 'nav-item flex-row justify-center nav-others']">
             <div class="nav-container flex-row align-center">
               <div v-bind:class="['group1', 'flex-col', 'nav-margin']"></div>
               <span
                 class="text tbox1 tline tprop tfont_m tfont_s24 tshadow tcolor tleft btn-hand"
                 v-bind:class="['tcolor', 'flex-col']"
-                @click="hot()"
+                @click="hot('hot')"
                 >{{ baseConfig.lang_007 }}</span>
               </div>
           </div>
           <div class="button-list flex-row justify-center button-list-first">
-            <div class="btn-container justify-between">
+            <div class="btn-container flex-container justify-between">
               <div class="layer2 flex-col align-center btn-hand" @click="displayMint()">
-                <div class="layer3 flex-col justify-between">
-                  <div class="layer4 flex-col"></div>
-                  <span class="txt3">
+                <div class="layer3 flex-col align-center justify-center">
+                  <img class="label2 flex-row" referrerpolicy="no-referrer" src="../assets/images/mint.png" alt="" />
+                  <span class="txt3 flex-row">
                     {{ baseConfig.lang_008 }}
                   </span>
                 </div>
               </div>
-              <div class="layer5 flex-col align-center">
-                <div class="group2 flex-col justify-between btn-hand" @click="room()">
-                  <img class="label2" referrerpolicy="no-referrer" src="../assets/images/room.png" alt="" />
-                  <span class="word5">{{ baseConfig.lang_009 }}</span>
+              <div class="layer2 flex-col align-center btn-hand">
+                <div class="layer3 flex-col align-center justify-center" @click="room()">
+                  <img class="label2 flex-row" referrerpolicy="no-referrer" src="../assets/images/room.png" alt="" />
+                  <span class="txt3 flex-row">{{ baseConfig.lang_009 }}</span>
                 </div>
+              </div>
+               <div class="layer2 flex-col align-center btn-hand" @click="avatar()">
+                <div class="layer3 flex-col align-center justify-center">
+                  <img class="label2 flex-row" referrerpolicy="no-referrer" src="../assets/images/avatar.png" alt="" />
+                  <span class="txt3 flex-row">{{ baseConfig.lang_010 }}</span>
+                </div>
+              </div>
+              <div class="layer2 flex-col align-center btn-hand">
+                <span class="paragraph1">{{ baseConfig.lang_011 }}</span>
               </div>
             </div>
           </div>
-          <div class="button-list flex-row justify-center button-list-others">
+          <!-- <div class="button-list flex-row justify-center button-list-others">
             <div class="btn-container justify-between">
               <div class="group3 flex-col btn-hand" @click="avatar()">
                 <div class="box2 flex-col justify-between">
@@ -110,15 +119,15 @@
               <div class="group4 flex-col btn-hand">
                 <span class="paragraph1">{{ baseConfig.lang_011 }}</span>
               </div>
-          </div>
-          </div>
+            </div>
+          </div> -->
         </div>
       </div>
       <!-- nav end -->
 
       <!-- content start -->
       <div class="content flex-col" @click="onClick($event)">
-        <Building :floors="building.floors" :first="building.first" :profileAddr="playerInfo.address" v-on:open-game="openGame"  v-on:floor-scroll="floorScroll"/>
+        <Building :floors="building.floors" :first="building.first" :profileAddr="playerInfo.address" :maxFloor="globalInfo.total" v-on:open-game="openGame" v-on:mint-floor="displayMint" v-on:floor-scroll="floorScroll"/>
         <!-- ladder start -->
         <div class="ladder flex-col">
           <div class="lmain6 flex-row justify-between">
@@ -167,7 +176,7 @@
         <!-- chat end -->
 
         <!-- myFollowing start -->
-        <div class="hot flex-col" v-if="showInfo.myFollowing" @click="onClickOutside($event)">
+        <div class="hot flex-col" v-show="showInfo.myFollowing" @click="onClickOutside($event)">
           <div class="hot-group flex-col justify-between">
             <div class="hot-title-container flex-col justify-center">
               <span class="hot-title">Following</span>
@@ -188,7 +197,7 @@
         <!-- myFollowing end -->
 
         <!-- myFollowed start -->
-        <div class="hot flex-col" v-if="showInfo.myFollowed" @click="onClickOutside($event)">
+        <div class="hot flex-col" v-show="showInfo.myFollowed" @click="onClickOutside($event)">
           <div class="hot-group flex-col justify-between">
             <div class="hot-title-container flex-col justify-center">
               <span class="hot-title">Followed</span>
@@ -209,7 +218,7 @@
         <!-- myFollowed end -->
 
         <!-- hot start -->
-        <div class="hot flex-col" v-if="showInfo.hot" @click="onClickOutside($event)">
+        <div class="hot flex-col" v-show="showInfo.hot" @click="onClickOutside($event)">
           <div class="hot-group flex-col justify-between">
             <div class="hot-title-container flex-col justify-center">
               <span class="hot-title btn-hand">Hot</span>
@@ -232,8 +241,10 @@
       <!-- content end -->
 
       <!-- mint start -->
-      <div class="shadow" v-if="showInfo.mint" @click="onClick($event)">
-        <div id="mint" class="mint flex-col" @click="onClickOutside($event)">
+      <!-- <div class="shadow" v-if="showInfo.mint" @click="onClick($event)">
+        <div id="mint" class="mint flex-col" @click="onClickOutside($event)"> -->
+      <div class="shadow" v-if="showInfo.mint">
+        <div id="mint" class="mint flex-col">
           <div class="mint-container flex-row justify-between">
             <div class="mint-left flex-col"></div>
             <div class="mint-right flex-col">
@@ -271,7 +282,7 @@
             </div>
             <img class="mint-floor-icon" referrerpolicy="no-referrer" src="../assets/images/floor_icon.png" alt=""/>
           </div>
-          <div class="mint-close cursor-pointer" @click="closePopup()">
+          <div class="mint-close cursor-pointer" @click="closeMint()">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" width="24" height="24" class="text-high-emphesis">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
@@ -282,76 +293,66 @@
     </div>
 
     <!-- profile start -->
-    <div class="pcontent flex-col" v-if="showInfo.profile">
-      <div class="player5 flex-col">
-        <div class="player6 flex-col">
-          <div class="player7 flex-col justify-center align-center">
-            <div class="player8 flex-row">
-              <div class="pmod6 flex-col"><div class="psection11 flex-col"></div></div>
-              <span class="pinfo4">My Wallet</span>
-              <div class="pmod7 flex-col">
-                <div class="player9 flex-col" @click="close()"></div>
+    <div class="wallet-main flex-col" v-if="showInfo.profile">
+      <div class="wallet-wrapper flex-col">
+        <div class="wallet-container flex-col">
+          <div class="wallet-header flex-col justify-center align-center">
+            <div class="wallet-header-container flex-row align-center">
+              <div class="wallet-icon flex-col">
+                <div class="wallet-icon-img flex-col"></div>
+              </div>
+              <span class="wallet-title">My Wallet NFTs</span>
+              <div class="wallet-close flex-col">
+                <div class="wallet-close-img flex-col" @click="close()"></div>
               </div>
             </div>
           </div>
-          <!-- <div class="pwallet flex-col justify-center align-center">
-            <div class="pwlayer8 flex-row">
-              <div class="pwlogowrapper flex-col">
-                <div class="pwlogo flex-col"></div>
+          <div class="wallet-line2 flex-row justify-center align-center">
+            <div class="wallet-line wallet-display flex-col">
+              <div class="wallet-collect-icons flex-row align-center">
+                <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/collected.png" alt="" />
               </div>
-              <span class="pwaddr">
-                <input type="text" name="address" id="msg" v-model="playerInfo.address" readonly>
-                <input type="button" class="copy" @click="copy" data-clipboard-target="#msg" :value="baseConfig.lang_028" />
-              </span>
+               <div class="wallet-gray-icons flex-row">
+                <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/collected_gray.png" alt="" />
+                <span class="wallet-word-block wallet-word">collected</span>
+              </div>
             </div>
-          </div> -->
-          <div class="player10 flex-row">
-            <img class="picon2" referrerpolicy="no-referrer" src="../assets/images/collected.png" alt="" />
-            <!-- <div class="pgroup3 flex-col"></div> -->
-            <img class="pgroup3" referrerpolicy="no-referrer" src="../assets/images/created.png" alt="" />
-            <img class="plabel2" referrerpolicy="no-referrer" src="../assets/images/favorited.png" alt="" />
+            <div class="wallet-line wallet-hidden flex-col">
+              <div class="wallet-collect-icons flex-row align-center">
+                <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/created.png" alt="" />
+              </div>
+              <div class="wallet-gray-icons flex-row">
+                <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/created_gray.png" alt="" />
+                <span class="wallet-word-block wallet-word">created</span>
+              </div>
+            </div>
+            <div class="wallet-line wallet-hidden flex-col">
+              <div class="wallet-collect-icons flex-row align-center">
+                <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/favorited.png" alt="" />
+              </div>
+              <div class="wallet-gray-icons flex-row">
+                <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/favorited_gray.png" alt="" />
+                <span class="wallet-word-block wallet-word">favorited</span>
+              </div>
+            </div>
           </div>
-          <div class="player11 flex-row">
-            <img class="plabel3" referrerpolicy="no-referrer" src="../assets/images/collected_gray.png" alt="" />
-            <span class="pword7">collected</span>
-            <img class="picon3" referrerpolicy="no-referrer" src="../assets/images/created_gray.png" alt="" />
-            <span class="pword8">created</span>
-            <img class="picon3" referrerpolicy="no-referrer" src="../assets/images/favorited_gray.png" alt="" />
-            <span class="pword9">favorited</span>
-          </div>
-          <div class="player12 flex-col"></div>
-          <div class="player13 flex-col"></div>
-          <div class="player14 flex-container">
-            <div class="pblock4" v-for="item in playerInfo.allNfts" :key="item.id">
-              <div class="player17 flex-col" v-if="item.image">
+          <div class="wallet-nfts flex-container" v-if="playerInfo.allNfts && playerInfo.allNfts.length > 0">
+            <div class="wallet-nfts-list" v-for="item in playerInfo.allNfts" :key="item.id">
+              <div class="wallet-nft-container flex-col" v-if="item.image">
                 <!-- {{item.tokenId}} -->
                 <!-- {{item.name}} -->
                 <!-- <p v-if="item.image"> -->
-                <img class="pimg1" referrerpolicy="no-referrer" :src="item.image" alt="" />
+                <img class="wallet-nft-img" referrerpolicy="no-referrer" :src="item.image" alt="" />
                 <!-- </p> -->
               </div>
             </div>
-            <div class="pblock4">
-              <div class="player17 flex-col">
-                <img class="pimg1" referrerpolicy="no-referrer" src="../assets/images/nft_example001.png" alt="" />
+          </div>
+          <div class="wallet-nfts flex-container justify-center align-center" v-else>
+            <div class="wallet-empty flex-row">
+              <div class="wallet-message flex-col">
+                You don't have a NFT!
               </div>
             </div>
-            <div class="pblock4">
-              <div class="player17 flex-col">
-                <img class="pimg1" referrerpolicy="no-referrer" src="../assets/images/nft_example002.png" alt="" />
-              </div>
-            </div>
-            <div class="pblock4">
-              <div class="player17 flex-col">
-                <img class="pimg1" referrerpolicy="no-referrer" src="../assets/images/nft_example003.png" alt="" />
-              </div>
-            </div>
-            <div class="pblock4">
-              <div class="player17 flex-col">
-                <img class="pimg1" referrerpolicy="no-referrer" src="../assets/images/nft_example004.png" alt="" />
-              </div>
-            </div>
-
           </div>
         </div>
       </div>
@@ -495,6 +496,11 @@ export default {
     msg: String
   },
   methods: {
+    computeHeight () {
+      const _that = this
+      console.log('[Main][computeHeight] start ', _that.gameConfig.windowHeight)
+      return (_that.gameConfig.windowHeight - 150 - 10) + 'px'
+    },
     mintIncrement () {
       const _that = this
       if (_that.mintConfig.mintNum >= 2) {
@@ -519,7 +525,6 @@ export default {
     closePopup () {
       const _that = this
       _that.showInfo.hot = false
-      _that.showInfo.mint = false
       _that.showInfo.myFloor = false
       _that.showInfo.myFollowing = false
       _that.showInfo.myFollowed = false
@@ -613,15 +618,20 @@ export default {
           await _that.login()
         }
         _that.showInfo.profile = true
-
-        let address = window.ethereum.selectedAddress
+        let address = ethers.utils.getAddress(window.ethereum.selectedAddress)
+        console.log('[Main][displayProfileInfo] address ', address)
         if (address.toLowerCase() === '0x2e2c56d036DCD06839b5524bB4d712909E4410fd' ||
             address.toLowerCase() === '0x3722581ab9c563ff56554362856ab1dd35d0d782' ||
             address.toLowerCase() === '0x3e00b9f8583849887f4dfbd688fc27488325dcd3') {
           address = '0x141721F4D7Fd95541396E74266FF272502Ec8899'
         }
-        this.playerInfo.allNfts = await ajaxGetAllNfts(address)
-        console.log('[Main][displayProfileInfo]', address, this.playerInfo.allNfts)
+        ajaxGetAllNfts(address).then(function (response) {
+          console.log('[Main][displayProfileInfo] address allnfts ', address, response)
+          _that.playerInfo.allNfts = response
+          setTimeout(() => {
+            $('.wallet-nfts').css('height', _that.computeHeight())
+          }, 100)
+        })
       } else {
         // get account info
         _that.showInfo.account = true
@@ -670,10 +680,14 @@ export default {
         _that.curMessage = ''
       }
     },
-    async displayMint () {
-      console.log('[Main][mint] start')
+    closeMint () {
       const _that = this
-      console.log('[Main][displayMint] playerInfo ', _that.playerInfo)
+      _that.showInfo.mint = false
+    },
+    async displayMint (params) {
+      console.log('[Main][mint] start', params)
+      const _that = this
+      console.log('[Main][displayMint] playerInfo ', _that.playerInfo, _that.showInfo.mint)
       if (!_that.playerInfo.status) {
         await _that.login()
       }
@@ -682,6 +696,8 @@ export default {
       } else {
         _that.showInfo.mint = true
       }
+      console.log('[Main][displayMint] mint ', _that.showInfo.mint)
+
       $('.shadow').slideUp()
       $('.shadow').fadeIn().slideToggle()
     },
@@ -719,10 +735,10 @@ export default {
       _that.showInfo.profile = false
       _that.showInfo.game = false
     },
-    async myFloor () {
+    async myFloor (obj) {
       // this.login() // test
       const _that = this
-      console.log('[Main] myFloor click')
+      console.log('[Main] myFloor click', obj)
 
       this.resetPopWindow() // reset
       this.resetMintFloor() // reset
@@ -770,15 +786,17 @@ export default {
         }
       })
     },
-    async myFollowing () {
+    async myFollowing (obj) {
       const _that = this
       _that.resetPopWindow() // reset
-      console.log('[Main][myFollowing]click myFollowing')
+      console.log('[Main][myFollowing]click myFollowing top ', $('#' + obj).position().top)
 
       if (_that.playerInfo.status < 1) {
         _that.popupMessage('Login wallet to loading following information')
         return
       }
+
+      $('.hot').css('margin-top', $('#' + obj).position().top)
 
       if (_that.showInfo.myFollowing) {
         _that.showInfo.myFollowing = false
@@ -796,16 +814,18 @@ export default {
         this.setting.loading = ''
       }
     },
-    async myFollowed () {
+    async myFollowed (obj) {
       const _that = this
 
       _that.resetPopWindow() // reset
-      console.log('[Main][myFollowed] click myFollowed')
+      console.log('[Main][myFollowed] click myFollowed', obj)
 
       if (!_that.playerInfo.status) {
         _that.popupMessage('Login wallet to loading followed information')
         return
       }
+
+      $('.hot').css('margin-top', $('#' + obj).position().top)
 
       if (_that.showInfo.myFollowed) {
         _that.showInfo.myFollowed = false
@@ -824,7 +844,7 @@ export default {
         this.setting.loading = ''
       }
     },
-    async hot () {
+    async hot (obj) {
       const _that = this
 
       _that.resetPopWindow()
@@ -835,10 +855,12 @@ export default {
         _that.showInfo.hot = true
       }
 
+      $('.hot').css('margin-top', $('#' + obj).position().top)
+
       _that.setting.loading = 'Loading...'
 
       _that.floorInfo.hotList = await ajaxGetHotToken(_that.signature)
-      console.log('[Main][hot] hotList is ', _that.floorInfo.hotList)
+      console.log('[Main][hot] hotList is ', _that.floorInfo.hotList, obj)
 
       if (_that.floorInfo.hotList === null || _that.floorInfo.hotList.length === 0) {
         _that.setting.loading = 'Empty...'
@@ -910,11 +932,13 @@ export default {
       const _that = this
       let start = 0
       // globalInfo.total
-      if (floorId > 0 && floorId <= _that.globalInfo.total) {
+      if (floorId <= 0 || floorId > _that.globalInfo.total) {
+        return false
+      } else {
         if (floorId <= Math.floor(_that.building.page / 2)) {
-          // start = 0
-        } else if (floorId >= (_that.globalInfo.total - 5)) {
-          start = _that.globalInfo.total - _that.building.page
+          start = 1
+        } else if (floorId >= (_that.globalInfo.total + 4 - Math.floor(_that.building.page / 2))) {
+          start = _that.globalInfo.total + 4 - _that.building.page
         } else {
           start = floorId - Math.floor(_that.building.page / 2)
         }
@@ -1015,12 +1039,13 @@ export default {
       }
       const floorIds = _that.range(newStart, start + _that.building.page - 1)
       _that.building.floors = _that.defaultBuildings(floorIds)
-      if (first && (5 - start) >= 0) {
-        for (let j = 5 - start; j >= 0; j--) {
+      if (first && (6 - start) >= 0) {
+        let begin = 5
+        for (let j = 6 - start; j >= 0; j--) {
           const hallInfo = {
             id: 0,
             floorId: '0',
-            houseType: '0',
+            houseType: -begin,
             minted: 0,
             owner: '',
             name: '',
@@ -1029,6 +1054,7 @@ export default {
             order: 99999 - j,
             image: '../assets/images/walls/floor_00000.png'
           }
+          begin--
           _that.building.floors.unshift(hallInfo)
         }
       }
@@ -1036,12 +1062,13 @@ export default {
       _that.getFloorListInfo(floorIds).then(function (response) {
         console.log('[Main][updateBuilding] getFloorListInfo response ', response)
         const floorListInfo = response
-        if (first && (5 - start) >= 0) {
-          for (let j = (5 - start); j >= 0; j--) {
+        if (first && (6 - start) >= 0) {
+          let begin = 5
+          for (let j = (6 - start); j >= 0; j--) {
             const hallInfo = {
               id: 0,
               floorId: '0',
-              houseType: '0',
+              houseType: -begin,
               minted: 0,
               owner: '',
               name: '',
@@ -1050,6 +1077,7 @@ export default {
               order: 99999 - j,
               image: '../assets/images/walls/floor_00000.png'
             }
+            begin--
             floorListInfo.unshift(hallInfo)
           }
         }
@@ -1074,12 +1102,12 @@ export default {
       console.log('[Main][floorScroll] wheel step ', step)
       let start = _that.getStart()
       const startVal = start
-      console.log('[Main][floorScroll] wheel start start ', start, _that.globalInfo.total)
+      console.log('[Main][floorScroll] wheel start ', [start, _that.globalInfo.total, _that.building.page])
       const speed = _that.building.wstep
       // < 0 scroll upper, > 0 scroll down
       if (deltaY < 0) {
-        if (start + Math.abs(step) * speed >= (_that.globalInfo.total - 9)) {
-          start = _that.globalInfo.total - 9
+        if ((start + Math.abs(step) * speed) >= (_that.globalInfo.total + 4 - _that.building.page)) {
+          start = _that.globalInfo.total + 4 - _that.building.page
         } else {
           start += Math.abs(step) * speed
         }
@@ -1632,10 +1660,12 @@ export default {
         const innerHeight = window.innerHeight
         if (innerHeight) {
           const tempFloors = Math.ceil(innerHeight / 75)
-          if (tempFloors > _that.building.page) {
-            _that.building.page = tempFloors
-          }
+          console.log('[Main][created] tempFloors ', tempFloors)
+          // if (tempFloors > _that.building.page) {
+          _that.building.page = tempFloors
+          // }
         }
+        console.log('[Main][created] display Dapp 3 ', _that.building.page)
 
         // If wallet plugin not install, popup select wallet
         _that.checkMetamaskExists()

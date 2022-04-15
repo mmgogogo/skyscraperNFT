@@ -1,0 +1,277 @@
+
+.profile-account {
+    z-index: 181;
+    height: 100%;
+    background-color: rgb(21 20 20 / 80%);
+    right: 0px;
+    width: 100%;
+    position: absolute;
+    top: 0px;
+  }
+  .account-container {
+    height: 100%;
+    background-color: rgba(255, 255, 255, 1);
+    width: 20%;
+    position: absolute;
+    height: 100%;
+    right: 0px;
+    top: 0px;
+  }
+  .account-content {
+    width: 100%;
+    height: 449px;
+  }
+  .account-header {
+    height: 75px;
+    background-color: rgba(43, 46, 53, 1);
+    box-shadow: 0px 1px 3px 0px rgb(0 0 0 / 30%);
+    width: 100%;
+    margin: 0 auto;
+  }
+  .account-header-content {
+    width: 90%;
+    height: 75px;
+    margin: 0 auto;
+  }
+  .account-icon-bg {
+    height: 58px;
+    width: 58px;
+    /* border: 0.6551724137931034px solid rgba(255, 255, 255, 1); */
+    box-shadow: inset 1px 1px 1px 0px rgb(0 0 0 / 20%);
+    /* border-radius: 50%; */
+    background: url(../images/profile.png) 0px 0px no-repeat;
+    background-size: 58px 58px;
+  }
+  
+  .account-icon {
+    width: 23px;
+    height: 26px;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAaCAYAAABctMd+AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAF6ADAAQAAAABAAAAGgAAAABedxUYAAACyklEQVRIDaWVO2/TUBSA40dDiik0QSUg0qioUspCioQU1CxVJ8QIPwDUTl3YO2aHhakrcyTEyENCQihjFoYoAqFUTauydCgJzYM4Md9x7ZQmtuu2R/pk+97z8r3n3KtEQohlWYqrpiiK5b6f9hwajSo6DlXGozAJOvyFNvTAOi2QGIyJ41hjIg4zYMAizMM2fHSeof8C/SPBuQoJuAfPYRuGMhgMmp1OZ71QKMif+f696+/EEy8TkIFH0ABP2dvbe4qhBAgneFEgBll4C77S7XZ/4jUGntn7RXWVs0EpRaPR+Y2NjRQ6nn7GBp0KMDGQypBKCRRVVa+g4CYTqGtPsg6yoTOmab73XRMmer3eLwxmwbPqxjJ3QkuJHWD8iqfUtKdUKpXXTHThbCVJYkq5XJ6gItb7/f5oxZj1en0Tp3NwGTyXxXMQZVskwMrKira2tnY3l8s9icfjC41GY7dUKn1dXV2toHQAf2AAp2cvDkHWfAjNomezWSOVSiWSyeSNdDodX1pamiwWi5ro49hThhOOkrT8BEiVyPtwnvdIs9lUDg8PFcMwrKmpKcm0D7Lmsi/90bPGNnYcX0JBzpFrII2xAEla/UQAxv4XCdBD55uu62Xe26MBIjiPwh24Dy+hDWcSAnxvtVp5jI6TkQ+4DouwCecWArRrtZp09VEAPMnGzcJj6MGFhOy/4Fz2THGbSDZPzmvPTmM8tMRisVwmk7mKge1cNkV2PBHaQ4AiGzqZz+flklFkM2XNDc6RZxdaD8eYY7iO49ugq07pdDRN+0CAakBSoaa2trbeoGjfsbaBk722s7PzkMNq97x/sL+//441n8Op3LnqcU3y5dyJNzk3XkxPTz/gMrgV1ESc5RbzJl37o1qtfl5eXv6Em9/QgLHuk2CClJJEl6dU1Ikk+B4VObjkcmmBFId9kPkZuUH85rEfE6k6F3vyH7rZ5EDWseUNAAAAAElFTkSuQmCC) 0px 0px no-repeat;
+    background-size: 23px 26px;
+    margin: 0 auto;
+  }
+  
+  .account-wallet {
+    height: 40px;
+    border-radius: 5px;
+    border: 0.6551724137931034px solid rgba(255, 255, 255, 1);
+    background-color: rgba(252, 132, 76, 1);
+    box-shadow: inset 1px 1px 1px 0px rgb(0 0 0 / 20%);
+    margin-left: 14px;
+    width: 120px;
+  }
+  
+  .account-message-input {
+    height: 40px;
+    /* border: 1px solid #ccc; */
+    /* color: rgb(239 235 235); */
+    overflow: visible;
+    font: inherit;
+    margin: 10px;
+    font-size: 20px;
+    background-color: #ffffff00;
+    font-family: initial;
+    text-align: left;
+    word-spacing: normal;
+    color:black;
+    /* padding-left:10px; */
+  }
+  
+  .account-wallet-word {
+    width: 110px;
+    height: 20px;
+    display: block;
+    overflow-wrap: break-word;
+    color: rgba(255, 255, 255, 1);
+    font-size: 16px;
+    font-family: SFProDisplay-Medium;
+    white-space: nowrap;
+    line-height: 19px;
+    text-align: center;
+    text-shadow: 1px 1px 1px rgb(0 0 0 / 20%);
+    margin: 0 auto;
+  }
+  
+  .account-close {
+    position: absolute;
+    height: 16px;
+    background-color: rgba(0, 0, 0, 0);
+    width: 16px;
+    right: 20px;
+  }
+  .account-close-img {
+    width: 16px;
+    height: 16px;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAFKADAAQAAAABAAAAFAAAAACy3fD9AAACcklEQVQ4EYWUX4sSURjGZ1xdDQoGEYSwC/EbeOmVfgcv7MIPEIsXZkpblgYSKHVVsXW7QrgF+gUEvfIjiBdd7IYbCP6FKI3R6XmmOcOZYXZ74eX8e85v3vec94yqwAzDUNkKU1XVEH2v9ja9z1okMAA/hqvuDTLUSy+v+60B2+Ner3eq67rR7/dfYaPujtQFC3S73RfQ/06n043hcLgHwxBAxYI94weSyaSWSqXKAGwF1A2D/uV+vy9jXclms/cAfI6tWx8BMHxIt88tHA6f5PP5t4CGCPKCQV/+t1VR1uu1hv4DuN9nRWCmiYV3QhSJRB4JKObEGQcYmQwbj8fn1Wr1AhozIPt2GUUmkwnmcrk3jFCAF4vF2Ww2e1qr1Q5esHq9/hnaK/glfGsDMTDLxwu6Wq0+aZr2C9kUqaMxMhdsh2ln/VF4U6RcE3YTjOviUoTWbAeDwZ/NZnOKM/3oWMBgMpmcNxoNOU0zMqFzAOXbrFQqBtMUQtEGYMFg8EcsFuO5OWDU2EAZhnnzNtE+pki2RCLxsNlsnkSjUZaTvGT2zUvxgsmlwTQZGWGCMJ/Pz9rtdmk0GtnFzzX//2C8AJ5ZKBS6brVaa9YnN1p1qqD4S2DYUJEyn6Bn0bI0EO0VAN8Y0XK5/EAgTRR/PB4PYmhmK54VYQ05Ta/S4Jl51SkK/32hUOBT3IkI9cPh8JNfpXnBMG3wmaKkdp1O54kcKfqMkG/5yC/eMn5Br/Hs7uKww0jzCxa/wy/hjtKw9LvpdFoqFot76O/gWX6FzvmWMcEz4A/2PvwIPoU7YBjLJuuZ6TV8KwtEnxdk/yfF5C2tQ/8XtGOCYGlEoHAAAAAASUVORK5CYII=) 0px 0px no-repeat;
+    background-size: 16px 16px;
+  }
+  
+  .account-title {
+    width: 100%;
+    height: 50px;
+  }
+  
+  .account-title-word {
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    font-size: 22px;
+    font-family: SFProDisplay-Medium;
+    white-space: nowrap;
+    line-height: 26px;
+    text-align: center;
+    margin: 0 auto;
+  }
+  
+  .account-username-label {
+    width: 81px;
+    height: 21px;
+    display: block;
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    font-size: 18px;
+    font-family: SFProDisplay-Medium;
+    white-space: nowrap;
+    line-height: 21px;
+    text-align: center;
+    margin: 32px 0 0 20px;
+  }
+  
+  .account-username-input {
+    /* width: 335px; */
+    height: 50px;
+    border-radius: 5px;
+    border: 1px solid rgba(230, 230, 230, 1);
+    margin: 12px 20px 0 20px;
+  }
+  .account-label2 {
+    width: 98px;
+    height: 21px;
+    display: block;
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    font-size: 18px;
+    font-family: SFProDisplay-Medium;
+    white-space: nowrap;
+    line-height: 21px;
+    text-align: left;
+    margin: 24px 0 0 20px;
+  }
+  
+  .account-network {
+    height: 77px;
+    border-radius: 5px;
+    border: 1px solid rgba(230, 230, 230, 1);
+    /* width: 100%; */
+    margin: 12px 20px 0 20px;
+  }
+  
+  .account-network-header {
+    width: 100%;
+    height: 17px;
+    padding: 10px 0px 0 16px;
+  }
+  
+  .account-network-header-info {
+    min-width: 63px;
+    height: 17px;
+    display: block;
+    overflow-wrap: break-word;
+    color: rgba(153, 153, 153, 1);
+    font-size: 12px;
+    font-family: PingFangSC-Medium;
+    white-space: nowrap;
+    line-height: 17px;
+    text-align: left;
+  }
+  
+  .account-network-header-info2 {
+    min-width: 200px;
+    height: 20px;
+    /* height: 17px;
+    overflow-wrap: break-word;
+    text-align: left;
+    white-space: nowrap;
+    font-size: 0; */
+  }
+  
+  .account-address {
+    font-size: 12px;
+    font-family: PingFangSC-Medium;
+    color: rgba(51, 51, 51, 1);
+    line-height: 17px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: right;
+  }
+  
+  .account-address-copy {
+    height: 17px;
+    border-radius: 4px;
+    font-size: 11px;
+    background-color: #ef4f4f;
+    color: #fff;
+    border: 0;
+    /* width: 34px; */
+    text-align: center;
+    vertical-align: middle;
+    margin: 0 auto;
+  }
+  
+  .account-network-body {
+    width: 148px;
+    height: 20px;
+    margin: 16px 0 12px 12px;
+  }
+  
+  .account-network-item {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin: 0 5px;
+  }
+  
+  .chain-r {
+    background-image: linear-gradient( 180deg, rgba(255, 129, 193, 1) 0%, rgba(255, 74, 141, 1) 100% );
+  }
+  
+  .chain-m {
+    background-image: linear-gradient( 180deg, rgb(104, 74, 236) 0%, rgb(105, 13, 190) 100% );
+  }
+  
+  .account-btn-container {
+    width: 100%;
+    height: 50px;
+    /* margin: 45px 0 0 24px; */
+    padding: 40px 0px;
+  }
+  .account-btn {
+    height: 44px;
+    border-radius: 5px;
+    border: 1px solid rgba(238, 238, 238, 1);
+    background-color: rgba(252, 132, 76, 1);
+    /* background-color: rgba(215, 215, 215, 1); */
+    box-shadow: inset 1px 1px 1px 0px rgb(0 0 0 / 20%);
+    margin-top: 1px;
+    width: 150px;
+  }
+  .account-btn-word {
+    width: 46px;
+    height: 24px;
+    display: block;
+    overflow-wrap: break-word;
+    color: rgba(255, 255, 255, 1);
+    /* color: rgba(255, 255, 255, 1); */
+    font-size: 20px;
+    font-family: SFProDisplay-Bold;
+    white-space: nowrap;
+    line-height: 24px;
+    text-align: center;
+    text-shadow: 1px 1px 1px rgb(0 0 0 / 20%);
+    margin: 10px 0 0 52px;
+  }
+  .chain-type {
+    text-align: center;
+    vertical-align: middle;
+    font-size: 13px;
+    color: white;
+  }
