@@ -87,20 +87,24 @@ export async function ajaxGetHotToken (signature) {
 }
 
 // 添加楼层留言
-export async function ajaxAddTokenInfo (tokenId, remark) {
+export async function ajaxAddTokenInfo (tokenId, address, remark) {
   console.log('[AjaxData] call ajaxAddTokenInfo:', tokenId, remark)
 
   const url = apiServer + '/token/add'
   const params = {
     tokenId: tokenId,
+    address: address,
     remark: remark
   }
-  await axios.post(url, qs.stringify(params)).then(response => {
+
+  const resCode = await axios.post(url, qs.stringify(params)).then(response => {
     const data = response.data
 
     console.log('[AjaxData] ajaxAddTokenInfo response-2:', data)
     return data.Code
   })
+
+  return resCode
 }
 
 // 获取我的关注列表

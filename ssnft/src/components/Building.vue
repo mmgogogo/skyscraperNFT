@@ -333,13 +333,14 @@ export default {
     },
     async updateMessage (tokenId, remark) {
       const _that = this
-      console.log('[Buiding] editMessage ', tokenId, remark)
+      console.log('[Buiding] editMessage ', tokenId, _that.address, remark)
 
       // update floor message local
       _that.updateFloorsInfo(tokenId, remark)
 
       // 判断楼层归属
-      const resCode = await ajaxAddTokenInfo(tokenId, remark)
+      const resCode = await ajaxAddTokenInfo(tokenId, _that.address, remark)
+      console.log('[Building][updateMessage] resCode', resCode)
       if (resCode !== 0) {
         // alert('bind faild')
         popupMessage('Remark faild')

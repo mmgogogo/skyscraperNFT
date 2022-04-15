@@ -33,8 +33,15 @@ export function getLocalStorage (key) {
 
 // 隐藏太长的钱包地址
 export function hiddenAddress (address) {
-  const reg = /^(\w{4})\w+(\w{4})$/
-  return address.replace(reg, '$1****$2')
+  console.log('[AjaxData] hiddenAddress', address)
+  if (address === '') return address
+  if (address === 0) return address
+  if (typeof(address) === 'string') {
+    const reg = /^(\w{4})\w+(\w{4})$/
+    return address.replace(reg, '$1****$2')
+  }
+
+  return address
 }
 
 export function hiddenName (name) {

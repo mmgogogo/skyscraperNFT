@@ -153,7 +153,7 @@
         </div>
         <!-- ladder end -->
         <!-- chat start -->
-        <!--
+        <!---->
         <div v-bind:class="[!showInfo.chat ? 'chat-height-30' : 'chat-height-360', 'chat-container', 'flex-col', 'align-center']">
           <div v-bind:class="[!showInfo.chat ? 'chat-header-up' : 'chat-header-down', 'flex-col']" @click="chatSwitcher()"></div>
           <div class="chat-body flex-col justify-between">
@@ -172,7 +172,7 @@
             </span>
           </div>
         </div>
-        -->
+        
         <!-- chat end -->
 
         <!-- myFollowing start -->
@@ -489,7 +489,8 @@ export default {
         { name: '系统', content: '欢迎进入聊天频道！' }
       ],
       chatConn: null, // chat connection
-      chatRandNum: 0 // chat rand agent id
+      chatRandNum: 0, // chat rand agent id
+      chatName: ''
     }
   },
   props: {
@@ -658,24 +659,24 @@ export default {
       }
       this.chatList.unshift({ name: hiddenAddress(chatName), content: msg })
     },
-    submitChat (chatName) {
+    submitChat () {
       // 发送聊天内容
       const _that = this
-      if (!_that.playerInfo.isLogin) {
-        _that.popupMessage('Login wallet first')
-        return
-      }
-      if (chatName === undefined) {
-        chatName = this.playerInfo.address
+      // if (!_that.playerInfo.isLogin) {
+      //   _that.popupMessage('Login wallet first')
+      //   return
+      // }
+      if (_that.playerInfo.address !== undefined &&  _that.playerInfo.address !== '') {
+        _that.chatName = _that.playerInfo.address
       }
 
       console.log('[Main] ws message is', _that.curMessage)
       if (_that.curMessage) {
         // 发送消息
-        this.broadcast(this.playerInfo.address, _that.curMessage)
+        this.broadcast(_that.chatName, _that.curMessage)
 
         // 更新聊天框
-        // this.updateChatList(chatName, _that.curMessage)
+        // this.updateChatList(_that.chatName, _that.curMessage)
 
         _that.curMessage = ''
       }
@@ -1203,11 +1204,11 @@ export default {
           minted: f1[k].minted,
           owner: f1[k].owner,
           name: '',
-          message: f2[k] !== undefined ? f2[k].msg : '',
           myFloor: f3[k] !== undefined ? f3[k].num : 0,
           order: 10 - k,
           image: image
         }
+        floorInfo.message = f2[floorInfo.id] !== undefined ? f2[floorInfo.id].msg : ''
         if (floorInfo.owner !== '') {
           floorInfo.name = f4[floorInfo.owner.toLowerCase()] !== undefined ? f4[floorInfo.owner.toLowerCase()].name : floorInfo.owner.toLowerCase()
         } else {
@@ -1524,12 +1525,13 @@ export default {
     // 初始化聊天服务器
     async initChatServer () {
       const _that = this
-      let chatName = hiddenAddress(this.playerInfo.address)
-      if (chatName === '') {
-        chatName = this.chatRandNum
+      if (this.playerInfo.address === '') {
+        _that.chatName = this.chatRandNum
+      } else {
+        _that.chatName = hiddenAddress(this.playerInfo.address)
       }
       if (window.WebSocket) {
-        const url = wsServerUrl() + '?id=' + chatName + '&room=0'
+        const url = wsServerUrl() + '?id=' + _that.chatName + '&room=0'
         console.log('[Main] ws server url: ' + url)
         this.chatConn = new WebSocket(url)
         this.chatConn.onopen = function (evt) {
@@ -1540,9 +1542,16 @@ export default {
         }
         this.chatConn.onmessage = function (evt) {
           // 解析消息
-          const data = JSON.parse(JSON.parse(evt.data))
-          console.log('[Main] ws data', data)
-          _that.updateChatList(data.name, data.msg)
+          // console.log('[onmessage]', evt.data)
+          try {
+            const data = JSON.parse(JSON.parse(evt.data))
+            console.log('[Main] ws data', data)
+            if (data.msg !== 'ping#pong') {
+              _that.updateChatList(data.name, data.msg)
+            }
+          } catch (error) {
+             console.log('[Main] ws error', error)
+          }
         }
       } else {
         _that.popupMessage('Your browser does not support WebSocket')
@@ -1673,6 +1682,11 @@ export default {
           _that.showInfo.login = true
         }
 
+        // init chat server
+        _that.chatRandNum = parseInt(Math.random() * 1000000)
+        console.log('[Main] start connect ws server', _that.chatRandNum)
+        await _that.initChatServer()
+
         // connect read provider node
         await _that.initProvider()
 
@@ -1683,11 +1697,6 @@ export default {
         await _that.timer()
         await Messager.listener()
         await _that.$Dapp.listener(_that.walletCallback)
-
-        // init chat server
-        _that.chatRandNum = parseInt(Math.random() * 1000000)
-        console.log('[Main] start connect ws server')
-        await _that.initChatServer()
 
         console.log('building', $('.building').prop('scrollHeight'))
         $('.building').scrollTop($('.building').prop('scrollHeight'))
