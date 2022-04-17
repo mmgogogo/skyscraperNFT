@@ -172,7 +172,6 @@
             </span>
           </div>
         </div>
-
         <!-- chat end -->
 
         <!-- myFollowing start -->
@@ -1548,7 +1547,7 @@ export default {
         console.log('[Main] ws server url: ' + url)
         this.chatConn = new WebSocket(url)
         this.chatConn.onopen = function (evt) {
-          _that.broadcast('系统', '欢迎加入频道')
+          _that.broadcast('系统', '欢迎[' + _that.chatName + ']加入频道')
         }
         this.chatConn.onclose = function (evt) {
           _that.broadcast('系统', 'Connection closed')
@@ -1696,7 +1695,7 @@ export default {
         }
 
         // init chat server
-        _that.chatRandNum = parseInt(Math.random() * 1000000)
+        _that.chatRandNum = 'Guest' + parseInt(Math.random() * 1000)
         console.log('[Main] start connect ws server', _that.chatRandNum)
         await _that.initChatServer()
 
