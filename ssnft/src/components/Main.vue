@@ -1627,9 +1627,9 @@ export default {
         await _that.$Dapp.connectProvider()
       }
       await this.$Dapp.Bridges.browser.totalSupply().then(function (ret) {
-        console.log('[Main][totalSupply] totalSupply ', ret)
+        // console.log('[Main][totalSupply] totalSupply ', ret)
         _that.globalInfo.total = ret.toNumber()
-        console.log('[Main][totalSupply] totalSupply ', _that.globalInfo.total)
+        // console.log('[Main][totalSupply] totalSupply ', _that.globalInfo.total)
       })
     },
     async getPlayerInfo () {
