@@ -69,6 +69,7 @@ export default {
     }
   },
   props: {
+    profileAddr: String,
     show: Boolean
   },
   methods: {
@@ -129,7 +130,7 @@ export default {
   },
   async updated () {
     const _that = this
-    console.log('[Account][updated] updated start!', _that.$Dapp.Bridges, _that.name, _that.count)
+    console.log('[Account][updated] updated start!', _that.name)
     _that.display = _that.show
     _that.playerInfo.address = _that.profileAddr
 
@@ -138,7 +139,6 @@ export default {
     }
 
     if (_that.playerInfo.address && !_that.name && _that.count <= 1) {
-      // _that.name = getLocalStorage('username' + _that.playerInfo.address)
       _that.count++
 
       if (_that.name === '') {
@@ -148,7 +148,6 @@ export default {
         _that.name = result.Name
       }
     }
-    console.log('[Account][updated] updated end!', _that)
   },
   mounted () {
     console.log('[Account][mounted] mounted start!')

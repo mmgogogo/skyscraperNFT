@@ -12,7 +12,7 @@ button {
     padding: 0;
     border: 1px solid transparent;
     outline: none;
-    background-color: transparent;
+    /* background-color: transparent; */
 }
 button:active {
     opacity: 0.6;

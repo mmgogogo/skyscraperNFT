@@ -280,6 +280,15 @@
     margin-left: 4px;
     text-align: left;
 }
+.board-msg-input {
+    font-size: 12px;
+    font-family: PingFangSC-Medium;
+    color: rgb(248 242 242);
+    line-height: 17px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+}
 
 .foundation {
     position: fixed;

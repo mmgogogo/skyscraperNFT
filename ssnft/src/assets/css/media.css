@@ -80,7 +80,7 @@
     }
 }
 
-@media screen and (max-height: 900px) {
+@media screen and (max-height: 900px) and (max-height: 1400px) {
     .layer2 {
         height: 68px;
         border-radius: 3.469387755102041px 3.469387755102041px 3.469387755102041px 3.469387755102041px;
@@ -89,7 +89,7 @@
         box-shadow: inset 2px 2px 1px 0px rgb(0 0 0 / 20%);
         padding-top: 13px;
         width: 68px;
-        margin: 20px 0px;
+        margin: 20px 10px;
     }
     .building {
         height: 100%;
@@ -100,6 +100,33 @@
     }
     .owner {
         width: 34vw;
+    }
+    .wallet-wrapper {
+        height: 100%;
+        background-color: rgba(255, 255, 255, 1);
+        right: 0px;
+        width: 22%;
+        position: absolute;
+        top: 0px;
+    }
+    .account-container {
+        height: 100%;
+        background-color: rgba(255, 255, 255, 1);
+        width: 22%;
+        position: absolute;
+        height: 100%;
+        right: 0px;
+        top: 0px;
+    }
+    .mint {
+        z-index: 187;
+        height: 524px;
+        border-radius: 5px;
+        background-color: rgba(43, 46, 53, 1);
+        width: 940px;
+        position: relative;
+        margin: 200px 25%;
+        padding: 80px 45px 0 45px;
     }
 }
 
@@ -254,6 +281,9 @@
     width: 27%;
     position: absolute;
     top: 0px;
+  }
+  .owner {
+    width: 32vw;
   }
 }
 
