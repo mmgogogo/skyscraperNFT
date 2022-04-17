@@ -386,7 +386,7 @@ input:focus
   border: 1px solid rgba(238, 238, 238, 1);
   background-color: rgba(43, 46, 53, 1);
   box-shadow: inset 2px 2px 1px 0px rgba(0, 0, 0, 0.2);
-  padding-top: 13px;
+  padding: 13px;
   width: 68px;
 }
 
@@ -518,19 +518,12 @@ input:focus
 }
 
 .paragraph1 {
-  width: 68px;
-  height: 20px;
-  display: block;
-  overflow-wrap: break-word;
   color: rgba(255, 255, 255, 1);
   font-size: 18px;
   font-family: SFProDisplay-Semibold;
   line-height: 20px;
-  text-align: center;
-  text-shadow: 1px 1px 1px rgb(0 0 0 / 30%);
   overflow: hidden;
   text-overflow: ellipsis;
-  margin: auto 0;
 }
 
 .header {
