@@ -172,7 +172,6 @@
             </span>
           </div>
         </div>
-        
         <!-- chat end -->
 
         <!-- myFollowing start -->
@@ -666,7 +665,7 @@ export default {
       //   _that.popupMessage('Login wallet first')
       //   return
       // }
-      if (_that.playerInfo.address !== undefined &&  _that.playerInfo.address !== '') {
+      if (_that.playerInfo.address !== undefined && _that.playerInfo.address !== '') {
         _that.chatName = _that.playerInfo.address
       }
 
@@ -1535,7 +1534,7 @@ export default {
         console.log('[Main] ws server url: ' + url)
         this.chatConn = new WebSocket(url)
         this.chatConn.onopen = function (evt) {
-          _that.broadcast('系统', '欢迎['+_that.chatName+']加入频道')
+          _that.broadcast('系统', '欢迎[' + _that.chatName + ']加入频道')
         }
         this.chatConn.onclose = function (evt) {
           _that.broadcast('系统', 'Connection closed')
@@ -1550,7 +1549,7 @@ export default {
               _that.updateChatList(data.name, data.msg)
             }
           } catch (error) {
-             console.log('[Main] ws error', error)
+            console.log('[Main] ws error', error)
           }
         }
       } else {
@@ -1683,7 +1682,7 @@ export default {
         }
 
         // init chat server
-        _that.chatRandNum = parseInt(Math.random() * 1000000)
+        _that.chatRandNum = 'Guest' + parseInt(Math.random() * 1000)
         console.log('[Main] start connect ws server', _that.chatRandNum)
         await _that.initChatServer()
 
