@@ -492,7 +492,7 @@ export default {
         floors: []
       },
       chatList: [
-        { name: '系统', content: '欢迎进入聊天频道！' }
+        // { name: '系统', content: '欢迎进入聊天频道！' }
       ],
       chatConn: null, // chat connection
       chatRandNum: 0, // chat rand agent id
