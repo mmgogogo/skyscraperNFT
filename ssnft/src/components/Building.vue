@@ -1,7 +1,7 @@
 <template>
 <div class="building flex-container align-end scroll" @wheel="handleWheel($event)" @click="onClick($event)">
   <div class="floor flex-row align-center" v-for="(floorInfo, index) in floorList" :key="index" :style="orderStyle(floorInfo.order)">
-    <div class="owner base-floor flex-col align-end" v-if="floorInfo.houseType === 0"></div>
+    <div class="owner base-floor flex-col align-end" v-if="floorInfo.floorId === '0' && floorInfo.houseType === 0"></div>
     <div class="owner flex-col align-end" v-else-if="floorInfo.houseType < 0">
       <img class="ower-img flex-row" referrerpolicy="no-referrer" v-bind:src="leftImg(floorInfo.houseType)" alt="" />
     </div>
@@ -22,14 +22,24 @@
       </div>
     </div>
     <!-- maxFloor >= floorInfo.floorId -->
-    <div class="room base-floor flex-col align-center" v-if="floorInfo.houseType === 0"></div>
-    <div class="room flex-col align-center" v-else-if="floorInfo.houseType !== 0 && maxFloor >= floorInfo.floorId">
+    <!-- building ground -->
+    <div class="room base-floor flex-col align-center" v-if="floorInfo.floorId === '0' && floorInfo.houseType === 0"></div>
+    <!-- building facade wall -->
+    <div class="room flex-col align-center" v-else-if="floorInfo.floorId === '0' && floorInfo.houseType < 0 ">
       <div class="decoration flex-container align-start" v-on:click="$emit('open-game', [floorInfo.floorId, floorInfo.minted, floorInfo.owner, floorInfo.houseType])">
         <!-- <img class="floor-area flex-row" referrerpolicy="no-referrer" src="../assets/images/walls/floor_area.png" alt="" /> -->
-        <img class="floor-img flex-row" referrerpolicy="no-referrer" v-bind:src="requireImg(floorInfo.houseType)" alt="" />
+        <img class="floor-img flex-row" referrerpolicy="no-referrer" v-bind:src="requireImg(floorInfo.houseType, floorInfo.floorId)" alt="" />
       </div>
     </div>
-    <div class="room flex-col align-center" v-else-if="floorInfo.houseType !== 0 && maxFloor < floorInfo.floorId">
+    <!-- building floors -->
+    <div class="room flex-col align-center" v-else-if="floorInfo.floorId > 0 && maxFloor >= floorInfo.floorId">
+      <div class="decoration flex-container align-start" v-on:click="$emit('open-game', [floorInfo.floorId, floorInfo.minted, floorInfo.owner, floorInfo.houseType])">
+        <!-- <img class="floor-area flex-row" referrerpolicy="no-referrer" src="../assets/images/walls/floor_area.png" alt="" /> -->
+        <img class="floor-img flex-row" referrerpolicy="no-referrer" v-bind:src="requireImg(floorInfo.houseType, floorInfo.floorId)" alt="" />
+      </div>
+    </div>
+    <!-- building max floors -->
+    <div class="room flex-col align-center" v-else-if="floorInfo.floorId > 0 && maxFloor < floorInfo.floorId">
       <div class="decoration flex-container align-start">
         <div class="mint-btn-container flex-col jusity-center align-center">
           <div class="mint-btn-wrapper flex-row justify-center align-center" v-on:click="$emit('mint-floor',[1])">
@@ -39,7 +49,7 @@
          </div>
       </div>
     </div>
-    <div class="others base-floor flex-col justify-center" v-if="floorInfo.houseType === 0"></div>
+    <div class="others base-floor flex-col justify-center" v-if="floorInfo.floorId === '0' && floorInfo.houseType === 0"></div>
     <div class="others flex-col justify-center" v-else-if="floorInfo.houseType < 0">
       <img class="others-img flex-row" referrerpolicy="no-referrer" v-bind:src="rightImg(floorInfo.houseType)" alt="" />
     </div>
@@ -50,7 +60,7 @@
             <div class="board-icon flex-col"></div>
             <span class="board-word flex-col">{{ floorInfo.id || '' }}</span>
             <span class="board-message" v-if="editId === floorInfo.floorId">
-              <input class="account-address remark flex-col" type="text" name="address"
+              <input class="board-msg-input remark flex-col" type="text" name="message"
                 :id="'remarkInfo_' + floorInfo.floorId"
                 v-model="remarkMessage"
                 @keyup.enter="submitRemark(floorInfo.floorId)"
@@ -68,7 +78,7 @@
   </div>
   <div class="foundation">
     <div class="decoration flex-container align-start">
-      <img class="floor-img flex-row" referrerpolicy="no-referrer" src="../assets/images/walls/floor_x.png" alt="" />
+      <img class="loading-img flex-row" referrerpolicy="no-referrer" scr="../assets/images/walls/loading.gif" alt="" />
     </div>
   </div>
 </div>
@@ -188,12 +198,16 @@ export default {
       // console.log('[Main] strPadLeft str ', str)
       return chr.repeat(len - String(str).length) + String(str)
     },
-    requireImg (houseType) {
+    requireImg (houseType, floorId) {
       if (houseType !== 'x') {
         if (houseType > 0) {
           houseType = this.strPadLeft(houseType)
         } else {
-          houseType = 'f000' + (Math.abs(houseType)).toString()
+          if (floorId > 0) {
+            houseType = this.strPadLeft(houseType)
+          } else {
+            houseType = 'f000' + (Math.abs(houseType)).toString()
+          }
         }
       }
       const imageCfg = {

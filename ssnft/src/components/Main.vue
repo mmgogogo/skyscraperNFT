@@ -242,7 +242,7 @@
       <!-- mint start -->
       <!-- <div class="shadow" v-if="showInfo.mint" @click="onClick($event)">
         <div id="mint" class="mint flex-col" @click="onClickOutside($event)"> -->
-      <div class="shadow" v-if="showInfo.mint">
+      <div class="mshadow" v-if="showInfo.mint">
         <div id="mint" class="mint flex-col">
           <div class="mint-container flex-row justify-between">
             <div class="mint-left flex-col"></div>
@@ -356,11 +356,17 @@
         </div>
       </div>
     </div>
-    <Account :show="showInfo.account" v-on:close-account="closeAccount" :profileAddr="playerInfo.address" />
+    <Account :show="showInfo.account" v-on:close-account="closeAccount" :profileAddr="playerInfo.address"/>
     <MyFloorList :show="showInfo.floor" :loading="setting.loading" :floors="playerInfo.mintFloorNumId" v-on:open-game="openGame" v-on:close-floors="closeFloors" />
     <Game :show="showInfo.game" :url="gameConfig.gameUrl" v-on:close-game="closeGame" />
     <!-- avatar start -->
     <Login :show="showInfo.login" :mmpExists="globalInfo.metamaskExists" v-on:update-profile="updateProfile" v-on:close-login="closeLogin"/>
+
+    <div class="global-loading flex-container justify-center" v-if="globalInfo.loading">
+      <div class="loading-container flex-container align-center justify-center">
+        <img class="loading-img flex-row" referrerpolicy="no-referrer" src="../assets/images/walls/loading.gif" alt="" />
+      </div>
+    </div>
   </main>
 </template>
 
@@ -433,7 +439,8 @@ export default {
       globalInfo: {
         total: 10000,
         runUpTime: '2019-08-15',
-        metamaskExists: false
+        metamaskExists: false,
+        loading: false
       },
       isShow: true,
       showInfo: {
@@ -698,8 +705,8 @@ export default {
       }
       console.log('[Main][displayMint] mint ', _that.showInfo.mint)
 
-      $('.shadow').slideUp()
-      $('.shadow').fadeIn().slideToggle()
+      $('.c').slideUp()
+      $('.mshadow').fadeIn().slideToggle()
     },
     async realMint () {
       const _that = this
@@ -789,7 +796,7 @@ export default {
     async myFollowing (obj) {
       const _that = this
       _that.resetPopWindow() // reset
-      console.log('[Main][myFollowing]click myFollowing top ', $('#' + obj).position().top)
+      console.log('[Main][myFollowing]click myFollowing top ', $('#' + obj).position())
 
       if (_that.playerInfo.status < 1) {
         _that.popupMessage('Login wallet to loading following information')
@@ -797,6 +804,7 @@ export default {
       }
 
       $('.hot').css('margin-top', $('#' + obj).position().top)
+      $('.hot').css('margin-left', $('#' + obj).width())
 
       if (_that.showInfo.myFollowing) {
         _that.showInfo.myFollowing = false
@@ -826,6 +834,7 @@ export default {
       }
 
       $('.hot').css('margin-top', $('#' + obj).position().top)
+      $('.hot').css('margin-left', $('#' + obj).width())
 
       if (_that.showInfo.myFollowed) {
         _that.showInfo.myFollowed = false
@@ -856,6 +865,7 @@ export default {
       }
 
       $('.hot').css('margin-top', $('#' + obj).position().top)
+      $('.hot').css('margin-left', $('#' + obj).width())
 
       _that.setting.loading = 'Loading...'
 
@@ -952,7 +962,7 @@ export default {
       let start = _that.getStart()
       // start = Math.ceil( start / 500 )
       if (start + _that.building.liftStep >= _that.globalInfo.total) {
-        start = _that.globalInfo.total - 14
+        start = _that.globalInfo.total + 2 - _that.building.page
       } else {
         start += _that.building.liftStep
       }
@@ -1037,6 +1047,7 @@ export default {
       } else {
         newStart = start
       }
+      _that.globalInfo.loading = true
       const floorIds = _that.range(newStart, start + _that.building.page - 1)
       _that.building.floors = _that.defaultBuildings(floorIds)
       if (first && (6 - start) >= 0) {
@@ -1082,6 +1093,8 @@ export default {
           }
         }
         _that.building.floors = floorListInfo
+        _that.globalInfo.loading = false
+        $('.building').scrollTop($('.building').prop('scrollHeight'))
       })
       console.log('[Main] building floors', _that.building.floors)
     },
@@ -1734,4 +1747,25 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.global-loading {
+  z-index: 181;
+  height: 10%;
+  background-color: rgba(0, 0, 0, 0.95);
+  left: 40%;
+  width: 20%;
+  position: absolute;
+  top: 20%;
+  border-radius: 20px;
+}
+.loading-container {
+  margin: auto 0;
+  /* border: 1px solid red; */
+  width: 50%;
+  height: 40%;
+}
+.loading-img {
+  z-index: 188;
+  width: 100px;
+  height: auto;
+}
 </style>

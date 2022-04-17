@@ -421,7 +421,7 @@ input:focus
   width: 68px;
 }
 
-.shadow {
+.mshadow {
   z-index: 79;
   height: 100vw;
   background-color: rgba(0, 0, 0, 0.5);
