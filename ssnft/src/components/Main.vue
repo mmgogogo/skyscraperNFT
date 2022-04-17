@@ -672,11 +672,11 @@ export default {
       //   _that.popupMessage('Login wallet first')
       //   return
       // }
-      if (_that.playerInfo.address !== undefined && _that.playerInfo.address !== '') {
-        _that.chatName = _that.playerInfo.address
-      }
+      // if (_that.playerInfo.address !== undefined && _that.playerInfo.address !== '') {
+      //   _that.chatName = _that.playerInfo.address
+      // }
 
-      console.log('[Main] ws message is', _that.curMessage)
+      console.log('[Main] ws message is', _that.chatName, _that.curMessage)
       if (_that.curMessage) {
         // 发送消息
         this.broadcast(_that.chatName, _that.curMessage)
@@ -1539,11 +1539,21 @@ export default {
     // 初始化聊天服务器
     async initChatServer () {
       const _that = this
-      if (this.playerInfo.address === '') {
-        _that.chatName = this.chatRandNum
+      if (_that.playerInfo.address === '') {
+        _that.chatName = _that.chatRandNum
       } else {
-        _that.chatName = hiddenAddress(this.playerInfo.address)
+        const lowAddr = _that.playerInfo.address
+        const f4 = await ajaxGetUserInfo([lowAddr])
+        console.log('[Main]initChatServer-1', lowAddr, f4)
+        for (var v in f4) {
+          if (v.toLowerCase() === lowAddr.toLowerCase()) {
+            _that.chatName = f4[v].name
+          }
+        }
+        _that.chatName = _that.chatName !== '' ? _that.chatName : hiddenAddress(lowAddr)
+        console.log('[Main]initChatServer-2', _that.chatName)
       }
+
       if (window.WebSocket) {
         const url = wsServerUrl() + '?id=' + _that.chatName + '&room=0'
         console.log('[Main] ws server url: ' + url)
@@ -1696,15 +1706,15 @@ export default {
           _that.showInfo.login = true
         }
 
-        // init chat server
-        _that.chatRandNum = 'Guest' + parseInt(Math.random() * 1000)
-        console.log('[Main] start connect ws server', _that.chatRandNum)
-        await _that.initChatServer()
-
         // connect read provider node
         await _that.initProvider()
 
         await _that.login()
+
+        // init chat server
+        _that.chatRandNum = 'Guest' + parseInt(Math.random() * 1000)
+        console.log('[Main] start connect ws server', _that.chatRandNum)
+        await _that.initChatServer()
 
         await _that.initBuilding()
         await _that.getGlobalInfo()
