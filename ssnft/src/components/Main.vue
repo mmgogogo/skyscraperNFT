@@ -103,8 +103,8 @@
                   <span class="txt3 flex-row">{{ baseConfig.lang_010 }}</span>
                 </div>
               </div>
-              <div class="layer2 flex-col align-center btn-hand">
-                <span class="paragraph1">{{ baseConfig.lang_011 }}</span>
+              <div class="layer2 flex-col align-center justify-center btn-hand">
+                <span class="paragraph1 flex-row">{{ baseConfig.lang_011 }}</span>
               </div>
             </div>
           </div>
@@ -1009,6 +1009,7 @@ export default {
       }
       _that.building.start = start
       console.log('[Main][created] building ', _that.building)
+      // _that.globalInfo.loading = true
       _that.updateBuilding(start, _that.building.first)
     },
     range (start, end) {
@@ -1047,7 +1048,7 @@ export default {
       } else {
         newStart = start
       }
-      _that.globalInfo.loading = true
+      // _that.globalInfo.loading = true
       const floorIds = _that.range(newStart, start + _that.building.page - 1)
       _that.building.floors = _that.defaultBuildings(floorIds)
       if (first && (6 - start) >= 0) {
@@ -1094,6 +1095,7 @@ export default {
         }
         _that.building.floors = floorListInfo
         _that.globalInfo.loading = false
+        console.log('[Main] building globalInfo.loading ', _that.globalInfo.loading)
         $('.building').scrollTop($('.building').prop('scrollHeight'))
       })
       console.log('[Main] building floors', _that.building.floors)
@@ -1739,13 +1741,13 @@ export default {
 <style scoped>
 .global-loading {
   z-index: 181;
-  height: 10%;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.95);
-  left: 40%;
-  width: 20%;
+  /* left: 40%; */
+  width: 100%;
   position: absolute;
-  top: 20%;
-  border-radius: 20px;
+  top: 0;
+  /* border-radius: 20px; */
 }
 .loading-container {
   margin: auto 0;
