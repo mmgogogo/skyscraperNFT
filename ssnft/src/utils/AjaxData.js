@@ -18,45 +18,56 @@ export function apiServerUrl () {
 
 // 添加关注地址
 export async function ajaxAddFollowerPeople (from, to) {
-  console.log('[AjaxData] call ajaxAddFollowerPeople:', from, to)
-
+  console.log('[AjaxData] call ajaxAddFollowerPeople:', [from, to])
+  let result = 200
+  if (!from || to === '') {
+    return result
+  }
   const url = apiServer + '/followerpeople/add'
   const params = {
     from: from,
     to: to
   }
-  await axios.post(url, qs.stringify(params)).then(response => {
-    const data = response.data
-
-    // TODO not support more then 100 nft
-    console.log('[AjaxData] ajaxAddFollowerPeople response-2:', data)
-    if (data.Code !== 0) {
-      alert('bind error')
-    } else {
-      alert('bind success')
-    }
-  })
+  return new Promise(
+    (resolve, reject) => axios.post(url, qs.stringify(params)).then((response, err) => {
+      console.log('[AjaxData][ajaxAddFollowerPeople][Response] is ', [response, err])
+      if (response && ('data' in response)) {
+        const data = response.data
+        // console.log('[AjaxData][ajaxAddFollowerPeople] response data ', data)
+        result = data.Code
+        resolve(result)
+      } else {
+        reject(new Error('ajaxAddFollowerPeople return error'))
+      }
+    })
+  )
 }
 
 // 添加关注楼层
 export async function ajaxAddFollowerToken (address, tokenId) {
-  console.log('[AjaxData] call ajaxAddFollowerToken:', address, tokenId)
-
+  console.log('[AjaxData] call ajaxAddFollowerToken:', [address, tokenId])
+  let result = 200
+  if (!tokenId || address === '') {
+    return result
+  }
   const url = apiServer + '/followertoken/add'
   const params = {
     address: address,
     tokenId: tokenId
   }
-  await axios.post(url, qs.stringify(params)).then(response => {
-    const data = response.data
-
-    console.log('[AjaxData] ajaxAddFollowerToken response-2:', data)
-    if (data.Code !== 0) {
-      alert('bind error')
-    } else {
-      alert('bind success')
-    }
-  })
+  return new Promise(
+    (resolve, reject) => axios.post(url, qs.stringify(params)).then((response, err) => {
+      console.log('[AjaxData][ajaxAddFollowerToken][Response] is ', [response, err])
+      if (response && ('data' in response)) {
+        const data = response.data
+        // console.log('[AjaxData][ajaxAddFollowerToken] response data ', data)
+        result = data.Code
+        resolve(result)
+      } else {
+        reject(new Error('ajaxAddFollowerToken return error'))
+      }
+    })
+  )
 }
 
 // 添加关注楼层
@@ -68,11 +79,11 @@ export async function ajaxGetHotToken (signature) {
       console.log('[AjaxData][ajaxGetHotToken][Response] is ', [response])
       const data = response.data
       let result = {}
-      console.log('[AjaxData] ajaxGetHotToken response:', data)
+      // console.log('[AjaxData] ajaxGetHotToken response:', data)
       if (data.Code === 0) {
         // Array[{TokenId:,Num:}]
         result = data.Data
-        console.log('[AjaxData] ajaxGetHotToken result:', result)
+        // console.log('[AjaxData] ajaxGetHotToken result:', result)
         if (result && result.length > 0) {
           result.sort(function (a, b) {
             return b.TokenId - a.TokenId
@@ -88,23 +99,30 @@ export async function ajaxGetHotToken (signature) {
 
 // 添加楼层留言
 export async function ajaxAddTokenInfo (tokenId, address, remark) {
-  console.log('[AjaxData] call ajaxAddTokenInfo:', tokenId, remark)
-
+  console.log('[AjaxData] call ajaxAddTokenInfo:', [tokenId, address, remark])
+  let result = 200
+  if (!tokenId || address === '') {
+    return result
+  }
   const url = apiServer + '/token/add'
   const params = {
     tokenId: tokenId,
     address: address,
     remark: remark
   }
-
-  const resCode = await axios.post(url, qs.stringify(params)).then(response => {
-    const data = response.data
-
-    console.log('[AjaxData] ajaxAddTokenInfo response-2:', data)
-    return data.Code
-  })
-
-  return resCode
+  return new Promise(
+    (resolve, reject) => axios.post(url, qs.stringify(params)).then((response, err) => {
+      console.log('[AjaxData][ajaxAddTokenInfo][Response] is ', [response, err])
+      if (response && ('data' in response)) {
+        const data = response.data
+        console.log('[AjaxData][ajaxAddTokenInfo] response data ', data)
+        result = data.Code
+        resolve(result)
+      } else {
+        reject(new Error('ajaxAddTokenInfo return error'))
+      }
+    })
+  )
 }
 
 // 获取我的关注列表
@@ -116,11 +134,11 @@ export async function ajaxGetMyFollower (type, address) {
       console.log('[AjaxData][ajaxGetMyFollower][Response] is ', [response])
       const data = response.data
       let result = {}
-      console.log('[AjaxData] ajaxGetMyFollower response:', data)
+      // console.log('[AjaxData] ajaxGetMyFollower response:', data)
       if (data.Code === 0) {
         // Array [{AddressFrom:3724,AddressTo:小写,CreateTime}]
         result = data.Data
-        console.log('[AjaxData] ajaxGetMyFollower result:', result)
+        // console.log('[AjaxData] ajaxGetMyFollower result:', result)
         if (result && result.length > 0) {
           result.sort(function (a, b) {
             return b.AddressFrom - a.AddressFrom
@@ -148,7 +166,7 @@ export async function ajaxGetAllNfts (address) {
       if (data.code === 200 && data.data) {
         const contents = data.data.content
         if (contents && contents.length > 0) {
-          console.log('[Web][Ajax] ajaxGetAllNfts content ', contents)
+          // console.log('[Web][Ajax] ajaxGetAllNfts content ', contents)
           for (const item of contents) {
             // console.log('[Web][Ajax] ajaxGetAllNfts nft_json ', item)
             let nftJsonStr = item.nft_json
@@ -185,7 +203,7 @@ export async function ajaxGetAllNfts (address) {
             }
           }
         }
-        console.log('[Ajax][ajaxGetAllNfts] nftList', result)
+        // console.log('[Ajax][ajaxGetAllNfts] nftList', result)
         resolve(result)
       } else {
         reject(new Error('return empty'))
@@ -202,14 +220,14 @@ export async function ajaxGetTokenInfo (tokenIds) {
       console.log('[Web][Ajax][Response] is ', [response])
       const data = response.data
       const result = {}
-      console.log('[AjaxData] ajaxGetTokenInfo response:', data)
+      // console.log('[AjaxData] ajaxGetTokenInfo response:', data)
       if (data.Code === 0) {
         const items = data.Data
         for (const i in items) {
           const oneToken = { from: items[i].Address, msg: items[i].Remark }
           result[items[i].TokenId] = oneToken
         }
-        console.log('[AjaxData] ajaxGetTokenInfo result:', result)
+        // console.log('[AjaxData] ajaxGetTokenInfo result:', result)
         resolve(result)
       } else {
         reject(new Error('return empty'))
@@ -227,14 +245,14 @@ export async function ajaxGetTokenHotNum (tokenIds) {
       console.log('[AjaxData][ajaxGetTokenHotNum][Response] is ', [response])
       const data = response.data
       const result = {}
-      console.log('[AjaxData] ajaxGetTokenHotNum response:', data)
+      // console.log('[AjaxData] ajaxGetTokenHotNum response:', data)
       if (data.Code === 0) {
         const items = data.Data
         for (const i in items) {
           const oneToken = { tokenId: items[i].TokenId, num: items[i].Num }
           result[items[i].TokenId] = oneToken
         }
-        console.log('[AjaxData] ajaxGetTokenHotNum result:', result)
+        // console.log('[AjaxData] ajaxGetTokenHotNum result:', result)
         resolve(result)
       } else {
         reject(new Error('return empty'))
@@ -252,10 +270,10 @@ export async function ajaxGetProfile (address) {
       console.log('[AjaxData][ajaxGetProfile][Response] is ', [response])
       const data = response.data
       let result = {}
-      console.log('[AjaxData] ajaxGetProfile response:', data)
+      // console.log('[AjaxData] ajaxGetProfile response:', data)
       if (data.Code === 0) {
         result = data.Data
-        console.log('[AjaxData] ajaxGetProfile result:', result)
+        // console.log('[AjaxData] ajaxGetProfile result:', result)
         resolve(result)
       } else {
         reject(new Error('return empty'))
@@ -266,23 +284,30 @@ export async function ajaxGetProfile (address) {
 
 // 读取玩家个人信息
 export async function ajaxUpdateProfile (address, name, loveNum) {
-  console.log('[AjaxData] call ajaxUpdateProfile:')
-
+  console.log('[AjaxData] call ajaxUpdateProfile ', [address, name, loveNum])
   let result = 200
+  if (address === '') {
+    return result
+  }
   const url = apiServer + '/user/update'
   const params = {
     address: address,
     name: name,
     loveNum: loveNum
   }
-  await axios.post(url, qs.stringify(params)).then(response => {
-    const data = response.data
-
-    console.log('[AjaxData] ajaxUpdateProfile response-2:', data)
-    result = data.Code
-  })
-
-  return result
+  return new Promise(
+    (resolve, reject) => axios.post(url, qs.stringify(params)).then((response, err) => {
+      console.log('[AjaxData][ajaxUpdateProfile][Response] is ', [response, err])
+      if (response && ('data' in response)) {
+        const data = response.data
+        // console.log('[AjaxData][ajaxUpdateProfile] response data ', data)
+        result = data.Code
+        resolve(result)
+      } else {
+        reject(new Error('ajaxUpdateProfile return error'))
+      }
+    })
+  )
 }
 
 // 获取用户表
@@ -300,13 +325,13 @@ export async function ajaxGetUserInfo (allAddress) {
       console.log('[AjaxData][ajaxGetUserInfo][Response] is ', [response])
       const result = {}
       const data = response.data
-      console.log('[AjaxData] ajaxGetUserInfo response:', data)
+      // console.log('[AjaxData] ajaxGetUserInfo response:', data)
       if (data.Code === 0) {
         const items = data.Data
         for (var i in items) {
           result[items[i].Address] = { address: items[i].Address, name: items[i].Name }
         }
-        console.log('[AjaxData] ajaxGetUserInfo result:', result)
+        // console.log('[AjaxData] ajaxGetUserInfo result:', result)
         resolve(result)
       } else {
         reject(new Error('return empty'))

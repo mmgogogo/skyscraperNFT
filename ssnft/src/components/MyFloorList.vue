@@ -6,9 +6,14 @@
       <span class="fc-title-word">My&nbsp;Floors</span>
     </div>
     <div class="floors-container flex-row"><!--  -->
-      <div class="floor-loading flex-col justify-center" v-if="loading !== ''">
+      <div class="floor-loading flex-col justify-center" v-if="loading === 'loading'">
         <span class="floor-loading-message">
           <img class="floor-loading-img flex-row" referrerpolicy="no-referrer" alt="" src="../assets/images/walls/loading.gif" />
+        </span>
+      </div>
+      <div class="floor-loading flex-col justify-center" v-if="loading === 'empty'">
+        <span class="floor-loading-message">
+          <span>You don't have a Floor!</span>
         </span>
       </div>
       <div class="floor-card flex-col" v-else v-for="(floorInfo, index) in floorList" :key="index" v-on:click="$emit('open-game', [floorInfo.floorId, 1, floorInfo.owner, floorInfo.houseType])">

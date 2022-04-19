@@ -33,10 +33,9 @@ export function getLocalStorage (key) {
 
 // 隐藏太长的钱包地址
 export function hiddenAddress (address) {
-  console.log('[AjaxData] hiddenAddress', address)
   if (address === '') return address
   if (address === 0) return address
-  if (typeof(address) === 'string') {
+  if (typeof (address) === 'string') {
     const reg = /^(\w{4})\w+(\w{4})$/
     return address.replace(reg, '$1****$2')
   }
@@ -52,17 +51,23 @@ export function hiddenName (name) {
   return name
 }
 
-export function popupMessage (message, gravity = 'top', position = 'center') {
+export function popupMessage (message, gravity = 'top', position = 'center', status = 's') {
+  const colorInfo = {
+    s: 'linear-gradient(to right, #00b09b, #96c93d)',
+    f: 'linear-gradient(to right, #e91717, #cb3327)',
+    w: 'linear-gradient(to right, #b2a50b, #efde1d)',
+    t: 'linear-gradient(to right, #6c6b62, #3d3a21)'
+  }
   Toastify({
     text: message,
-    duration: 3000,
+    duration: 5000,
     newWindow: true,
     close: true,
     gravity: gravity, // `top` or `bottom`
     position: position, // `left`, `center` or `right`
     stopOnFocus: true, // Prevents dismissing of toast on hover
     style: {
-      background: 'linear-gradient(to right, #00b09b, #96c93d)'
+      background: colorInfo[status]
     }
   }).showToast()
 }

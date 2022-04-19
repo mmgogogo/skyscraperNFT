@@ -157,21 +157,21 @@ const Dapp = {
     console.log('[Web3][sign] signature', signature)
   },
   listener: async (callbackFunc) => {
-    window.ethereum.on('accountsChanged', function () {
-      console.log('[Web3][disconnect] accountsChanged')
-      callbackFunc('accountsChanged')
+    window.ethereum.on('accountsChanged', async function (params) {
+      console.log('[Web3][accountsChanged] params ', params, Dapp.Bridges.ethereum, window.ethereum)
+      await callbackFunc('accountsChanged', params)
     })
-    window.ethereum.on('chainChanged', function () {
-      console.log('[Web3][disconnect] chainChanged')
-      callbackFunc('chainChanged')
+    window.ethereum.on('chainChanged', async function (params) {
+      console.log('[Web3][chainChanged] params ', params)
+      await callbackFunc('chainChanged', params)
     })
-    window.ethereum.on('disconnect', function () {
-      console.log('[Web3][disconnect] emit')
-      callbackFunc('disconnect')
+    window.ethereum.on('disconnect', async function (params) {
+      console.log('[Web3][disconnect] params ', params)
+      await callbackFunc('disconnect', params)
     })
-    window.ethereum.on('message', (message) => {
-      console.log('[Web3][disconnect] metemask message ', message)
-      callbackFunc('message')
+    window.ethereum.on('message', async (message) => {
+      console.log('[Web3][message] message ', message)
+      await callbackFunc('message', message)
     })
   },
   switch: async (chainId) => {
@@ -240,8 +240,6 @@ const Dapp = {
 
 export default {
   install: (App) => {
-    console.log('herere there ')
     App.config.globalProperties.$Dapp = Dapp
-    console.log('herere there ', App.config.globalProperties.$Dapp)
   }
 }

@@ -319,7 +319,7 @@ export default {
       if (lenArr[0] > _that.maxChar) {
         $('#remarkInfo_' + tokenId).val(lenArr[1])
         _that.remarkMessage = $('#remarkInfo_' + tokenId).val()
-        popupMessage('Max message 30 chars')
+        popupMessage('Max message 30 chars', 'top', 'center', 't')
       }
       console.log('[Building] computeWords length is ', lenArr)
       return lenArr[0]
@@ -357,9 +357,9 @@ export default {
       console.log('[Building][updateMessage] resCode', resCode)
       if (resCode !== 0) {
         // alert('bind faild')
-        popupMessage('Remark faild')
+        popupMessage('Remark faild', 'top', 'center', 'f')
       } else {
-        popupMessage('Remark success')
+        popupMessage('Remark success', 'top', 'center', 's')
       }
     },
     updateFloorsInfo (floorId, message) {
@@ -383,9 +383,9 @@ export default {
     }
   },
   created () {
-    console.log('[Buiding] created start!')
+    console.log('[Buiding][created] start!')
     const _that = this
-    console.log('[Buiding] that ', _that.$Dapp)
+    console.log('[Buiding][created] that.$Dapp ', _that.$Dapp)
 
     window.addEventListener('scroll', _that.handleScroll)
   }
