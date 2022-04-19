@@ -20,14 +20,14 @@
         </span>
         <span class="account-username-label">Username</span>
         <div class="account-username-input flex-col justify-center">
-          <input type="text" class="account-message-input" name="message" id="message" v-model="name" maxlength="20">
+          <input type="text" class="account-message-input" name="username" id="username" :value="username" maxlength="20">
         </div>
         <span class="account-label2">Network&nbsp;List</span>
         <div class="account-network flex-col">
           <div class="account-network-header flex-row justify-between">
             <span class="account-network-header-info">EVM&nbsp;Chain</span>
             <div class="account-network-header-info2 flex-container justify-center">
-              <input class="account-address flex-col" type="text" name="address" id="messageInfo" v-model="playerInfo.address" readonly>
+              <input class="account-address flex-col" type="text" name="address" id="messageInfo" v-model="address" readonly>
               <button type="button" class="account-address-copy flex-col" @click="copy" data-clipboard-target="#messageInfo">Copy</button>
               <!-- <span class="account-address">0xc2f1…76E3</span> -->
               <!-- <span class="account-address-copy">Copied</span> -->
@@ -51,114 +51,97 @@
 </template>
 
 <script>
+import $ from 'jquery'
 import Clipboard from 'clipboard'
-import Toastify from 'toastify-js'
-import { addLocalStorage, getLocalStorage } from '../utils/Utils'
-import { ajaxGetProfile, ajaxUpdateProfile } from '../utils/AjaxData'
+// addLocalStorage, getLocalStorage,
+import { popupMessage } from '../utils/Utils'
+import { ethers } from 'ethers'
+// import { ajaxGetProfile, ajaxUpdateProfile } from '../utils/AjaxData'
 
 export default {
   name: 'Account',
   data () {
     return {
-      name: '',
-      count: 0,
+      username: '',
+      tmpNmae: '',
       display: false,
-      playerInfo: {
-        address: ''
-      }
+      address: ''
     }
   },
   props: {
     profileAddr: String,
+    accountName: String,
     show: Boolean
   },
   methods: {
-    async walletSelect (chainId) {
-      const _that = this
-      console.log('[Account][Click] this dapp ', chainId, _that.$Dapp)
-    },
-    popupMessage (message, gravity = 'top', position = 'center') {
-      Toastify({
-        text: message,
-        duration: 3000,
-        newWindow: true,
-        close: true,
-        gravity: gravity, // `top` or `bottom`
-        position: position, // `left`, `center` or `right`
-        stopOnFocus: true, // Prevents dismissing of toast on hover
-        style: {
-          background: 'linear-gradient(to right, #00b09b, #96c93d)'
-        }
-      }).showToast()
-    },
     copy () {
-      const _that = this
+      // const _that = this
       const clipboard = new Clipboard('.account-address-copy')
       clipboard.on('success', e => {
         console.log('[Account] copy address is', e)
-        _that.popupMessage('Copied !')
+        popupMessage('Address copied !', 'top', 'center', 's')
       })
       clipboard.on('error', e => {
-        _that.popupMessage('Copy failed')
+        popupMessage('Copy failed', 'top', 'center', 'f')
       })
     },
     close () {
       this.$emit('close-account')
     },
-    async submitName (chatName) {
+    submitName () {
       const _that = this
-      if (!_that.playerInfo.address) {
-        _that.popupMessage('Login wallet first')
-        return
-      }
-      if (chatName === undefined) {
-        chatName = this.playerInfo.address
-      }
-      console.log('[Account] name is', _that.name)
-      if (_that.name) {
-        addLocalStorage('username' + chatName, _that.name, 2 * 3600)
-        // 入库
-        const res = await ajaxUpdateProfile(this.playerInfo.address, _that.name, 0)
-        console.log('[Account] code', res)
-        if (res !== 0) {
-          _that.popupMessage('Username updated faild!', 'top', 'right')
-        } else {
-          _that.popupMessage('Username updated!', 'top', 'right')
-        }
-      }
+      const username = $('#username').val()
+      console.log('[Account][submitName] username ', username)
+      _that.$emit('update-name', { name: username })
     }
   },
   async updated () {
     const _that = this
-    console.log('[Account][updated] updated start!', _that.name)
+    console.log('[Account][updated] updated start!', [_that.username, _that.profileAddr, _that.accountName])
     _that.display = _that.show
-    _that.playerInfo.address = _that.profileAddr
+    _that.address = _that.profileAddr ? ethers.utils.getAddress(_that.profileAddr) : ''
+    _that.username = _that.accountName
+    // _that.name = _that.accountName[_that.playerInfo.address]
+    // if (_that.accountName && (_that.playerInfo.address in _that.accountName)) {
+    //   _that.name = _that.accountName[_that.playerInfo.address]
+    //   return
+    // }
 
-    if (('ethereum' in _that.$Dapp.Bridges) && ('selectedAddress' in _that.$Dapp.Bridges.ethereum)) {
-      _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
-    }
+    // if (!_that.profileAddr && ('ethereum' in _that.$Dapp.Bridges) && ('selectedAddress' in _that.$Dapp.Bridges.ethereum)) {
+    //   _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
+    // }
 
-    if (_that.playerInfo.address && !_that.name && _that.count <= 1) {
-      _that.count++
-
-      if (_that.name === '') {
-        console.log('[Account][updated] _that.playerInfo.address ', _that.playerInfo.address)
-        const result = await ajaxGetProfile(_that.playerInfo.address)
-        console.log('[Account][updated] result: ', result)
-        _that.name = result.Name
-      }
-    }
+    // // user address exists and name empty and only 1 time
+    // if (_that.playerInfo.address && _that.count <= 1) {
+    //   _that.count++
+    //   const len = _that.playerInfo.address.length
+    //   const key = 'un:' + _that.playerInfo.address.substring(len - 6)
+    //   const localName = getLocalStorage(key)
+    //   if (localName) {
+    //     _that.name = localName
+    //   } else {
+    //     console.log('[Account][updated] _that.playerInfo.address ', _that.playerInfo.address)
+    //     try {
+    //       const result = await ajaxGetProfile(_that.playerInfo.address)
+    //       console.log('[Account][updated] result: ', result)
+    //       _that.name = result.Name
+    //     } catch (error) {
+    //       _that.name = ''
+    //       console.log('[Account][updated] error ', error)
+    //     }
+    //   }
+    // }
   },
   mounted () {
     console.log('[Account][mounted] mounted start!')
   },
   created () {
-    const _that = this
+    // const _that = this
     console.log('[Account][created] created start!')
-    if (_that.playerInfo.address) {
-      _that.name = getLocalStorage('username' + _that.playerInfo.address)
-    }
-    console.log('[Account][created] created end ', _that.name, _that.playerInfo)
+    // if (_that.playerInfo.address) {
+    //   _that.name = getLocalStorage('username' + _that.playerInfo.address)
+    // }
+    // console.log('[Account][created] created end ', _that.name, _that.playerInfo)
   }
 }
 </script>

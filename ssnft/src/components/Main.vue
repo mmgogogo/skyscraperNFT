@@ -356,7 +356,7 @@
         </div>
       </div>
     </div>
-    <Account :show="showInfo.account" v-on:close-account="closeAccount" :profileAddr="playerInfo.address"/>
+    <Account :show="showInfo.account" v-on:update-name="updateUsername" v-on:close-account="closeAccount" :profileAddr="playerInfo.address" :accountName="getUsername()" />
     <MyFloorList :show="showInfo.floor" :loading="setting.loading" :floors="playerInfo.mintFloorNumId" v-on:open-game="openGame" v-on:close-floors="closeFloors" />
     <Game :show="showInfo.game" :url="gameConfig.gameUrl" v-on:close-game="closeGame" />
     <!-- avatar start -->
@@ -373,9 +373,6 @@
 <script>
 import * as ethers from 'ethers'
 import $ from 'jquery'
-import Toastify from 'toastify-js'
-import 'toastify-js/src/toastify.css'
-import Clipboard from 'clipboard'
 
 import Building from '@/components/Building.vue'
 import Login from '@/components/Login.vue'
@@ -385,9 +382,10 @@ import Account from '@/components/Account.vue'
 import Messager from '@/utils/Messager.js'
 import {
   // ajaxAddFollowerPeople, ajaxAddFollowerToken, ajaxAddTokenInfo,
-  ajaxGetHotToken, ajaxGetMyFollower, ajaxGetAllNfts, ajaxGetTokenInfo, ajaxGetTokenHotNum, wsServerUrl, ajaxGetUserInfo
+  ajaxGetHotToken, ajaxGetMyFollower, ajaxGetAllNfts, ajaxGetTokenInfo,
+  ajaxGetTokenHotNum, wsServerUrl, ajaxGetUserInfo, ajaxGetProfile, ajaxUpdateProfile
 } from '@/utils/AjaxData.js'
-import { addLocalStorage, getLocalStorage, hiddenAddress } from '@/utils/Utils.js'
+import { addLocalStorage, getLocalStorage, hiddenAddress, popupMessage } from '../utils/Utils'
 
 export default {
   name: 'Navigator',
@@ -458,6 +456,7 @@ export default {
       },
       playerInfo: {
         name: '',
+        names: {},
         chainId: '',
         address: '',
         signature: '',
@@ -562,6 +561,7 @@ export default {
       console.log('[Main][selectAWallet] end ', this.showInfo.login)
     },
     async initProvider () {
+      // connect to the 3rd provider not wallet and singer
       const _that = this
       await _that.$Dapp.connectProvider()
     },
@@ -578,30 +578,17 @@ export default {
       const dapp = _that.$Dapp
       console.log('[Main][login] Dapp is', dapp)
 
-      // if (!dapp.isMetaMaskInstalled()) {
-      //   _that.popupMessage('Please install wallet plugin')
-      //   return
-      // }
-      // TODO:切换账号这里应该重新处理
-      // if (!dapp.Bridges.local || !dapp.Bridges.ethereum || dapp.Bridges.ethereum === undefined) {
-      //   console.log('[Main][login] connect')
-      //   await _that.$Dapp.connectWallet()
-      //   // await _that.$Dapp.sign(_that.$Dapp.Bridges.ethereum.selectedAddress, _that.generateSessKey())
-      // }
-      // else {
-      //   _that.popupMessage('Metamask connected')
-      // }
-
-      // get status
+      // playerInfo status
+      // null: local default value
+      // 0: , 1: clicked login panel, 2: signed
       const status = getLocalStorage('status')
-      console.log('[Main][getPlayerInfo] status ', status)
-      if (status >= 1) {
-        await _that.$Dapp.connectWallet()
+      console.log('[Main][login] playerInfo status ', status)
+      // if (status >= 1) {
+      _that.$Dapp.connectWallet().then(async function () {
         await _that.updateProfile([{ type: 'login', chainId: _that.$Dapp.Bridges.ethereum.chainId, address: _that.$Dapp.Bridges.ethereum.selectedAddress }])
-        // _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
-      }
-      // check sign
-      await _that.signAddress()
+        await _that.signAddress()
+      })
+      // }
     },
     resetPopWindow () {
       console.log('[Main][resetPopWindow] start')
@@ -668,18 +655,11 @@ export default {
     submitChat () {
       // 发送聊天内容
       const _that = this
-      // if (!_that.playerInfo.isLogin) {
-      //   _that.popupMessage('Login wallet first')
-      //   return
-      // }
-      // if (_that.playerInfo.address !== undefined && _that.playerInfo.address !== '') {
-      //   _that.chatName = _that.playerInfo.address
-      // }
 
-      console.log('[Main] ws message is', _that.chatName, _that.curMessage)
+      console.log('[Main][submitChat] message is ', [_that.chatName, _that.curMessage])
       if (_that.curMessage) {
         // 发送消息
-        this.broadcast(_that.chatName, _that.curMessage)
+        _that.broadcast(_that.chatName, _that.curMessage)
 
         // 更新聊天框
         // this.updateChatList(_that.chatName, _that.curMessage)
@@ -712,11 +692,11 @@ export default {
       const _that = this
       console.log('[Main][realMint] playerInfo ', _that.playerInfo)
       if (!_that.playerInfo.status) {
-        _that.popupMessage('please login wallet', 'top', 'right')
+        popupMessage('Please login wallet', 'top', 'right', 't')
         return
       }
       if (_that.mintConfig.mintNum <= 0 || _that.mintConfig.mintPrice <= 0) {
-        _that.popupMessage('Input param error')
+        popupMessage('Input param error', 'top', 'right', 'f')
         return
       }
 
@@ -732,8 +712,7 @@ export default {
         value: floorPrice
       }
       await _that.$Dapp.Bridges.writer.mint(floorNum, overrides).then(function (ret) {
-        console.log(ret)
-        _that.popupMessage('正在MINT楼层...，稍后请查看My Floor')
+        popupMessage('Minting, wait for a moment', 'top', 'center', 't')
       })
       _that.showInfo.mint = true
     },
@@ -749,10 +728,10 @@ export default {
 
       this.resetPopWindow() // reset
       this.resetMintFloor() // reset
-      this.setting.loading = 'Loading...' // loading open
+      this.setting.loading = 'loading' // loading open
 
       if (_that.playerInfo.status < 1) {
-        this.popupMessage('Login wallet to loading floor information')
+        popupMessage('Login wallet to loading floor information', 'top', 'center', 't')
         return
       }
 
@@ -770,7 +749,8 @@ export default {
         const tokenNum = parseInt(ret)
         console.log('[Main][myFloor] call balanceOf:', ret, tokenNum)
         if (tokenNum === 0) {
-          _that.popupMessage('Your have nothing nft')
+          // popupMessage('Your have nothing nft', 'top', 'center', 't')
+          _that.setting.loading = 'empty'
           return
         }
 
@@ -785,12 +765,7 @@ export default {
             })
           })
         }
-
-        if (tokenNum === 0) {
-          _that.setting.loading = 'Empty...'
-        } else {
-          _that.setting.loading = ''
-        }
+        _that.setting.loading = ''
       })
     },
     async myFollowing (obj) {
@@ -799,7 +774,7 @@ export default {
       console.log('[Main][myFollowing]click myFollowing top ', $('#' + obj).position())
 
       if (_that.playerInfo.status < 1) {
-        _that.popupMessage('Login wallet to loading following information')
+        popupMessage('Login wallet to loading following information', 'top', 'center', 't')
         return
       }
 
@@ -829,7 +804,7 @@ export default {
       console.log('[Main][myFollowed] click myFollowed', obj)
 
       if (!_that.playerInfo.status) {
-        _that.popupMessage('Login wallet to loading followed information')
+        popupMessage('Login wallet to loading followed information', 'top', 'center', 't')
         return
       }
 
@@ -879,7 +854,7 @@ export default {
       }
     },
     room () {
-      this.popupMessage('room coming soon')
+      popupMessage('Coming soon', 'top', 'center', 't')
     },
     async avatar () {
       const _that = this
@@ -889,7 +864,7 @@ export default {
       let address = _that.playerInfo.address
       console.log('[Main][avatar] address ', address, _that.signature)
       if (!address || !_that.signature) {
-        _that.popupMessage('Login first')
+        popupMessage('Login wallet first', 'top', 'center', 't')
         return
       }
 
@@ -916,27 +891,6 @@ export default {
       const _that = this
       console.log('[Main] floor id is ', this.gotoNum)
       _that.search(this.gotoNum)
-      // return
-      // await this.$Dapp.Bridges.writer.getTokenInfo(this.gotoNum).then(function (ret) {
-      //   console.log('[Main][goto] call getTokenInfo:', ret)
-      //   const tokenId = parseInt(ret.tokenId)
-      //   console.log('[Main][goto] token id:', tokenId)
-      //   if (tokenId === 0) {
-      //     this.popupMessage('this floor not available(may be you want to mint?), please input the right number')
-      //   } else {
-      //     this.popupMessage('going to the floor[' + tokenId + '] ...')
-      //     this.popupMessage('coming soon :)')
-      //   }
-      // })
-      // 新版本楼层=tokenID
-      // const ret = await this.getTokenFromContract(this.gotoNum)
-      // console.log('[Main][goto] call getTokenInfo:', ret)
-      // if (ret.minted === 0) {
-      // this.popupMessage('this floor not available(may be you want to mint?), please input the right number')
-      // } else {
-      //   this.popupMessage('going to the floor[' + ret.tokenId + '] ...')
-      //   this.popupMessage('coming soon :)')
-      // }
     },
     search (floorId) {
       const _that = this
@@ -1016,23 +970,6 @@ export default {
       return Array(end - start + 1).fill().map((_, idx) => start + idx)
     },
     defaultBuildings (floorIds) {
-      // const floorList = []
-      // floorList =
-      // for (const floorId of floorIds) {
-      //   const floorInfo = {
-      //     id: floorId,
-      //     floorId: floorId,
-      //     houseType: '0',
-      //     minted: 0,
-      //     owner: '',
-      //     name: '',
-      //     message: '',
-      //     myFloor: '',
-      //     order: 99999 - parseInt(floorId),
-      //     image: '../assets/images/walls/floor_00000.png'
-      //   }
-      //   floorList.push(floorInfo)
-      // }
       return this.getFloorInfoFromCache(floorIds)
     },
     updateBuilding (start, first = false, direct = 0) {
@@ -1335,11 +1272,6 @@ export default {
 
           addLocalStorage('status', _that.playerInfo.status, 2 * 3600 - 10)
 
-          // todo data
-          // getUserProfile(address)
-          // return {name: 'zhaofei'}
-
-          _that.playerInfo.name = 'Default'
           _that.showInfo.login = false
           await _that.signAddress()
         }
@@ -1349,12 +1281,15 @@ export default {
           _that.playerInfo.status = 1
 
           addLocalStorage('status', _that.playerInfo.status, 2 * 3600 - 10)
+        }
+        if ('type' in params && params.type === 'change') {
+          _that.playerInfo.chainId = params.chainId
+          _that.playerInfo.address = params.address
+          _that.playerInfo.status = params.status
 
-          // todo data
-          // getUserProfile(address)
-          // return {name: 'zhaofei'}
+          addLocalStorage('status', _that.playerInfo.status, 2 * 3600 - 10)
 
-          _that.playerInfo.name = 'Default'
+          await _that.signAddress()
         }
         if ('type' in params && params.type === 'sign') {
           _that.playerInfo.chainId = params.chainId
@@ -1363,27 +1298,39 @@ export default {
           _that.playerInfo.status = 2
 
           addLocalStorage('status', _that.playerInfo.status, 2 * 3600 - 10)
-          addLocalStorage('signature', params.signature, 2 * 3600 - 10)
-
-          // todo data
-          // getUserProfile(address)
-          // return {name: 'zhaofei'}
-
-          _that.playerInfo.name = 'Default'
+          const len = params.address.length
+          const key = 'sig_' + params.address.substring(len - 6)
+          addLocalStorage(key, params.signature, 2 * 3600 - 10)
+        }
+        const curAddr = _that.playerInfo.address
+        if (curAddr && (!_that.playerInfo.names || !(curAddr in _that.playerInfo.names) || ((curAddr in _that.playerInfo.names) && !_that.playerInfo.names[curAddr]))) {
+          console.log('[Main][updateProfile] names get ', curAddr)
+          try {
+            const result = await ajaxGetProfile(curAddr)
+            _that.playerInfo.names[curAddr] = result.Name
+          } catch (error) {
+            console.log('[Main][updateProfile] error ', error)
+          }
         }
       }
     },
     async signAddress () {
       const _that = this
-
-      let signature = getLocalStorage('signature')
-      console.log('[Main][login] signature is ', signature)
-
-      if (_that.playerInfo.status && _that.playerInfo.status === 1 && !signature) {
+      if (!('ethereum' in _that.$Dapp.Bridges) || (_that.$Dapp.Bridges && !_that.$Dapp.Bridges.ethereum.selectedAddress)) {
+        return
+      }
+      if (!_that.playerInfo.address) {
+        _that.playerInfo.address = _that.$Dapp.Bridges.ethereum.selectedAddress
+      }
+      const len = _that.playerInfo.address.length
+      const key = 'sig_' + _that.playerInfo.address.substring(len - 6)
+      let signature = getLocalStorage(key)
+      console.log('[Main][login] signature is ', signature, _that.playerInfo)
+      if (_that.playerInfo.status && (_that.playerInfo.status === 1 || _that.playerInfo.status === 2) && !signature) {
         const signer = _that.$Dapp.Bridges.local.getSigner(_that.playerInfo.address)
         const signMsg = 'Welcome'
         signature = await signer.signMessage(signMsg)
-        console.log('[Main][signature] content is ', signMsg, signature)
+        // console.log('[Main][signature] content is ', signMsg, signature)
         await _that.updateProfile([{ type: 'sign', chainId: _that.$Dapp.Bridges.ethereum.chainId, address: _that.$Dapp.Bridges.ethereum.selectedAddress, signature: signature }])
         _that.playerInfo.signature = signature
         _that.signature = signature
@@ -1396,6 +1343,35 @@ export default {
       const _that = this
       console.log('[Main][closeAccount] closeAccount start')
       _that.showInfo.account = false
+    },
+    getUsername () {
+      const _that = this
+      return _that.playerInfo.address && (_that.playerInfo.address in _that.playerInfo.names) ? _that.playerInfo.names[_that.playerInfo.address] : ''
+    },
+    updateUsername (params) {
+      const _that = this
+      console.log('[Main][updateUsername] start ', params)
+      if (_that.playerInfo.address && _that.playerInfo.address.length >= 40) {
+        if ('name' in params && params.name) {
+          try {
+            _that.playerInfo.names[_that.playerInfo.address] = params.name
+            ajaxUpdateProfile(_that.playerInfo.address, params.name, 0).then(function (res) {
+              console.log('[Main][updateUsername] ajaxUpdateProfile return ', res)
+              if (res !== 0) {
+                popupMessage('Name changed faild!', 'top', 'right', 'f')
+              } else {
+                const len = _that.playerInfo.address.length
+                const key = 'un:' + _that.playerInfo.address.substring(len - 6)
+                addLocalStorage(key, params.name, 2 * 3600)
+
+                popupMessage('Name changed successfully!', 'top', 'right', 's')
+              }
+            })
+          } catch (error) {
+            console.log('[Main][updateUsername] error ', error)
+          }
+        }
+      }
     },
     closeLogin (params) {
       const _that = this
@@ -1420,18 +1396,17 @@ export default {
       const address = _that.playerInfo.address
       // If player not login, Cant open game.
       if (!address) {
-        _that.popupMessage('Connect wallet firt, cant open it')
+        popupMessage('Connect wallet firt, cant open it', 'top', 'center', 't')
         return
       }
 
-      await _that.signAddress()
       // when user login game they signed a message use their wallet to prove the owner
       // and Login server will return a token to Client, expired after 2 hours
       // this is the login token, use it here
-      // todo data
+      await _that.signAddress()
 
       if (parseInt(params[1]) === 0) {
-        _that.popupMessage('Not minted floor, cant open it')
+        popupMessage('Not minted floor, cant open it', 'top', 'center', 'f')
         return
       }
       // Own the floor or not
@@ -1475,30 +1450,6 @@ export default {
       // console.log('[Main] strPadLeft str ', str)
       return chr.repeat(len - String(str).length) + String(str)
     },
-    popupMessage (message, gravity = 'top', position = 'center') {
-      Toastify({
-        text: message,
-        duration: 3000,
-        newWindow: true,
-        close: true,
-        gravity: gravity, // `top` or `bottom`
-        position: position, // `left`, `center` or `right`
-        stopOnFocus: true, // Prevents dismissing of toast on hover
-        style: {
-          background: 'linear-gradient(to right, #00b09b, #96c93d)'
-        }
-      }).showToast()
-    },
-    copy () {
-      const _that = this
-      const clipboard = new Clipboard('.copy')
-      clipboard.on('success', e => {
-        _that.popupMessage('copy successfully')
-      })
-      clipboard.on('error', e => {
-        _that.popupMessage('copy failed')
-      })
-    },
     timer () {
       const _that = this
       // loop 1 time per 8 seconds
@@ -1508,10 +1459,10 @@ export default {
       }, 8000)
     },
     async broadcast (name, msg) {
+      const _that = this
       // 发送通知
-      if (this.chatConn === null) {
-        console.log('重新链接服务器...')
-        this.initChatServer()
+      if (_that.chatConn === null) {
+        _that.initChatServer()
       }
       // 打包消息
       const data = JSON.stringify({
@@ -1520,20 +1471,31 @@ export default {
         room: 0,
         type: 0 // 0=公共 1=私聊
       })
-      // 校验当前链接状态
-      console.log('ws链接状态：', this.chatConn)
+      // check wss connection status
       // CONNECTING：值为0，表示正在连接；
       // OPEN：值为1，表示连接成功，可以通信了；
       // CLOSING：值为2，表示连接正在关闭；
       // CLOSED：值为3，表示连接已经关闭，或者打开连接失败。
       try {
-        if (this.chatConn.readyState >= 2) {
-          console.log('断开重新链接：', this.chatConn)
-          await this.initChatServer()
+        let flag = 0
+        if (_that.chatConn.readyState === 2) {
+          console.log('[Main][broadcast] wss closing', _that.chatConn)
+          flag = 1
+        } else if (_that.chatConn.readyState === 3) {
+          console.log('[Main][broadcast] wss closed', _that.chatConn)
+          flag = 1
+        } else if (_that.chatConn.readyState > 3) {
+          console.log('[Main][broadcast] error', _that.chatConn)
+          flag = 1
         }
-        this.chatConn.send(data)
+        if (flag === 1) {
+          await _that.initChatServer()
+          _that.chatConn.send(data)
+        } else {
+          _that.chatConn.send(data)
+        }
       } catch (error) {
-        console.log('ws send error')
+        console.log('[Main][broadcast] wss error', error)
       }
     },
     // 初始化聊天服务器
@@ -1544,41 +1506,46 @@ export default {
       } else {
         const lowAddr = _that.playerInfo.address
         const f4 = await ajaxGetUserInfo([lowAddr])
-        console.log('[Main]initChatServer-1', lowAddr, f4)
+        console.log('[Main][initChatServer] addr and username ', lowAddr, f4)
         for (var v in f4) {
           if (v.toLowerCase() === lowAddr.toLowerCase()) {
             _that.chatName = f4[v].name
           }
         }
         _that.chatName = _that.chatName !== '' ? _that.chatName : hiddenAddress(lowAddr)
-        console.log('[Main]initChatServer-2', _that.chatName)
+        console.log('[Main][initChatServer] chatName ', _that.chatName)
       }
 
       if (window.WebSocket) {
-        const url = wsServerUrl() + '?id=' + _that.chatName + '&room=0'
-        console.log('[Main] ws server url: ' + url)
-        this.chatConn = new WebSocket(url)
-        this.chatConn.onopen = function (evt) {
-          _that.broadcast('系统', '欢迎[' + _that.chatName + ']加入频道')
+        if (_that.chatConn && _that.chatConn.readyState === 1) {
+          return
         }
-        this.chatConn.onclose = function (evt) {
+        const url = wsServerUrl() + '?id=' + _that.chatName + '&room=0'
+        console.log('[Main][initChatServer] server url ' + url)
+        _that.chatConn = new WebSocket(url)
+        _that.chatConn.onopen = function (evt) {
+          const hellomsg = getLocalStorage(_that.chatName)
+          if (!hellomsg) {
+            _that.broadcast('系统', '欢迎[' + _that.chatName + ']加入频道')
+            addLocalStorage(_that.chatName, 1, 2 * 3600 - 10)
+          }
+        }
+        _that.chatConn.onclose = function (evt) {
           _that.broadcast('系统', 'Connection closed')
         }
-        this.chatConn.onmessage = function (evt) {
-          // 解析消息
-          // console.log('[onmessage]', evt.data)
+        _that.chatConn.onmessage = function (evt) {
           try {
             const data = JSON.parse(JSON.parse(evt.data))
-            console.log('[Main] ws data', data)
+            console.log('[Main][onmessage] message data', data)
             if (data.msg !== 'ping#pong') {
               _that.updateChatList(data.name, data.msg)
             }
           } catch (error) {
-            console.log('[Main] ws error', error)
+            console.log('[Main][onmessage] error', error)
           }
         }
       } else {
-        _that.popupMessage('Your browser does not support WebSocket')
+        popupMessage('Your browser does not support WebSocket', 'top', 'center', 'f')
       }
     },
     errorConnect () {
@@ -1589,37 +1556,45 @@ export default {
       }
       return false
     },
-    walletCallback (params) {
+    // type: accountsChanged:newaddress chainChanged:newchain disconnect: message:message
+    walletCallback (type, value) {
       const _that = this
-      console.log('[Main][walletCallback] params ', params)
-      console.log('[Main][walletCallback] playerInfo ', _that.playerInfo, _that.showInfo.login)
-      if (_that.showInfo.login) {
-        _that.showInfo.login = false
+      console.log('[Main][walletCallback] params ', [type, value], _that.playerInfo)
+      if (type === 'accountsChanged') {
+        if (_that.playerInfo.address && _that.playerInfo.status >= 1) {
+          if (value && value.length > 0) {
+            if (value[0] !== _that.playerInfo.address) {
+              popupMessage('Wallet address switched', 'top', 'center', 't')
+              _that.updateProfile([{ type: 'change', address: value[0], chainId: _that.playerInfo.chainId, status: 1 }])
+            }
+          } else {
+            popupMessage('Wallet connect close', 'top', 'center', 't')
+            if (_that.$Dapp.Bridges.ethereum.selectedAddress) {
+              _that.updateProfile([{ type: 'connected', address: _that.$Dapp.Bridges.ethereum.selectedAddress, chainId: _that.$Dapp.Bridges.ethereum.chainId, status: 1 }])
+            } else {
+              _that.updateProfile([{ type: 'change', address: '', chainId: _that.$Dapp.Bridges.ethereum.chainId, status: 0 }])
+              // window.location.reload()
+            }
+          }
+        } else {
+          window.location.reload()
+        }
+      } else if (type === 'chainChanged') {
+        if (_that.playerInfo.address && _that.playerInfo.status >= 1) {
+          popupMessage('Network changed', 'top', 'center', 't')
+          _that.updateProfile([{ type: 'change', address: _that.playerInfo.address, chainId: value, status: 1 }])
+        } else {
+          window.location.reload()
+        }
+      } else if (type === 'disconnect') {
+        if (_that.playerInfo.address && _that.playerInfo.status >= 1) {
+          _that.updateProfile([{ type: 'change', address: '', chainId: _that.playerInfo.chainId, status: 0 }])
+        } else {
+          window.location.reload()
+        }
+      } else if (type === 'message') {
+        // do nothing
       }
-    },
-    onClickCheck () {
-      // // alert
-      // let that = this
-      // let tips = localStorage.getItem('tips')
-      // if (!tips || isNaN(tips) || tips === "NaN") {
-      //   tips = 0
-      // }
-      // // console.log(['tips', tips])
-      // if (that.playerInfo.status === 0) {
-      //   if (tips >= 3) {
-
-      //   } else {
-      //     tips = parseInt(tips) + 1
-      //     // console.log(['tips2', tips])
-      //     localStorage.setItem('tips', tips)
-      //     that.$toast({message: 'Please login Ethereum wallet', duration: 1000})
-      //   }
-      //   return false
-      // } else if (that.playerInfo.status === 1) {
-      //   that.$toast({message: 'Loading...', duration: 1000})
-      //   return false
-      // }
-      // return true
     },
     async getGlobalInfo () {
       const _that = this
@@ -1671,7 +1646,7 @@ export default {
       const _that = this
       if (!_that.$Dapp.isMetaMaskInstalled()) {
         _that.globalInfo.metamaskExists = false
-        _that.popupMessage('Please install wallet plugin')
+        popupMessage('Please install wallet plugin', 'top', 'center', 't')
       } else {
         _that.globalInfo.metamaskExists = true
       }
@@ -1686,10 +1661,10 @@ export default {
   created () {
     console.log('[Main][created] created start!')
     const _that = this
-    console.log('[Main][created] display Dapp 1 ', _that.$Dapp)
+    console.log('[Main][created] display Dapp ', _that.$Dapp)
     $(fn => {
       (async function () {
-        console.log('[Main][created] display Dapp 2 ', _that.$Dapp, window.innerHeight)
+        console.log('[Main][created] display Dapp innerHeight ', _that.$Dapp, window.innerHeight)
         const innerHeight = window.innerHeight
         if (innerHeight) {
           const tempFloors = Math.ceil(innerHeight / 75)
@@ -1698,7 +1673,7 @@ export default {
           _that.building.page = tempFloors
           // }
         }
-        console.log('[Main][created] display Dapp 3 ', _that.building.page)
+        console.log('[Main][created] display Dapp page ', _that.building.page)
 
         // If wallet plugin not install, popup select wallet
         _that.checkMetamaskExists()
@@ -1712,8 +1687,13 @@ export default {
         await _that.login()
 
         // init chat server
-        _that.chatRandNum = 'Guest' + parseInt(Math.random() * 1000)
-        console.log('[Main] start connect ws server', _that.chatRandNum)
+        let randId = getLocalStorage('randId')
+        if (!randId) {
+          randId = parseInt(Math.random() * 100000)
+          addLocalStorage('randId', randId, 7 * 24 * 3600)
+        }
+        _that.chatRandNum = 'Guest' + randId
+        console.log('[Main][created] connect ws server', _that.chatRandNum)
         await _that.initChatServer()
 
         await _that.initBuilding()
@@ -1722,7 +1702,7 @@ export default {
         await Messager.listener()
         await _that.$Dapp.listener(_that.walletCallback)
 
-        console.log('building', $('.building').prop('scrollHeight'))
+        console.log('[Main][created]  building height ', $('.building').prop('scrollHeight'))
         $('.building').scrollTop($('.building').prop('scrollHeight'))
 
         const onwheel = function (e) {
@@ -1740,6 +1720,7 @@ export default {
     })
   },
   mounted () {
+    console.log('[Main][mounted] start')
     // $(".shadow").click(function() {
     //   $(".shadow").fadeIn();
     // });
