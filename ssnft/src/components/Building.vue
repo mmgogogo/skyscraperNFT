@@ -374,7 +374,6 @@ export default {
     }
   },
   updated () {
-    console.log('[Buiding] updated start!')
     const _that = this
     _that.floorList = _that.floors
     _that.address = _that.profileAddr

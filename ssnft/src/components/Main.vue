@@ -386,6 +386,7 @@ import {
   ajaxGetTokenHotNum, wsServerUrl, ajaxGetUserInfo, ajaxGetProfile, ajaxUpdateProfile
 } from '@/utils/AjaxData.js'
 import { addLocalStorage, getLocalStorage, hiddenAddress, popupMessage } from '../utils/Utils'
+import cfg from '../config/setting'
 
 export default {
   name: 'Navigator',
@@ -582,13 +583,42 @@ export default {
       // null: local default value
       // 0: , 1: clicked login panel, 2: signed
       const status = getLocalStorage('status')
-      console.log('[Main][login] playerInfo status ', status)
-      // if (status >= 1) {
-      _that.$Dapp.connectWallet().then(async function () {
-        await _that.updateProfile([{ type: 'login', chainId: _that.$Dapp.Bridges.ethereum.chainId, address: _that.$Dapp.Bridges.ethereum.selectedAddress }])
-        await _that.signAddress()
-      })
-      // }
+      console.log('[Main][login] playerInfo status ', status, _that.checkDappWallet())
+      const walletNotReady = _that.checkDappWallet()
+      console.log('')
+      if (walletNotReady === true) {
+        console.log('[Main][login] connectWallet start')
+        _that.$Dapp.connectWallet().then(async (response) => {
+          console.log('[Main][login] connectWallet response ', response)
+          if (_that.$Dapp.Bridges.ethereum) {
+            await _that.updateProfile([{ type: 'login', chainId: _that.$Dapp.Bridges.ethereum.chainId, address: _that.$Dapp.Bridges.ethereum.selectedAddress }])
+            try {
+              await _that.signAddress()
+            } catch (error) {
+              console.log('[Main][login] signAddress error ', error)
+            }
+          }
+          console.log('[Main][login] connectWallet end')
+        })
+      }
+    },
+    checkDappWalletEthereum () {
+      const _that = this
+      if (_that.$Dapp && _that.$Dapp.Bridges && _that.$Dapp.Bridges.ethereum) {
+        return true
+      } else {
+        console.log('[Main][checkDappWallet] ', _that.$Dapp)
+        return false
+      }
+    },
+    checkDappWallet () {
+      const _that = this
+      if (_that.$Dapp && _that.$Dapp.Bridges) {
+        return true
+      } else {
+        console.log('[Main][checkDappWallet] ', _that.$Dapp)
+        return false
+      }
     },
     resetPopWindow () {
       console.log('[Main][resetPopWindow] start')
@@ -1126,8 +1156,12 @@ export default {
       const _that = this
 
       if (_that.errorConnect()) {
-        console.log('Main][created] error', _that.$Dapp.Bridges)
-        return []
+        _that.$Dapp.switch(cfg[cfg.version].chainId).then(function (response) {
+          console.log('[Main][getFloorListInfo] response', response)
+          // window.location.reload()
+        })
+        console.log('[Main][getFloorListInfo] error', _that.$Dapp.Bridges)
+        return _that.defaultBuildings(floorIds)
       }
 
       // [{ minted: 0, owner: '', tokenId: floorId, floorNo: 0, houseType: 0 }, ...]
@@ -1288,8 +1322,11 @@ export default {
           _that.playerInfo.status = params.status
 
           addLocalStorage('status', _that.playerInfo.status, 2 * 3600 - 10)
-
-          await _that.signAddress()
+          try {
+            await _that.signAddress()
+          } catch (error) {
+            console.log('[Main][updateProfile] signAddress refuse ', error)
+          }
         }
         if ('type' in params && params.type === 'sign') {
           _that.playerInfo.chainId = params.chainId
@@ -1316,7 +1353,12 @@ export default {
     },
     async signAddress () {
       const _that = this
-      if (!('ethereum' in _that.$Dapp.Bridges) || (_that.$Dapp.Bridges && !_that.$Dapp.Bridges.ethereum.selectedAddress)) {
+      if (_that.checkDappWalletEthereum() === false) {
+        console.log('[Main][login][signAddress] checkDappWalletEthereum false')
+        return
+      }
+      if (!_that.$Dapp.Bridges.ethereum.selectedAddress) {
+        console.log('[Main][login][signAddress] selectedAddress empty')
         return
       }
       if (!_that.playerInfo.address) {
@@ -1327,6 +1369,7 @@ export default {
       let signature = getLocalStorage(key)
       console.log('[Main][login] signature is ', signature, _that.playerInfo)
       if (_that.playerInfo.status && (_that.playerInfo.status === 1 || _that.playerInfo.status === 2) && !signature) {
+        _that.signSwitch = true
         const signer = _that.$Dapp.Bridges.local.getSigner(_that.playerInfo.address)
         const signMsg = 'Welcome'
         signature = await signer.signMessage(signMsg)
@@ -1403,8 +1446,11 @@ export default {
       // when user login game they signed a message use their wallet to prove the owner
       // and Login server will return a token to Client, expired after 2 hours
       // this is the login token, use it here
-      await _that.signAddress()
-
+      try {
+        await _that.signAddress()
+      } catch (error) {
+        console.log('[Main][openGame] signAddress error ', error)
+      }
       if (parseInt(params[1]) === 0) {
         popupMessage('Not minted floor, cant open it', 'top', 'center', 'f')
         return
@@ -1536,8 +1582,8 @@ export default {
         _that.chatConn.onmessage = function (evt) {
           try {
             const data = JSON.parse(JSON.parse(evt.data))
-            console.log('[Main][onmessage] message data', data)
             if (data.msg !== 'ping#pong') {
+              console.log('[Main][onmessage] message data', data)
               _that.updateChatList(data.name, data.msg)
             }
           } catch (error) {
@@ -1560,37 +1606,66 @@ export default {
     walletCallback (type, value) {
       const _that = this
       console.log('[Main][walletCallback] params ', [type, value], _that.playerInfo)
+      if (_that.checkDappWalletEthereum() === false) {
+        console.log('[Main][walletCallback] checkDappWalletEthereum false')
+        return
+      }
       if (type === 'accountsChanged') {
         if (_that.playerInfo.address && _that.playerInfo.status >= 1) {
           if (value && value.length > 0) {
             if (value[0] !== _that.playerInfo.address) {
+              _that.playerInfo.address = value[0]
               popupMessage('Wallet address switched', 'top', 'center', 't')
-              _that.updateProfile([{ type: 'change', address: value[0], chainId: _that.playerInfo.chainId, status: 1 }])
+              _that.updateProfile([{
+                type: 'change',
+                address: value[0],
+                chainId: _that.$Dapp.Bridges.ethereum.chainId,
+                status: 1
+              }])
             }
           } else {
             popupMessage('Wallet connect close', 'top', 'center', 't')
             if (_that.$Dapp.Bridges.ethereum.selectedAddress) {
-              _that.updateProfile([{ type: 'connected', address: _that.$Dapp.Bridges.ethereum.selectedAddress, chainId: _that.$Dapp.Bridges.ethereum.chainId, status: 1 }])
+              _that.updateProfile([{
+                type: 'connected',
+                address: _that.$Dapp.Bridges.ethereum.selectedAddress,
+                chainId: _that.$Dapp.Bridges.ethereum.chainId,
+                status: 1
+              }])
             } else {
-              _that.updateProfile([{ type: 'change', address: '', chainId: _that.$Dapp.Bridges.ethereum.chainId, status: 0 }])
-              // window.location.reload()
+              _that.updateProfile([{
+                type: 'change',
+                address: '',
+                chainId: _that.$Dapp.Bridges.ethereum.chainId,
+                status: 0
+              }])
             }
           }
         } else {
-          window.location.reload()
+          // window.location.reload()
         }
       } else if (type === 'chainChanged') {
         if (_that.playerInfo.address && _that.playerInfo.status >= 1) {
           popupMessage('Network changed', 'top', 'center', 't')
-          _that.updateProfile([{ type: 'change', address: _that.playerInfo.address, chainId: value, status: 1 }])
+          _that.updateProfile([{
+            type: 'change',
+            address: _that.$Dapp.Bridges.ethereum.selectedAddress,
+            chainId: value,
+            status: 1
+          }])
         } else {
-          window.location.reload()
+          // window.location.reload()
         }
       } else if (type === 'disconnect') {
         if (_that.playerInfo.address && _that.playerInfo.status >= 1) {
-          _that.updateProfile([{ type: 'change', address: '', chainId: _that.playerInfo.chainId, status: 0 }])
+          _that.updateProfile([{
+            type: 'change',
+            address: '',
+            chainId: _that.$Dapp.Bridges.ethereum.chainId,
+            status: 0
+          }])
         } else {
-          window.location.reload()
+          // window.location.reload()
         }
       } else if (type === 'message') {
         // do nothing

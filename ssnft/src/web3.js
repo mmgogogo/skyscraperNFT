@@ -1,46 +1,28 @@
 import * as ethers from 'ethers'
 // import $ from 'jquery'
 import _ from 'lodash'
-import Toastify from 'toastify-js'
+import { popupMessage } from './utils/Utils'
 import contractNFTTest from './contractAbi'
+import cfg from './config/setting'
 
 // -32000 execution reverted! "Internal JSON-RPC error." 原因为合约有报错
 /**
  * 目标链ID
  */
-// const targetChainId = '0x2a' // Kovan测试链
-const targetChainId = '0x3' // Ropster测试链
-// const targetChainId = '0x1' // Mainnet
-
-_.assign(1, 1)
-
-/**
- * 合约地址
- */
-// const contractAddress = '0x93893eB7a1eBB90ED99b0FcEE48b5171aADc2b06' // Kovan
-// const contractUrl = 'https://kovan.etherscan.io/address/0x93893eb7a1ebb90ed99b0fcee48b5171aadc2b06'
+const targetChainId = cfg[cfg.version].chainId
 
 /**
  * 节点token
  * register: https://web3api.com/
  */
-const providerToken = '735d69b2d035422ab5ff680934b338dc'
+const providerToken = cfg[cfg.version].providerToken
 /**
  * Network http provider
  * @mainnet https://bsc-mainnet.web3api.com/v1/
  * @testnet https://bsc-testnet.web3api.com/v1/
  */
-// const networkHttpProvider = 'https://kovan.infura.io/v3/' + providerToken
-const networkHttpProvider = 'https://ropsten.infura.io/v3/' + providerToken
-
-// alchemy
-// const contractAddress = '0xFD0B9c88DF4A884Eee463B7DBb46d97c53fa757B'
-const contractAddress = '0xc53885d4A9be6D17fcC56F4907E2CAc1d31261fd'
-// const web3HttpProvider = 'https://eth-ropsten.alchemyapi.io/v2/Po-F6eE3SaJQ9R74LUWLa1gOW36CTh7J'
-
-/**
- * ABI
- */
+const networkHttpProvider = cfg[cfg.version].providerUrl + providerToken
+const contractAddress = cfg[cfg.version].contractAddress
 const contractAbi = contractNFTTest
 
 /**
@@ -96,21 +78,9 @@ const Dapp = {
   connectWallet: async () => {
     try {
       if (isMetaMaskInstalled()) {
-        if (window.ethereum.chainId !== targetChainId) {
+        if (!('chainId' in window.ethereum) || (('chainId' in window.ethereum) && window.ethereum.chainId !== targetChainId)) {
           Dapp.Bridges.rightChainId = false
-          console.log('window.ethereum.chainId', window.ethereum.chainId, targetChainId)
-          Toastify({
-            text: 'Please switch to Ropsten Test Network',
-            duration: 3000,
-            newWindow: true,
-            close: true,
-            gravity: 'top', // `top` or `bottom`
-            position: 'right', // `left`, `center` or `right`
-            stopOnFocus: true, // Prevents dismissing of toast on hover
-            style: {
-              background: 'linear-gradient(to right, #00b09b, #96c93d)'
-            }
-          }).showToast()
+          popupMessage('Please switch to Ropsten Test Network', 'top', 'center', 'f')
           return Dapp
         }
 
@@ -132,22 +102,11 @@ const Dapp = {
 
         return Dapp
       }
-      Toastify({
-        text: 'Please install wallet plugin',
-        duration: 3000,
-        newWindow: true,
-        close: true,
-        gravity: 'top', // `top` or `bottom`
-        position: 'right', // `left`, `center` or `right`
-        stopOnFocus: true, // Prevents dismissing of toast on hover
-        style: {
-          background: 'linear-gradient(to right, #00b09b, #96c93d)'
-        }
-      }).showToast()
+      popupMessage('Please install wallet plugin', 'top', 'center', 'f')
       return null
     } catch (e) {
-      console.log(['dapp exception ', e])
-      throw e
+      console.log(['ConnectWallet error ', e])
+      // throw e
     }
   },
   sign: async (wallet, nonce) => {
@@ -184,39 +143,19 @@ const Dapp = {
             method: 'wallet_switchEthereumChain',
             params: [{ chainId: chainId }]
           })
+          await Dapp.connectWallet()
+          window.location.reload()
         } catch (switchError) {
           // This error code indicates that the chain has not been added to MetaMask.
           if (switchError.code === 4902) {
-            await Dapp.connectWallet()
+            // add a chain
           } else {
-            Toastify({
-              text: '[Error] ' + switchError.message,
-              duration: 3000,
-              newWindow: true,
-              close: true,
-              gravity: 'top', // `top` or `bottom`
-              position: 'right', // `left`, `center` or `right`
-              stopOnFocus: true, // Prevents dismissing of toast on hover
-              style: {
-                background: 'linear-gradient(to right, #00b09b, #96c93d)'
-              }
-            }).showToast()
+            popupMessage('[Error] ' + switchError.message, 'top', 'center', 'f')
           }
         }
       }
     } else {
-      Toastify({
-        text: 'Please install wallet plugin',
-        duration: 3000,
-        newWindow: true,
-        close: true,
-        gravity: 'top', // `top` or `bottom`
-        position: 'right', // `left`, `center` or `right`
-        stopOnFocus: true, // Prevents dismissing of toast on hover
-        style: {
-          background: 'linear-gradient(to right, #00b09b, #96c93d)'
-        }
-      }).showToast()
+      popupMessage('Please install wallet plugin', 'top', 'center', 'f')
       return null
     }
   },

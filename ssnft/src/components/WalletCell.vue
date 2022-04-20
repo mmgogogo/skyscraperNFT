@@ -20,6 +20,7 @@
 import wallet001 from '../assets/images/metamask.png'
 import wallet002 from '../assets/images/metamask-1x.png'
 import wallet003 from '../assets/images/metamask-2x.png'
+import cfg from '../config/setting'
 
 export default {
   name: 'Wallet',
@@ -27,13 +28,13 @@ export default {
     return {
       walletConfig: [
         {
-          id: '0x1',
+          id: cfg.prod.chainId,
           name: 'Metamask(MN)',
           icons: [wallet001, wallet002, wallet003],
           download: 'https://metamask.io/download/'
         },
         {
-          id: '0x3',
+          id: cfg.dev.chainId,
           name: 'Metamask(RS)',
           icons: [wallet001, wallet002, wallet003],
           download: 'https://metamask.io/download/'
@@ -47,7 +48,7 @@ export default {
   methods: {
     async walletSelect (chainId) {
       const _that = this
-      console.log('[Wallet][Click] this dapp ', chainId, _that.$Dapp, _that.mmpExists)
+      console.log('[Wallet][Click] this dapp ', chainId, _that.mmpExists)
       // If metamask plugin not exists, navigate to download page.
       if (!_that.mmpExists) {
         window.open('https://metamask.io/download/')
