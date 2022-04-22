@@ -429,6 +429,7 @@ export default {
         baseUrl: 'https://kokoya-game-1308188195.file.myqcloud.com/dress/game/nft/index.html',
         gameUrl: '',
         avatarBaseUrl: 'https://kokoya-game-1308188195.file.myqcloud.com/dress/game/nftAvatar/index.html',
+        lobbyUrl: 'https://kokoya-game-1308188195.file.myqcloud.com/dress/game/nftHall/index.html',
         windowHeight: window.innerHeight
       },
       address: '',
@@ -1441,6 +1442,14 @@ export default {
       // If player not login, Cant open game.
       if (!address) {
         popupMessage('Connect wallet firt, cant open it', 'top', 'center', 't')
+        return
+      }
+
+      // lobbyFloor ['0', 0, '', -4] floorId, minted, owner, houseType
+      if (params[0] === '0' && params[1] === 0 && params[2] === '' && params[3] <= 0) {
+        _that.showInfo.game = true
+        _that.gameConfig.gameUrl = _that.gameConfig.lobbyUrl + `?roomId=0&wallet=${address}&owned=0&owner=''&layout=0&sign=''`
+        console.log('[Main][openGame] openGame lobby ', _that.showInfo.game, _that.gameConfig.gameUrl)
         return
       }
 
