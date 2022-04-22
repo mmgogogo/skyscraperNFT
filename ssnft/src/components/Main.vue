@@ -1445,14 +1445,6 @@ export default {
         return
       }
 
-      // lobbyFloor ['0', 0, '', -4] floorId, minted, owner, houseType
-      if (params[0] === '0' && params[1] === 0 && params[2] === '' && params[3] <= 0) {
-        _that.showInfo.game = true
-        _that.gameConfig.gameUrl = _that.gameConfig.lobbyUrl + `?roomId=0&wallet=${address}&owned=0&owner=''&layout=0&sign=''`
-        console.log('[Main][openGame] openGame lobby ', _that.showInfo.game, _that.gameConfig.gameUrl)
-        return
-      }
-
       // when user login game they signed a message use their wallet to prove the owner
       // and Login server will return a token to Client, expired after 2 hours
       // this is the login token, use it here
@@ -1461,6 +1453,16 @@ export default {
       } catch (error) {
         console.log('[Main][openGame] signAddress error ', error)
       }
+
+
+      // lobbyFloor ['0', 0, '', -4] floorId, minted, owner, houseType
+      if (params[0] === '0' && params[1] === 0 && params[2] === '' && params[3] <= 0) {
+        _that.showInfo.game = true
+        _that.gameConfig.gameUrl = _that.gameConfig.lobbyUrl + `?roomId=0&wallet=${address}&owned=0&owner=''&layout=0&sign=${_that.signature}`
+        console.log('[Main][openGame] openGame lobby ', _that.showInfo.game, _that.gameConfig.gameUrl)
+        return
+      }
+
       if (parseInt(params[1]) === 0) {
         popupMessage('Not minted floor, cant open it', 'top', 'center', 'f')
         return
