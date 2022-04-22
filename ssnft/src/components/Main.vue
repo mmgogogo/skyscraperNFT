@@ -1345,6 +1345,7 @@ export default {
           try {
             const result = await ajaxGetProfile(curAddr)
             _that.playerInfo.names[curAddr] = result.Name
+            await _that.initChatUsername(result.Name)
           } catch (error) {
             console.log('[Main][updateProfile] error ', error)
           }
@@ -1544,23 +1545,32 @@ export default {
         console.log('[Main][broadcast] wss error', error)
       }
     },
+    async initChatUsername (username) {
+      const _that = this
+      if (username) {
+        _that.chatName = username
+      } else {
+        if (_that.playerInfo.address === '') {
+          _that.chatName = _that.chatRandNum
+        } else {
+          const lowAddr = _that.playerInfo.address
+          const f4 = await ajaxGetUserInfo([lowAddr])
+          console.log('[Main][initChatServer] addr and username ', lowAddr, f4)
+          for (var v in f4) {
+            if (v.toLowerCase() === lowAddr.toLowerCase()) {
+              _that.chatName = f4[v].name
+            }
+          }
+          _that.chatName = _that.chatName !== '' ? _that.chatName : hiddenAddress(lowAddr)
+          console.log('[Main][initChatServer] chatName ', _that.chatName)
+        }
+      }
+    },
     // 初始化聊天服务器
     async initChatServer () {
       const _that = this
-      if (_that.playerInfo.address === '') {
-        _that.chatName = _that.chatRandNum
-      } else {
-        const lowAddr = _that.playerInfo.address
-        const f4 = await ajaxGetUserInfo([lowAddr])
-        console.log('[Main][initChatServer] addr and username ', lowAddr, f4)
-        for (var v in f4) {
-          if (v.toLowerCase() === lowAddr.toLowerCase()) {
-            _that.chatName = f4[v].name
-          }
-        }
-        _that.chatName = _that.chatName !== '' ? _that.chatName : hiddenAddress(lowAddr)
-        console.log('[Main][initChatServer] chatName ', _that.chatName)
-      }
+
+      await _that.initChatUsername()
 
       if (window.WebSocket) {
         if (_that.chatConn && _that.chatConn.readyState === 1) {
@@ -1728,6 +1738,7 @@ export default {
     }
   },
   updated () {
+    // const _that = this
     console.log('[Main][update] start!')
     if (this.building.first) {
       $('.building').scrollTop($('.building').prop('scrollHeight'))
@@ -1761,6 +1772,15 @@ export default {
 
         await _that.login()
 
+        await _that.initBuilding()
+        await _that.getGlobalInfo()
+        await _that.timer()
+        await Messager.listener()
+        await _that.$Dapp.listener(_that.walletCallback)
+
+        console.log('[Main][created]  building height ', $('.building').prop('scrollHeight'))
+        $('.building').scrollTop($('.building').prop('scrollHeight'))
+
         // init chat server
         let randId = getLocalStorage('randId')
         if (!randId) {
@@ -1770,15 +1790,6 @@ export default {
         _that.chatRandNum = 'Guest' + randId
         console.log('[Main][created] connect ws server', _that.chatRandNum)
         await _that.initChatServer()
-
-        await _that.initBuilding()
-        await _that.getGlobalInfo()
-        await _that.timer()
-        await Messager.listener()
-        await _that.$Dapp.listener(_that.walletCallback)
-
-        console.log('[Main][created]  building height ', $('.building').prop('scrollHeight'))
-        $('.building').scrollTop($('.building').prop('scrollHeight'))
 
         const onwheel = function (e) {
           let _log = ''
