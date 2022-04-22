@@ -1454,7 +1454,6 @@ export default {
         console.log('[Main][openGame] signAddress error ', error)
       }
 
-
       // lobbyFloor ['0', 0, '', -4] floorId, minted, owner, houseType
       if (params[0] === '0' && params[1] === 0 && params[2] === '' && params[3] <= 0) {
         _that.showInfo.game = true
