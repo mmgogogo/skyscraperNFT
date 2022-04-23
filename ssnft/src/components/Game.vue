@@ -45,7 +45,7 @@ export default {
         'box-sizing': 'content-box',
         'border-width': '0px',
         height: wHeight ? wHeight + 'px' : '768px',
-        width: wHeight ? wHeight * 1.7778 + 'px' : '1024px'
+        width: wHeight ? wHeight * 1.7778 + 'px' : '900px'
       }
     }
   },
