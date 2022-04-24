@@ -167,7 +167,7 @@
           </div>
 
           <div class="chat-footer flex-col justify-center">
-            <span class="chat-footer-msg">Chat：
+            <span class="chat-footer-msg">Chat:
               <input type="text" class="message-input" name="message" id="message" v-model="curMessage" maxlength="20" @focus="chatSwitcher(true)" @keyup.enter="submitChat()">
             </span>
           </div>
@@ -411,7 +411,7 @@ export default {
       },
       // 基础配置
       baseConfig: {
-        lang_001: 'Total Floor',
+        lang_001: 'Total Floors',
         lang_002: 'Search',
         lang_003: 'GO',
         lang_004: 'My Floor',
