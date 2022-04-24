@@ -186,7 +186,7 @@
                   <span class="hot-layer-message">{{setting.loading}}</span>
                 </div>
                 <div class="hot-item flex-col justify-center" v-for="v in playerInfo.myFollowing" :key="v.AddressTo">
-                  <span class="hot-layer-message">玩家地址:{{v.AddressTo}}</span>
+                  <span class="hot-layer-message">玩家地址:{{ addressDisplay(v.AddressTo) }}</span>
                 </div>
               </div>
               <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
@@ -207,7 +207,7 @@
                   <span class="hot-layer-message">{{setting.loading}}</span>
                 </div>
                 <div class="hot-item flex-col justify-center" v-for="v in playerInfo.myFollowed" :key="v.AddressTo">
-                  <span class="hot-layer-message">玩家地址:{{v.AddressFrom}}</span>
+                  <span class="hot-layer-message">玩家地址:{{ addressDisplay(v.AddressFrom) }}</span>
                 </div>
               </div>
               <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
@@ -504,6 +504,9 @@ export default {
     msg: String
   },
   methods: {
+    addressDisplay (address) {
+      return hiddenAddress(address)
+    },
     computeHeight () {
       const _that = this
       console.log('[Main][computeHeight] start ', _that.gameConfig.windowHeight)
