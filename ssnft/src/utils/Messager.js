@@ -42,6 +42,20 @@ class Messager {
       //   type: 'follow',  // 请求类型
       //   data: {follower: '0xabc0k....', roomId: 1000, time: now() }
       // }
+      // 3.1 拉取用户关注的楼层信息
+      // {
+      //   source: 'game',  // 发起方
+      //   type: 'followingList',  // 请求类型
+      //   data: {address:0xabcdd...} // address:用户的钱包地址
+      // }
+      // return [{address:被关注者,roomId:被关注楼层,createTime:关注时间}, ...]
+      // 3.2 拉取follow用户的楼层的用户信息
+      // {
+      //   source: 'game',  // 发起方
+      //   type: 'followedList',  // 请求类型
+      //   data: {address: '0xabc0k....', roomId: 1000 } // address: 用户的钱包地址, roomId:楼层Id
+      // }
+      // return [{address:关注者,createTime:关注时间}, ...]
       if (typeof event.data === 'object' &&
           event.data &&
           'type' in event.data &&
@@ -59,6 +73,12 @@ class Messager {
               await Messager.processNFTList(data)
             } else if (type === 'follow') {
               await Messager.processFollowInfo(data)
+            } else if (type === 'followingList') {
+              // listbymefollower
+              // await Messager.getFollowingList(data)
+            } else if (type === 'followedList') {
+              // listbyfollowerme
+              // await Messager.getFollowedList(data)
             } else if (type === 'remark') {
               await Messager.processEditFloorInfo(data)
             }
@@ -116,13 +136,31 @@ class Messager {
 
     // 关注玩家
     if (me !== '' && follower !== '') {
-      ajaxAddFollowerPeople(me, follower)
+      await ajaxAddFollowerPeople(me, follower)
     }
 
     // 关注楼层
     if (me !== '' && roomId !== '') {
-      ajaxAddFollowerToken(me, roomId)
+      await ajaxAddFollowerToken(me, roomId)
     }
+  }
+
+  // AddressFrom: "0x3722581ab9c563ff56554362856ab1dd35d0d782"
+  // AddressTo: "6829"
+  // CreateTime: 1645525956
+  // Deleted: 0
+  // Id: 7
+  static async getFollowingList (params) {
+
+  }
+
+  // AddressFrom: "4266"
+  // AddressTo: "0x3722581ab9c563ff56554362856ab1dd35d0d782"
+  // CreateTime: 1645530942
+  // Deleted: 0
+  // Id: 10
+  static async getFollowedList (params) {
+
   }
 
   // 楼层留言
