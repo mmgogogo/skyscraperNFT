@@ -123,7 +123,11 @@ class Messager {
   }
 
   // 关注其他
-  static async processFollowInfo (params) {
+  static async processFollowInfo (data) {
+    if (!data.data) {
+      return
+    }
+    const params = data.data
     // 关注了谁
     const follower = params.follower
     // 我是谁
@@ -164,7 +168,11 @@ class Messager {
   }
 
   // 楼层留言
-  static async processEditFloorInfo (params) {
+  static async processEditFloorInfo (data) {
+    if (!data.data) {
+      return
+    }
+    const params = data.data
     // 楼层ID
     const tokenId = params.tokenId
     // 留言内容
