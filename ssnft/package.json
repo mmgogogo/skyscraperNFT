@@ -10,8 +10,8 @@
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
     "deploy": "sh deploy.sh",
-    "window": "deploy.bat"
-	"publish":"publish.bat"
+    "window": "deploy.bat",
+	"pbwindow":"pbwindow.bat"
   },
   "dependencies": {
     "ant-design-vue": "^1.7.8",

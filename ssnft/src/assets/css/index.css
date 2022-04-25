@@ -1,11 +1,11 @@
 .number {
-  font-size: 20px;
+  font-size: 18px;
   text-rendering: auto;
   color: rgba(244, 240, 240, 0.838);
   letter-spacing: normal;
   word-spacing: normal;
   line-height: normal;
-  line-height: 52px\9;/*为了兼容IE8*/
+  line-height: 52px\9;/*forIE8*/
   text-transform: none;
   text-indent: 0px;
   text-shadow: none;
@@ -29,8 +29,8 @@
 input:focus
 { 
   background-color:rgba(255, 255, 255, 0.15);
-  line-height: normal; /*为了兼容谷歌*/
-  line-height: 52px\9; /*为了兼容IE8*/
+  line-height: normal; /*forgoogle*/
+  line-height: 52px\9; /*forIE8*/
 }
 
 .page {
@@ -221,7 +221,7 @@ input:focus
   width: 71px;
   overflow-wrap: break-word;
   color: rgba(255, 255, 255, 1);
-  font-size: 25px;
+  font-size: 22px;
   font-family: DINAlternate-Bold;
   white-space: nowrap;
   text-align: center;

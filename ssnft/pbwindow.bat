@@ -1,8 +1,4 @@
-:: deploy windows
-
-:: build app
-yarn run build
-
+:: copy 2 files
 copy C:\Users\Administrator.SZ-20171008YJHA\Documents\GitHub\www\skyscraperNFT\ssnft\CNAME C:\Users\Administrator.SZ-20171008YJHA\Documents\GitHub\www\skyscraperNFT\ssnft\dist
 copy C:\Users\Administrator.SZ-20171008YJHA\Documents\GitHub\www\skyscraperNFT\ssnft\Readme.md C:\Users\Administrator.SZ-20171008YJHA\Documents\GitHub\www\skyscraperNFT\ssnft\dist
 

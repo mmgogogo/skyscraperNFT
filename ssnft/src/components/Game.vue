@@ -39,13 +39,13 @@ export default {
     windowCompute () {
       const _that = this
       console.log('[Game][windowCompute] windowHeight', _that.windowHeight)
-      const wHeight = _that.windowHeight
+      const wHeight = _that.windowHeight // eslint-disable-line no-unused-vars
       return {
         'min-height': '500px',
         'box-sizing': 'content-box',
         'border-width': '0px',
-        height: wHeight ? wHeight + 'px' : '768px',
-        width: wHeight ? wHeight * 1.7778 + 'px' : '900px'
+        height: '95%',
+        width: '96%'
       }
     }
   },

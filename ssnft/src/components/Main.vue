@@ -17,7 +17,7 @@
         <div class="outer1 flex-col">
           <div class="bd1 flex-row justify-center">
             <div class="outer2 flex-col align-left">
-              <span class="text tbox tline tcolor tprop tfont_m tfont_s26 tshadow tleft" >{{ baseConfig.lang_001 }}</span>
+              <span class="text tbox tline tcolor tprop tfont_m tfont_s26 tshadow tcenter" >{{ baseConfig.lang_001 }}</span>
               <div class="box1 flex-row justify-bewteen">
                 <img class="icon1 flex-col" referrerpolicy="no-referrer" src="../assets/images/building_logo.png" alt="" />
                 <span class="box3 tfont_s30 tfont_m tcenter tcolor tprop flex-col">{{ globalInfo.total }}</span>
@@ -186,7 +186,7 @@
                   <span class="hot-layer-message">{{setting.loading}}</span>
                 </div>
                 <div class="hot-item flex-col justify-center" v-for="v in playerInfo.myFollowing" :key="v.AddressTo">
-                  <span class="hot-layer-message">玩家地址:{{v.AddressTo}}</span>
+                  <span class="hot-layer-message">UserAddress:{{v.AddressTo}}</span>
                 </div>
               </div>
               <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
@@ -199,7 +199,7 @@
         <div class="hot flex-col" v-show="showInfo.myFollowed" @click="onClickOutside($event)">
           <div class="hot-group flex-col justify-between">
             <div class="hot-title-container flex-col justify-center">
-              <span class="hot-title">Followed</span>
+              <span class="hot-title">Follower</span>
             </div>
             <div class="hot-container flex-row">
               <div class="hot-list flex-col">
@@ -207,7 +207,7 @@
                   <span class="hot-layer-message">{{setting.loading}}</span>
                 </div>
                 <div class="hot-item flex-col justify-center" v-for="v in playerInfo.myFollowed" :key="v.AddressTo">
-                  <span class="hot-layer-message">玩家地址:{{v.AddressFrom}}</span>
+                  <span class="hot-layer-message">UserAddress:{{v.AddressFrom}}</span>
                 </div>
               </div>
               <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
@@ -416,13 +416,13 @@ export default {
         lang_003: 'GO',
         lang_004: 'My Floor',
         lang_005: 'Following',
-        lang_006: 'Followed',
+        lang_006: 'Follower',
         lang_007: 'Hot',
         lang_008: 'Mint',
         lang_009: 'Room',
         lang_010: 'Avatar',
         lang_011: 'DAO',
-        lang_028: '复制'
+        lang_028: 'Copy'
       },
       gameConfig: {
         // baseUrl: 'http://127.0.0.1:9000', // https://dontil.github.io/test/ http://127.0.0.1:9000
