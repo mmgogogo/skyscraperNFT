@@ -9,22 +9,23 @@ export default {
     console.log('[App] created start!')
   }
 }
-</script>
+// document.oncontextmenu = function () {
+//   return false
+// }
+// 禁用右键
 
-<script>
-   document.onkeydown = function(event){
-        if (event.ctrlKey && window.event.keyCode==65){   //禁用ctrl + a 功能
-            return false;
-        }        
-             
-        if (event.ctrlKey && window.event.keyCode==83){	//禁用ctrl + s 功能
-            return false;
-        }
-
-        if (event.ctrlKey && window.event.keyCode==86){	//禁用ctrl + v 功能
-           return false;
-        }
-    }
+document.onkeydown = () => {
+// 禁用F12
+  if (window.event && window.event.keyCode === 123) {
+    return false
+  // 禁用ctrl+shift+i,
+  } else if (window.event.ctrlKey && window.event.keyCode === 65) {
+    return false
+    // 屏蔽Shift+F10
+  } else if (window.event.shiftKey && window.event.keyCode === 121) {
+    return false
+  }
+}
 </script>
 
 <style>
