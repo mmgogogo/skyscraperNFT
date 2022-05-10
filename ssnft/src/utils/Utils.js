@@ -42,7 +42,7 @@ export function hiddenAddress (address) {
 }
 
 export function hiddenName (name) {
-  if (name.length > 8) {
+  if (name.length > 10) {
     const len = name.length
     return name.substring(0, 4) + '...' + name.substring(len - 4)
   }
