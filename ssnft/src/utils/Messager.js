@@ -42,6 +42,12 @@ class Messager {
       //   type: 'follow',  // 请求类型
       //   data: {follower: '0xabc0k....', roomId: 1000, time: now() }
       // }
+      // 2.2 接收游戏端发送的unfollow请求数据
+      // {
+      //   source: 'game',  // 发起方
+      //   type: 'unfollow',  // 请求类型 取关
+      //   data: {follower: '0xabc0k....', roomId: 1000, time: now() } // follower:被关注者地址，roomId:被关注者房间
+      // }
       // 3.1 拉取用户关注的楼层信息
       // {
       //   source: 'game',  // 发起方
