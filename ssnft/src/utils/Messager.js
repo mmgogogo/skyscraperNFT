@@ -3,63 +3,63 @@ import { ajaxGetAllNfts, ajaxAddFollowerPeople, ajaxAddFollowerToken, ajaxAddTok
 export default
 class Messager {
   static sendMessage (message, callback) {
-    // 获取通信的子iframe
-    // iframe对象 TODO 这里可以再想想
+    // Get subiframe
+    // iframe object TODO think more
     const iframe = window.frames[0]
     console.log('[Web][Messager] sendMessage iframe is ', iframe, message)
     if (!iframe) {
       console.log('[Web][Messager] sendMessage ifram not created')
     } else {
-      // 向目标iframe发送message,"*"可以通过指定地址,限制发送的目标
+      // Send message to object iframe,"*" for all can limit send origin object by a special url
       iframe.postMessage(message, '*')
     }
     if (callback) {
-      // 100毫秒后用户可再次点击控制按钮发送请求
+      // 100 limit send more frequence
       setTimeout(callback, 100)
     }
   }
 
   static async listener () {
     window.addEventListener('message', async function (event) {
-      // 过滤域 event.origin === 'http://localhost:8080'
-      // 过滤消息类型 event.data && "type" in event.data
-      // event.data数据结构如下：
-      // 1.1 发送给游戏端的nft数据
+      // Filt origin, event.origin === 'http://localhost:8080'
+      // Filt event type, event.data && "type" in event.data
+      // event.data Data Structure as follow：
+      // 1.1 Send nft data to Game
       // {
       //     type: "nftList",
       //     source: "web",
       //     data: [{"img":"...", "type":"eth"},{}]
       // }
-      // 1.2 接收游戏端发送的nft请求数据
+      // 1.2 Receive nft request message sent by Game
       // {
-      //   source: 'game', // 发起方
-      //   type: 'nftList',    // 请求类型
-      //   data: {wallet: '0xabc0k....' }// 钱包地址
+      //   source: 'game', // from
+      //   type: 'nftList',    // request type
+      //   data: {wallet: '0xabc0k....' } // wallet address
       // }
-      // 2.1 接收游戏端发送的follow请求数据
+      // 2.1 Receive follow request message send by Game
       // {
-      //   source: 'game',  // 发起方
-      //   type: 'follow',  // 请求类型
+      //   source: 'game',  // from
+      //   type: 'follow',  // request type
       //   data: {follower: '0xabc0k....', roomId: 1000, time: now() }
       // }
-      // 2.2 接收游戏端发送的unfollow请求数据
+      // 2.2 Receive unfollow request data sent by Game
       // {
-      //   source: 'game',  // 发起方
-      //   type: 'unfollow',  // 请求类型 取关
-      //   data: {follower: '0xabc0k....', roomId: 1000, time: now() } // follower:被关注者地址，roomId:被关注者房间
+      //   source: 'game',  // from
+      //   type: 'unfollow',  // request type
+      //   data: {follower: '0xabc0k....', roomId: 1000, time: now() } // follower:follower address, roomId:follower floorId
       // }
-      // 3.1 拉取用户关注的楼层信息
+      // 3.1 Fetch followed info
       // {
-      //   source: 'game',  // 发起方
-      //   type: 'followingList',  // 请求类型
-      //   data: {address:0xabcdd...} // address:用户的钱包地址
+      //   source: 'game',  // from
+      //   type: 'followingList',  // request type
+      //   data: {address:0xabcdd...} // address:user wallet address
       // }
-      // return [{address:被关注者,roomId:被关注楼层,createTime:关注时间}, ...]
-      // 3.2 拉取follow用户的楼层的用户信息
+      // return [{address:被关注者,roomId:被关注楼层,createTime:followed time}, ...]
+      // 3.2 Fetch following info
       // {
-      //   source: 'game',  // 发起方
-      //   type: 'followedList',  // 请求类型
-      //   data: {address: '0xabc0k....', roomId: 1000 } // address: 用户的钱包地址, roomId:楼层Id
+      //   source: 'game',  // from
+      //   type: 'followedList',  // request type
+      //   data: {address: '0xabc0k....', roomId: 1000 } // address: user wallet address, roomId: floorId
       // }
       // return [{address:关注者,createTime:关注时间}, ...]
       if (typeof event.data === 'object' &&
@@ -70,8 +70,8 @@ class Messager {
         const data = event.data
         console.log('[Web][Messager] received event data ', data)
         try {
-          // 这里写处理方法
-          // 例如：如果是nft消息，通过nft处理方法来处理
+          // Event process function here
+          // e.g. If it is nft event message, use NftProcessFunc to process it
           if ('type' in data) {
             const type = data.type
             // nftList
@@ -128,28 +128,28 @@ class Messager {
     }
   }
 
-  // 关注其他
+  // process follow info
   static async processFollowInfo (data) {
     if (!data.data) {
       return
     }
     const params = data.data
-    // 关注了谁
+    // followed someone address
     const follower = params.follower
-    // 我是谁
+    // Who is me? my address
     const me = params.me
-    // 关注的房间
+    // followed roomId
     const roomId = params.roomId
-    // 发生时间
+    // create time
     const time = params.time
     console.log('[Web][Messager]processFollowInfo ', { follower: follower, roomId: roomId, time: time, me: me })
 
-    // 关注玩家
+    // followed address
     if (me !== '' && follower !== '') {
       await ajaxAddFollowerPeople(me, follower)
     }
 
-    // 关注楼层
+    // floor id
     if (me !== '' && roomId !== '') {
       await ajaxAddFollowerToken(me, roomId)
     }
@@ -173,17 +173,14 @@ class Messager {
 
   }
 
-  // 楼层留言
+  // floor message
   static async processEditFloorInfo (data) {
     if (!data.data) {
       return
     }
     const params = data.data
-    // 楼层ID
     const tokenId = params.tokenId
-    // 留言内容
     const remark = params.remark
-    // 发生时间
     const time = params.time
     console.log('[Web][Messager]processEditFloorInfo ', { tokenId: tokenId, remark: remark, time: time })
 

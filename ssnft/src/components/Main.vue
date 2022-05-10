@@ -186,7 +186,7 @@
                   <span class="hot-layer-message">{{setting.loading}}</span>
                 </div>
                 <div class="hot-item flex-col justify-center" v-for="v in playerInfo.myFollowing" :key="v.AddressTo">
-                  <span class="hot-layer-message">玩家地址:{{ addressDisplay(v.AddressTo) }}</span>
+                  <span class="hot-layer-message">{{ addressDisplay(v.AddressTo) }}</span>
                 </div>
               </div>
               <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
@@ -207,7 +207,7 @@
                   <span class="hot-layer-message">{{setting.loading}}</span>
                 </div>
                 <div class="hot-item flex-col justify-center" v-for="v in playerInfo.myFollowed" :key="v.AddressTo">
-                  <span class="hot-layer-message">玩家地址:{{ addressDisplay(v.AddressFrom) }}</span>
+                  <span class="hot-layer-message">{{ addressDisplay(v.AddressFrom) }}</span>
                 </div>
               </div>
               <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
@@ -228,7 +228,7 @@
                   <span class="hot-layer-message">{{setting.loading}}</span>
                 </div>
                 <div class="hot-item flex-col justify-center" v-for="v in floorInfo.hotList" :key="v.TokenId">
-                  <span class="hot-layer-message">楼层ID:{{v.TokenId}}， 热度:{{v.Num}}</span>
+                  <span class="hot-layer-message">Floor:{{v.TokenId}}, Hot:{{v.Num}}</span>
                 </div>
               </div>
               <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
@@ -261,7 +261,7 @@
             <div class="mint-left-msg-up flex-row">
               <div class="mint-left-msg-up-container flex-container">
                 <span class="mint-price-txt">Price</span>
-                <span class="mint-price-split">：</span>
+                <span class="mint-price-split">:</span>
                 <span class="mint-price-value">{{ mintConfig.mintPrice }}</span>
                 <span class="mint-price-unit">ETH</span>
               </div>
@@ -269,7 +269,7 @@
             <div class="mint-left-msg-down flex-row justify-between">
               <div class="mint-left-msg-up-container flex-container">
                 <span class="mint-number-txt flex-col">Amount</span>
-                <span class="mint-price-split">：</span>
+                <span class="mint-price-split">:</span>
                 <div class="mint-minus flex-row align-center" @click="mintDecrement()">
                   <div class="mint-minus-img flex-col"></div>
                 </div>
@@ -307,30 +307,24 @@
             </div>
           </div>
           <div class="wallet-line2 flex-row justify-center align-center">
-            <div class="wallet-line wallet-display flex-col">
-              <div class="wallet-collect-icons flex-row align-center">
-                <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/collected.png" alt="" />
-              </div>
-               <div class="wallet-gray-icons flex-row">
-                <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/collected_gray.png" alt="" />
+            <div v-bind:class="[showInfo.nftlabel === 'collected' ? 'wallet-line wallet-display flex-col' : 'wallet-line wallet-hidden flex-col']" @click="clickNftLabel('collected')">
+              <div class="wallet-gray-icons flex-row">
+                <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/collected.png" alt="" v-if="showInfo.nftlabel === 'collected'"/>
+                <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/collected_gray.png" alt="" v-else/>
                 <span class="wallet-word-block wallet-word">collected</span>
               </div>
             </div>
-            <div class="wallet-line wallet-hidden flex-col">
-              <div class="wallet-collect-icons flex-row align-center">
-                <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/created.png" alt="" />
-              </div>
+            <div v-bind:class="[showInfo.nftlabel === 'created' ? 'wallet-line wallet-display flex-col' : 'wallet-line wallet-hidden flex-col']" @click="clickNftLabel('created')">
               <div class="wallet-gray-icons flex-row">
-                <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/created_gray.png" alt="" />
+                <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/created.png" alt="" v-if="showInfo.nftlabel === 'created'"/>
+                <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/created_gray.png" alt="" v-else/>
                 <span class="wallet-word-block wallet-word">created</span>
               </div>
             </div>
-            <div class="wallet-line wallet-hidden flex-col">
-              <div class="wallet-collect-icons flex-row align-center">
-                <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/favorited.png" alt="" />
-              </div>
+            <div v-bind:class="[showInfo.nftlabel === 'favorited' ? 'wallet-line wallet-display flex-col' : 'wallet-line wallet-hidden flex-col']" @click="clickNftLabel('favorited')">
               <div class="wallet-gray-icons flex-row">
-                <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/favorited_gray.png" alt="" />
+                <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/favorited.png" alt="" v-if="showInfo.nftlabel === 'favorited'"/>
+                <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/favorited_gray.png" alt="" v-else/>
                 <span class="wallet-word-block wallet-word">favorited</span>
               </div>
             </div>
@@ -400,7 +394,6 @@ export default {
   data () {
     // initial data
     return {
-      // 合约函数
       appContractWriter: this.$Dapp.Bridges.writer,
       appContractReader: this.$Dapp.Bridges.read,
       signature: '',
@@ -409,7 +402,6 @@ export default {
         unit: 0.01,
         mintPrice: 0.01
       },
-      // 基础配置
       baseConfig: {
         lang_001: 'Total Floors',
         lang_002: 'Search',
@@ -435,7 +427,6 @@ export default {
       address: '',
       url: window.location.href ? window.location.href : '',
       lang: 'en',
-      // 全局数据
       globalInfo: {
         total: 10000,
         runUpTime: '2019-08-15',
@@ -452,6 +443,7 @@ export default {
         login: false,
         floor: false,
         account: false,
+        nftlabel: 'collected',
         myFloor: false, // my nft
         myFollowing: false, // i see
         myFollowed: false // see i
@@ -463,7 +455,7 @@ export default {
         address: '',
         signature: '',
         isLogin: false,
-        status: 0, // 登录状态值 0: metamask未登录, 1: 登录metamask成功 2: 获取name数据成功
+        status: 0, // login status 0: metamask not login, 1: login metamask successful 2: get name successful
         allNfts: [], // all nft
         mintFloorNumId: [], // mint
         mintFloorTokenId: [], // mint
@@ -492,9 +484,7 @@ export default {
         start: 6,
         floors: []
       },
-      chatList: [
-        // { name: '系统', content: '欢迎进入聊天频道！' }
-      ],
+      chatList: [],
       chatConn: null, // chat connection
       chatRandNum: 0, // chat rand agent id
       chatName: ''
@@ -679,7 +669,7 @@ export default {
       }
     },
     updateChatList (chatName, msg) {
-      // 更新聊天框
+      // update chat message list
       const len = this.chatList.length
       if (len > 20) {
         this.chatList = this.chatList.slice(len - 19)
@@ -687,15 +677,15 @@ export default {
       this.chatList.unshift({ name: hiddenAddress(chatName), content: msg })
     },
     submitChat () {
-      // 发送聊天内容
+      // send chat message
       const _that = this
 
       console.log('[Main][submitChat] message is ', [_that.chatName, _that.curMessage])
       if (_that.curMessage) {
-        // 发送消息
+        // message broadcast
         _that.broadcast(_that.chatName, _that.curMessage)
 
-        // 更新聊天框
+        // update chat message list
         // this.updateChatList(_that.chatName, _that.curMessage)
 
         _that.curMessage = ''
@@ -754,6 +744,10 @@ export default {
       const _that = this
       _that.showInfo.profile = false
       _that.showInfo.game = false
+    },
+    clickNftLabel (label) {
+      const _that = this
+      _that.showInfo.nftlabel = label
     },
     async myFloor (obj) {
       // this.login() // test
@@ -1116,16 +1110,17 @@ export default {
     },
     async getFloorListInfo (floorIds) {
       console.log('[Main][getFloorListInfo] start')
-      // 获取楼层全部信息
+      // fetch floor base information return list
       // this.getFloorBaseInfo(floorIds)
       // this.getFloorMessageInfo(floorIds)
 
       // data structure
       // 0. floorIds [1,2,3,4... 10000]
-      // 建议是 100条，取好缓存在本地
+      // recommand 100 records per request and save them into local strorage
       //
-      // 1. 楼层基础信息数据列表
-      // 输入楼层列表，返回楼层状态对象
+      // 1. floors base information
+      // input floor id list
+      // return object for floor status information
       // getFloorBaseInfo([1,2,3,4...])
       //
       // {
@@ -1135,18 +1130,19 @@ export default {
       //   ...
       // }
 
-      // 2. 楼层是否留言的数据列表
-      // 输入楼层列表，返回楼层状态对象
+      // 2. floor remark info list
+      // input floor id list
+      // return object for floor remark information list
       // getFloorMessageInfo([1,2,3,4...])
       // {1: [{from: 0xabc, msg: 'hello'}], ...}
 
-      // 3. 返回值数据结构
+      // 3. return data structure
       // {
-      //   floorId: '楼层ID',
-      //   owner: '所有者的地者',
-      //   name: '所有者的名字',
-      //   message: '留言信息Object',
-      //   myFloor:'我的楼层的魅力值 or 0'
+      //   floorId: '1001',
+      //   owner: '0x...abc',
+      //   name: 'my name',
+      //   message: 'Object for remark information',
+      //   myFloor:'love value or 0'
       // }
       // return [
       //   {
@@ -1215,7 +1211,7 @@ export default {
       // [{ minted: 0, owner: '', tokenId: floorId, floorNo: 0, houseType: 0 }, ...]
       const baseInfo = []
       for (const f of floorIds) {
-        // 这里会统一处理缓存情况
+        // tips: process floors information cache from local storage
         const oneFloor = await _that.getTokenFromContract(f)
         baseInfo.push(oneFloor)
       }
@@ -1269,14 +1265,14 @@ export default {
       return floorsInfo
     },
     async getTokenFromContract (floorId) {
-      // 判断是否有缓存
+      // Judge whether cached or not
       const cacheName = 'FC:'
       const oneFloorCache = getLocalStorage(cacheName + floorId)
       if (oneFloorCache !== null) {
         return oneFloorCache
       }
 
-      // 获取楼层合约里面的信息，将来这里换个新合约，直接映射TokenID的对象
+      // Get floor base information from contract
       const oneFloor = { minted: 0, owner: '', tokenId: floorId, floorNo: 0, houseType: 0 }
       await this.$Dapp.Bridges.browser.getTokenInfo(floorId).then(function (ret) {
         // floorNo, houseType, tokenId, uri
@@ -1290,7 +1286,7 @@ export default {
       })
       // console.log('[Main] getTokenFromContract response', oneFloor)
 
-      // 写入缓存
+      // Write into local storage
       addLocalStorage(cacheName + floorId, oneFloor)
       return oneFloor
     },
@@ -1520,22 +1516,21 @@ export default {
     },
     async broadcast (name, msg) {
       const _that = this
-      // 发送通知
       if (_that.chatConn === null) {
         _that.initChatServer()
       }
-      // 打包消息
+      // Package messages
       const data = JSON.stringify({
         name: name,
         msg: msg,
         room: 0,
-        type: 0 // 0=公共 1=私聊
+        type: 0 // 0=public 1=private
       })
       // check wss connection status
-      // CONNECTING：值为0，表示正在连接；
-      // OPEN：值为1，表示连接成功，可以通信了；
-      // CLOSING：值为2，表示连接正在关闭；
-      // CLOSED：值为3，表示连接已经关闭，或者打开连接失败。
+      // CONNECTING：value 0, connecting；
+      // OPEN value 1, connect successful can be communicated；
+      // CLOSING：value 2, connection is closing；
+      // CLOSED：value 3, connection is closed or opened failed error。
       try {
         let flag = 0
         if (_that.chatConn.readyState === 2) {
@@ -1579,7 +1574,7 @@ export default {
         }
       }
     },
-    // 初始化聊天服务器
+    // Connection to chat server initialize
     async initChatServer () {
       const _that = this
 
@@ -1595,12 +1590,12 @@ export default {
         _that.chatConn.onopen = function (evt) {
           const hellomsg = getLocalStorage(_that.chatName)
           if (!hellomsg) {
-            _that.broadcast('系统', '欢迎[' + _that.chatName + ']加入频道')
+            _that.broadcast('Skyscraper', 'Welcome [' + _that.chatName + ']')
             addLocalStorage(_that.chatName, 1, 2 * 3600 - 10)
           }
         }
         _that.chatConn.onclose = function (evt) {
-          _that.broadcast('系统', 'Connection closed')
+          _that.broadcast('Skyscraper', 'Connection closed')
         }
         _that.chatConn.onmessage = function (evt) {
           try {
@@ -1618,8 +1613,7 @@ export default {
       }
     },
     errorConnect () {
-      // 统计各种异常情况，然后直接退出
-      // 如果连接异常直接退出
+      // Stat errors
       if (this.$Dapp.Bridges.rightChainId === false) {
         return true
       }
@@ -1713,32 +1707,6 @@ export default {
       if (status === 1) {
         await that.login()
       }
-      // if (!that.$Dapp.Bridges.Metamask || !that.$Dapp.Bridges.Metamask.signedIn) {
-      //   // 未登录
-      //   that.playerInfo.status = 0 // not login
-      //   that.playerInfo.mmpLogin = false
-      //   return false
-      // }
-      // that.playerInfo.mmpLogin = true
-      // // 判断是否是同一个 哈希地址
-      // if (that.playerInfo.metamask !== that.$Dapp.Bridges.Metamask.web3.eth.defaultAccount) {
-      //   // 切换地址的时候 显示为1 未注册
-      //   that.playerInfo.status = 1 // not register
-      //   // 清除战斗记录
-      //   that.playerInfo.metamask = that.$Dapp.Bridges.Metamask.web3.eth.defaultAccount
-      //   that.playerInfo.address = that.$Dapp.Bridges.Browser.web3.utils.toChecksumAddress(
-      //     that.$Dapp.Bridges.Metamask.web3.eth.defaultAccount
-      //   )
-      // }
-      // if (that.$Dapp.Bridges.Metamask &&
-      //   that.$Dapp.Bridges.Metamask.signedIn &&
-      //   that.$Dapp.Bridges.Metamask.contracts.Sword) {
-      //   that.playerInfo.status = 2
-      //   // 更新用户信息
-      //   let myaddress = that.$Dapp.Bridges.Metamask.contracts.Sword.bridge.wallet()
-      //   myaddress = that.$Dapp.Bridges.Browser.web3.utils.toChecksumAddress(myaddress)
-      //   await that.$Dapp.Bridges.Browser.contracts.Sword.read('GetPlayerInfoXAddr', myaddress.toString())
-      // }
     },
     checkMetamaskExists () {
       const _that = this
@@ -1794,7 +1762,7 @@ export default {
         console.log('[Main][created]  building height ', $('.building').prop('scrollHeight'))
         $('.building').scrollTop($('.building').prop('scrollHeight'))
 
-        // init chat server
+        // Init chat server
         let randId = getLocalStorage('randId')
         if (!randId) {
           randId = parseInt(Math.random() * 100000)
@@ -1807,7 +1775,7 @@ export default {
         const onwheel = function (e) {
           let _log = ''
           const _ie9 = navigator.userAgent.indexOf('MSIE 9.0') > 0
-          const _h = _ie9 ? window.innerHeight : document.body.clientHeight // 兼容IE9
+          const _h = _ie9 ? window.innerHeight : document.body.clientHeight // For IE9
           _log += 'deltaY:' + e.deltaY
           _log += '|wheelDelta:' + e.wheelDelta
           _log += '|detail:' + e.detail

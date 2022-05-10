@@ -132,8 +132,8 @@ export default {
       count: 0,
       timearea: 0,
       startTime: 0,
-      defaultMsg: '欢迎来我家',
-      defaultName: '空置房',
+      defaultMsg: 'Welcome to my room',
+      defaultName: 'Empty Room',
       scrolled: false,
       floorList: [],
       editId: 0,
@@ -352,7 +352,7 @@ export default {
       // update floor message local
       _that.updateFloorsInfo(tokenId, remark)
 
-      // 判断楼层归属
+      // Is room owner?
       const resCode = await ajaxAddTokenInfo(tokenId, _that.address, remark)
       console.log('[Building][updateMessage] resCode', resCode)
       if (resCode !== 0) {
