@@ -75,3 +75,17 @@
     text-align: center;
     width: 100%;
 }
+
+.hot-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.hot-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.hot-list::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 20px;
+  border: 3px solid rgba(43, 46, 53, 1);
+}

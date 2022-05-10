@@ -41,13 +41,13 @@
               </div>
             </div>
           </div>
-          <div class="" v-bind:class="[!showInfo.floor ? '' : 'bgcolor_gray', 'nav-item flex-row justify-center nav-first']">
+          <div id="myFloor" v-bind:class="[!showInfo.floor ? '' : 'bgcolor_gray', 'nav-item flex-row justify-center nav-first']">
             <div class="nav-container flex-row align-center">
               <div v-bind:class="['layer1', 'flex-col', 'nav-margin']"></div>
               <span
                 class="text tbox1 tline tprop tfont_m tfont_s24 tshadow btn-hand"
                 v-bind:class="['tcolor', 'flex-col']"
-                @click="myFloor(this)">
+                @click="myFloor('myFloor')">
                 {{ baseConfig.lang_004 }}</span>
             </div>
           </div>
@@ -173,6 +173,27 @@
           </div>
         </div>
         <!-- chat end -->
+
+        <!-- my floors start -->
+        <div class="hot flex-col" v-show="showInfo.myFloor" @click="onClickOutside($event)">
+          <div class="hot-group flex-col justify-between">
+            <div class="hot-title-container flex-col justify-center">
+              <span class="hot-title">My Floors</span>
+            </div>
+            <div class="hot-container flex-row">
+              <div class="hot-list flex-col">
+                <div class="hot-item flex-col justify-center" v-if="setting.loading !== ''">
+                  <span class="hot-layer-message">{{setting.loading}}</span>
+                </div>
+                <div class="hot-item flex-col justify-center" v-for="floorInfo in playerInfo.mintFloorNumId" :key="floorInfo.floorId">
+                  <span class="hot-layer-message" @click="openGame([floorInfo.floorId, 1, floorInfo.owner, floorInfo.houseType])">Floor:{{ addressDisplay(floorInfo.floorId) }}</span>
+                </div>
+              </div>
+              <!-- <div class="group3 flex-col align-center"><div class="bd4 flex-col"></div></div> -->
+            </div>
+          </div>
+        </div>
+        <!-- my floors end -->
 
         <!-- myFollowing start -->
         <div class="hot flex-col" v-show="showInfo.myFollowing" @click="onClickOutside($event)">
@@ -307,21 +328,21 @@
             </div>
           </div>
           <div class="wallet-line2 flex-row justify-center align-center">
-            <div v-bind:class="[showInfo.nftlabel === 'collected' ? 'wallet-line wallet-display flex-col' : 'wallet-line wallet-hidden flex-col']" @click="clickNftLabel('collected')">
+            <div v-bind:class="[(showInfo.nftlabel === 'collected') ? 'wallet-line wallet-display flex-col' : 'wallet-line wallet-hidden flex-col']" @click="clickNftLabel('collected')">
               <div class="wallet-gray-icons flex-row">
                 <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/collected.png" alt="" v-if="showInfo.nftlabel === 'collected'"/>
                 <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/collected_gray.png" alt="" v-else/>
                 <span class="wallet-word-block wallet-word">collected</span>
               </div>
             </div>
-            <div v-bind:class="[showInfo.nftlabel === 'created' ? 'wallet-line wallet-display flex-col' : 'wallet-line wallet-hidden flex-col']" @click="clickNftLabel('created')">
+            <div v-bind:class="[(showInfo.nftlabel === 'created') ? 'wallet-line wallet-display flex-col' : 'wallet-line wallet-hidden flex-col']" @click="clickNftLabel('created')">
               <div class="wallet-gray-icons flex-row">
                 <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/created.png" alt="" v-if="showInfo.nftlabel === 'created'"/>
                 <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/created_gray.png" alt="" v-else/>
                 <span class="wallet-word-block wallet-word">created</span>
               </div>
             </div>
-            <div v-bind:class="[showInfo.nftlabel === 'favorited' ? 'wallet-line wallet-display flex-col' : 'wallet-line wallet-hidden flex-col']" @click="clickNftLabel('favorited')">
+            <div v-bind:class="[(showInfo.nftlabel === 'favorited') ? 'wallet-line wallet-display flex-col' : 'wallet-line wallet-hidden flex-col']" @click="clickNftLabel('favorited')">
               <div class="wallet-gray-icons flex-row">
                 <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/favorited.png" alt="" v-if="showInfo.nftlabel === 'favorited'"/>
                 <img class="wallet-group-icon" referrerpolicy="no-referrer" src="../assets/images/favorited_gray.png" alt="" v-else/>
@@ -351,7 +372,7 @@
       </div>
     </div>
     <Account :show="showInfo.account" v-on:update-name="updateUsername" v-on:close-account="closeAccount" :profileAddr="playerInfo.address" :accountName="getUsername()" />
-    <MyFloorList :show="showInfo.floor" :loading="setting.loading" :floors="playerInfo.mintFloorNumId" v-on:open-game="openGame" v-on:close-floors="closeFloors" />
+    <!-- <MyFloorList :show="showInfo.floor" :loading="setting.loading" :floors="playerInfo.mintFloorNumId" v-on:open-game="openGame" v-on:close-floors="closeFloors" /> -->
     <Game :show="showInfo.game" :url="gameConfig.gameUrl" v-on:close-game="closeGame" />
     <!-- avatar start -->
     <Login :show="showInfo.login" :mmpExists="globalInfo.metamaskExists" v-on:update-profile="updateProfile" v-on:close-login="closeLogin"/>
@@ -371,7 +392,7 @@ import $ from 'jquery'
 import Building from '@/components/Building.vue'
 import Login from '@/components/Login.vue'
 import Game from '@/components/Game.vue'
-import MyFloorList from '@/components/MyFloorList.vue'
+// import MyFloorList from '@/components/MyFloorList.vue'
 import Account from '@/components/Account.vue'
 import Messager from '@/utils/Messager.js'
 import {
@@ -388,7 +409,7 @@ export default {
     Building: Building,
     Login: Login,
     Game: Game,
-    MyFloorList: MyFloorList,
+    // MyFloorList: MyFloorList,
     Account: Account
   },
   data () {
@@ -763,10 +784,15 @@ export default {
         return
       }
 
+      $('.hot').css('margin-top', $('#' + obj).position().top)
+      $('.hot').css('margin-left', $('#' + obj).width())
+
       if (this.showInfo.myFloor) {
         this.showInfo.floor = false
+        this.showInfo.myFloor = false
       } else {
         this.showInfo.floor = true
+        this.showInfo.myFloor = true
       }
 
       const address = window.ethereum.selectedAddress
@@ -1771,6 +1797,7 @@ export default {
         _that.chatRandNum = 'Guest' + randId
         console.log('[Main][created] connect ws server', _that.chatRandNum)
         await _that.initChatServer()
+        _that.clickNftLabel('collected')
 
         const onwheel = function (e) {
           let _log = ''
