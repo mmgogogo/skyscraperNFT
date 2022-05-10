@@ -1,13 +1,13 @@
 import axios from 'axios'
 import qs from 'qs'
 
-// 服务器地址
+// Server Uri
 // const apiServer = 'http://127.0.0.1:9950'
 // const wsServer = 'ws://127.0.0.1:9950/ws'
 const wsServer = 'wss://iamxmm.xyz/ws'
 const apiServer = 'https://iamxmm.xyz'
 
-// 共享服务
+// Share service
 export function wsServerUrl () {
   return wsServer
 }
@@ -16,7 +16,7 @@ export function apiServerUrl () {
   return apiServer
 }
 
-// 添加关注地址
+// Add followed or following address
 export async function ajaxAddFollowerPeople (from, to) {
   console.log('[AjaxData] call ajaxAddFollowerPeople:', [from, to])
   let result = 200
@@ -43,7 +43,7 @@ export async function ajaxAddFollowerPeople (from, to) {
   )
 }
 
-// 添加关注楼层
+// Add followed or following floor
 export async function ajaxAddFollowerToken (address, tokenId) {
   console.log('[AjaxData] call ajaxAddFollowerToken:', [address, tokenId])
   let result = 200
@@ -70,7 +70,7 @@ export async function ajaxAddFollowerToken (address, tokenId) {
   )
 }
 
-// 添加关注楼层
+// Add hot floor
 export async function ajaxGetHotToken (signature) {
   console.log('[AjaxData] call ajaxGetHotToken:', signature)
   const url = apiServer + '/followertoken/hot?signature=' + signature
@@ -97,7 +97,7 @@ export async function ajaxGetHotToken (signature) {
   )
 }
 
-// 添加楼层留言
+// Add floor remark message info
 export async function ajaxAddTokenInfo (tokenId, address, remark) {
   console.log('[AjaxData] call ajaxAddTokenInfo:', [tokenId, address, remark])
   let result = 200
@@ -125,7 +125,7 @@ export async function ajaxAddTokenInfo (tokenId, address, remark) {
   )
 }
 
-// 获取我的关注列表
+// Fetch my followed floors list
 export async function ajaxGetMyFollower (type, address) {
   console.log('[AjaxData] call ajaxGetMyFollower:', type, address)
   const url = apiServer + '/followerpeople/' + type + '?from=' + address
@@ -152,7 +152,7 @@ export async function ajaxGetMyFollower (type, address) {
   )
 }
 
-// 获取个人nft列表
+// Fetch my nft list
 export async function ajaxGetAllNfts (address) {
   // console.log('[Web][Ajax] ajaxGetAllNfts start ', address)
   const url = apiServer + '/user/getallnft?address=' + address
@@ -212,7 +212,7 @@ export async function ajaxGetAllNfts (address) {
   )
 }
 
-// 获取token的留言
+// Fetch floor message list
 export async function ajaxGetTokenInfo (tokenIds) {
   const url = apiServer + '/token/listbytokenids?tokenIds=' + tokenIds.join(',')
   return new Promise(
@@ -236,7 +236,7 @@ export async function ajaxGetTokenInfo (tokenIds) {
   )
 }
 
-// 获取楼层热度
+// Fetch floor hot information
 export async function ajaxGetTokenHotNum (tokenIds) {
   console.log('[AjaxData] call ajaxGetTokenHotNum start')
   const url = apiServer + '/followertoken/listbytokenids?tokenIds=' + tokenIds.join(',')
@@ -261,7 +261,7 @@ export async function ajaxGetTokenHotNum (tokenIds) {
   )
 }
 
-// 读取玩家个人信息
+// Fetch my base information, e.g. name
 export async function ajaxGetProfile (address) {
   console.log('[AjaxData] call ajaxGetProfile ', address)
   const url = apiServer + '/user/get?address=' + address
@@ -282,7 +282,7 @@ export async function ajaxGetProfile (address) {
   )
 }
 
-// 读取玩家个人信息
+// Update user base information
 export async function ajaxUpdateProfile (address, name, loveNum) {
   console.log('[AjaxData] call ajaxUpdateProfile ', [address, name, loveNum])
   let result = 200
@@ -310,7 +310,7 @@ export async function ajaxUpdateProfile (address, name, loveNum) {
   )
 }
 
-// 获取用户表
+// Fetch user information
 export async function ajaxGetUserInfo (allAddress) {
   console.log('[AjaxData] ajaxGetUserInfo allAddress ', allAddress)
   if (allAddress === '') {

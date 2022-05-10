@@ -1,16 +1,15 @@
 import Toastify from 'toastify-js'
 import 'toastify-js/src/toastify.css'
 
-// 获取当前时间戳
 export function curTimeSe () {
   return parseInt((new Date()).valueOf() / 1000)
 }
 
 /**
- * 缓存格式是个JSON，前面是data，后面是过期时间
+ * Format json {data: expire time}
  * @param {integer} key
  * @param {string} value
- * @param {integer} sec 过期时间，秒为单位
+ * @param {integer} sec expire time, seconds
  */
 export function addLocalStorage (key, value, sec) {
   // console.log('[Utils] addLocalStorage', key, value, sec)
@@ -31,7 +30,6 @@ export function getLocalStorage (key) {
   }
 }
 
-// 隐藏太长的钱包地址
 export function hiddenAddress (address) {
   if (address === '') return address
   if (address === 0) return address

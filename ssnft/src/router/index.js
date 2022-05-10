@@ -1,8 +1,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 // createWebHistory
 const routes = [
-  // { path: '/', redirect: { name: 'Home' } }, // 重定向'
-  // { path: '/skyscraper', name: 'Enter', redirect: { name: 'Home' } }, // 重定向
+  // { path: '/', redirect: { name: 'Home' } }, // redirect'
+  // { path: '/skyscraper', name: 'Enter', redirect: { name: 'Home' } }, // redirect
   {
     path: '/',
     name: 'Home',
