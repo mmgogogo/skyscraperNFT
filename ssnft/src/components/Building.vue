@@ -347,7 +347,7 @@ export default {
     },
     async updateMessage (tokenId, remark) {
       const _that = this
-      console.log('[Buiding] editMessage ', tokenId, _that.address, remark)
+      console.log('[Building] editMessage ', tokenId, _that.address, remark)
 
       // update floor message local
       _that.updateFloorsInfo(tokenId, remark)

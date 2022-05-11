@@ -217,7 +217,7 @@ export async function ajaxGetTokenInfo (tokenIds) {
   const url = apiServer + '/token/listbytokenids?tokenIds=' + tokenIds.join(',')
   return new Promise(
     (resolve, reject) => axios.post(url).then(response => {
-      console.log('[Web][Ajax][Response] is ', [response])
+      console.log('[AjaxData][ajaxGetTokenInfo] Response is ', [tokenIds, response])
       const data = response.data
       const result = {}
       // console.log('[AjaxData] ajaxGetTokenInfo response:', data)
