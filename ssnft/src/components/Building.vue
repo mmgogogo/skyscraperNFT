@@ -272,7 +272,7 @@ export default {
       const timearea = Math.ceil(event.timeStamp - _that.startTime)
       setTimeout(function () {
         console.log('[Building][handleWheel] settimeout count ', _that.count, ' timearea ', timearea)
-        if (_that.count >= 15 || timearea > 200) {
+        if (_that.count >= 5 || timearea > 200) {
           _that.$emit('floor-scroll', event)
           _that.count = 0
         }
