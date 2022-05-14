@@ -481,6 +481,44 @@ html {
   text-align: center;
   text-shadow: 2px 1px 1px rgb(0 0 0 / 20%);
 }
+/*修改标尺*/
+.lmod5 {
+  height: 25px;
+  width: 25px;
+}
+.lmain7 {
+  width: 20px;
+  height: 20px;
+  background-size: 18px 18px;
+}
+.lmod7 {
+  height: 25px;
+   width: 25px;
+}
+.lmod8 {
+  width: 18px;;
+  height: 3px;
+  border-radius: 2px;
+  
+  box-shadow: 1px 1px 1px 0px rgb(0 0 0 / 60%);
+}
+.lbox10 {
+  height: 32.35vw;
+  background-size: 26px 32.86vw;
+  width: 26px;
+}
+.lmod6 {
+  height: 25.79vw;
+  background-size: 22px 26.04vw;
+  padding-top: 1.93vw;
+  width: 22px;
+}
+.lmain8 {
+  height: 7px;
+   padding-top: 1px;
+  padding-left: 1px;
+  width: 15px;
+}
 }
 
 @media screen and (max-width: 600px){
@@ -628,6 +666,15 @@ html {
   filter:alpha(Opacity=9100);
   -moz-opacity:0.99;
   opacity: 0.99;
+}
+.ladder {
+  z-index: 16;
+  height: 100%;
+  position: absolute;
+  right: 95%;
+  top: 25%;
+  padding: 20vw 3px;
+  visibility: visible;
 }
 /* 
 .chat-body {
