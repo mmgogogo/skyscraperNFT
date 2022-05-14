@@ -348,8 +348,8 @@
  
   }
 
-  @media screen and (max-width: 800px) {
-    .tfont_s24 {
+@media screen and (max-width: 800px) {
+  .tfont_s24 {
       font-size: 15px;
   }
   .nav-margin {
@@ -402,8 +402,8 @@ html {
   font-family: DM Sans, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 .floor-img {
-  width: 58%;
-  height: 75px;
+  width: 48%;
+  height: 28;
   margin: 0px;
   padding: 0px;
 }
@@ -480,6 +480,65 @@ html {
   text-align: center;
   text-shadow: 2px 1px 1px rgb(0 0 0 / 20%);
 }
+}
+
+@media screen and (max-width: 600px){
+.nav {
+    position: absolute;
+    height: 100%;
+    background-color: rgba(43, 46, 53, 1);
+    width: 0%;
+    overflow-y: scroll;
+    padding-top: 75px;
+    z-index: 100;
+}
+.navigation {
+  width: 50%;
+  display: flex;
+  justify-content: flex-end;
+  align-content: center;
+  margin-left: 20px;
+}
+.wallet-txt {
+  font-size: 14px;
+  margin: 0 auto;
+  font-family: PingFangSC-Semibold, PingFang SC;
+}
+.wallet {
+  width: 110px;
+  height: 40px;
+  /* background: url(../images/wallet.png) -1px -1px no-repeat; */
+  border-radius: 10px;
+  background-color: #6B6D71;
+}
+.profile {
+  width: 45px;
+  height: 45px;
+  background: url(data:image/png;base64,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) 0px 0px no-repeat;
+  background-size: 44px 44px;
+  margin: auto 0;
+}
+
+.logo {
+  width: 50%;
+  height: 75px;
+  background-size: auto 57px;
+  margin-top: 0px;
+  margin-left: -20px;
+}
+
+.btn-margin-2 {
+  margin: auto 20px;
+}
+.wallet-wrapper {
+    height: 100%;
+    background-color: rgba(255, 255, 255, 1);
+    right: 0px;
+    width: 50%;
+    position: absolute;
+    top: 0px;
+}
+
 /* 
   .layer1 {
     width: 25px;
