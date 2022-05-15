@@ -45,7 +45,7 @@ export default {
         'box-sizing': 'content-box',
         'border-width': '0px',
         height: '95%',
-        width: '96%'
+        width: '98%'
 
       }
     }
@@ -76,12 +76,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.game {
+@media screen and (max-width: 800px){
+  .game {
   z-index: 200;
   position: absolute;
-  height: 100%;
+  height: 50%;
   width: 100%;
-  top: 0px;
+  top: 25%;
   left: 0px;
   margin: 0 auto;
   display: flex;
@@ -90,6 +91,24 @@ export default {
   align-items: center;
   border-radius: inherit;
   background-color: rgb(4 4 4 / 90%);
+}
+  }
+@media screen and (min-width: 801px){
+.game {
+  z-index: 200;
+  position: absolute;
+  height: 98%;
+  width: 100%;
+  top: 1%;
+  left: 0px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: inherit;
+  background-color: rgb(4 4 4 / 90%);
+}
 }
 .close {
   position: absolute;
