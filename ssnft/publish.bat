@@ -1,10 +1,5 @@
-:: deploy windows
-
-:: build app
-yarn run build
-
-cp -R CNAME dist/
-cp -R doc.md dist/
+copy C:\Users\Administrator.SZ-20171008YJHA\Documents\GitHub\www\skyscraperNFT\ssnft\CNAME C:\Users\Administrator.SZ-20171008YJHA\Documents\GitHub\www\skyscraperNFT\ssnft\dist\
+copy C:\Users\Administrator.SZ-20171008YJHA\Documents\GitHub\www\skyscraperNFT\ssnft\doc.md C:\Users\Administrator.SZ-20171008YJHA\Documents\GitHub\www\skyscraperNFT\ssnft\dist\
 
 :: navigate into the build output directory
 cd dist

@@ -72,6 +72,7 @@ export default {
   border-radius: inherit;
   background-color: rgb(4 4 4 / 90%);
 }
+
 .close {
   position: absolute;
   top: 12px;
