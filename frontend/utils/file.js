@@ -1,4 +1,4 @@
-import { NFTStorage } from 'https://cdn.jsdelivr.net/npm/nft.storage/dist/bundle.esm.min.js'
+import { NFTStorage } from './bundle.esm.min.js'
 const NFT_STORAGE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweEU0QTFDOTZBRjA1N2JkNDZGOGM0OThlOTY2MjcyOTA2MjgzNDM1MGIiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYzOTM5MjIxMzI0OCwibmFtZSI6InNtYXJ0LnN0b25lIn0.uO9UTsdRDUnEcr5F54HTqkPUl2TetSH9HNX2Cf-TNJc";
 
 function log(msg) {

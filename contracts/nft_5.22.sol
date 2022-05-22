@@ -8,12 +8,10 @@ import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract IBuilding is Context, Ownable, ERC721, ERC721Burnable, ERC721Pausable, IERC721Enumerable {
     using EnumerableSet for EnumerableSet.UintSet;
     using Counters for Counters.Counter;
-    using Strings for uint256;
 
     // fund account
     address payable public receiver;
@@ -21,15 +19,13 @@ contract IBuilding is Context, Ownable, ERC721, ERC721Burnable, ERC721Pausable, 
     // nft storage struct
     enum Sales { EXPECT, SELLING, CLOSE }
 
-    // houtType 1-17 blocks information
-    uint8[][] private blocks = [[4,4,0,0],[4,2,1,0],[4,1,0,1],[4,0,2,0],[5,5,0,0],[5,3,1,0],[5,2,0,1],[5,1,2,0],[5,0,1,1],[7,7,0,0],[7,5,1,0],[7,4,0,1],[7,3,2,0],[7,2,1,1],[7,1,3,0],[7,1,0,2],[7,0,2,1]];
-
-    // floor information
+    // 楼层描述
     struct Floor {
         uint256 floorNo;    // floor number
         address owner;      // owner who minted
         uint256 tokenId;    // nftId
-        uint256 houseType;  // random houseType
+        uint256 houseType;  // random hourseType 
+        bytes uri;          // tokenURI TODO
     }
 
     uint256 public buildingId;
@@ -78,7 +74,7 @@ contract IBuilding is Context, Ownable, ERC721, ERC721Burnable, ERC721Pausable, 
         require(value >= _mintPrice && value >= num * _mintPrice, "check balance");
         
         for(uint256 i = 0; i < num; i++) {
-            _tokenIdCounter.increment();                    /// @notice tokenId increment
+            _tokenIdCounter.increment();                        /// @notice tokenId increment
             uint256 tokenId = _tokenIdCounter.current();    /// @notice tokenId start one
             mintOne(tokenId);
         }
@@ -88,10 +84,7 @@ contract IBuilding is Context, Ownable, ERC721, ERC721Burnable, ERC721Pausable, 
         uint256 floor = tokenId;
         require(_floorTokenMap[floor].owner == address(0), "floor minted");
 
-        uint256 houseType = 17;
-        if (tokenId <= 20) {
-            houseType = random(tokenId);
-        }
+        uint256 houseType = random(tokenId);
 
         _floorTokenMap[floor].owner = msg.sender;       /// @notice Set floor owner
         _floorTokenMap[floor].tokenId = tokenId;        /// @notice Set floor tokenId
@@ -156,36 +149,10 @@ contract IBuilding is Context, Ownable, ERC721, ERC721Burnable, ERC721Pausable, 
         require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
 
         string memory baseURI = _baseURI();
-        baseURI = bytes(baseURI).length > 0 ? baseURI : "https://theskyscraper.io/images/";
         uint256 floor = _tokenFloorMap[tokenId];
-        uint256 houseType = _floorTokenMap[floor].houseType;
-        
-        string memory metadata = string(abi.encodePacked(
-            '{"platform": "Skyscraper NFT",' ,
-            '"name": "Floor #', tokenId.toString(), '",' ,
-            '"description": "This a description~",' ,
-            '"collection_name": "Skyscraper NFT",' ,
-            '"image": "', baseURI , tokenId.toString(), '.png",' ,
-            '"external_url": "', baseURI , tokenId.toString(), '",' ,
-            '"interactive_nft": {' ,
-            '"code_uri": "', baseURI, '",' ,
-            '"version": "2.0"},' ,
-            '"attributes": [{"trait_type": "HouseType","value": "', houseType.toString() ,'"},' ,
-            '{"trait_type": "Size","value": "', _blockInfo(houseType, 0) ,'"},' ,
-            '{"trait_type": "1 Block Room","value": "', _blockInfo(houseType, 1) ,'"},' ,
-            '{"trait_type": "2 Blocks Room","value": "', _blockInfo(houseType, 2) ,'"},' ,
-            '{"trait_type": "3 Blocks Room","value": "', _blockInfo(houseType, 3) ,'"}]}'
-        ));
 
-        return string(abi.encodePacked(
-            "data:application/json;base64,",
-            Base64.encode(bytes(metadata))
-        ));
-    }
-
-    function _blockInfo(uint256 houseType, uint8 index) private view returns (string memory) {
-        uint256 room = blocks[houseType-1][index];
-        return room.toString();
+        return bytes(baseURI).length > 0 ? 
+            string(abi.encodePacked(baseURI, string(_floorTokenMap[floor].uri))) : string(_floorTokenMap[floor].uri);
     }
     
     function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal override(ERC721, ERC721Pausable) {
@@ -227,66 +194,5 @@ contract IBuilding is Context, Ownable, ERC721, ERC721Burnable, ERC721Pausable, 
 
     function withdraw() public onlyOwner() {
         receiver.transfer(address(this).balance);
-    }
-}
-
-/// [MIT License]
-/// @title Base64
-/// @notice Provides a function for encoding some bytes in base64
-/// @author Brecht Devos <brecht@loopring.org>
-library Base64 {
-    bytes internal constant TABLE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
-    /// @notice Encodes some bytes to the base64 representation
-    function encode(bytes memory data) internal pure returns (string memory) {
-        uint256 len = data.length;
-        if (len == 0) return "";
-
-        // multiply by 4/3 rounded up
-        uint256 encodedLen = 4 * ((len + 2) / 3);
-
-        // Add some extra buffer at the end
-        bytes memory result = new bytes(encodedLen + 32);
-
-        bytes memory table = TABLE;
-
-        assembly {
-            let tablePtr := add(table, 1)
-            let resultPtr := add(result, 32)
-
-            for {
-                let i := 0
-            } lt(i, len) {
-
-            } {
-                i := add(i, 3)
-                let input := and(mload(add(data, i)), 0xffffff)
-
-                let out := mload(add(tablePtr, and(shr(18, input), 0x3F)))
-                out := shl(8, out)
-                out := add(out, and(mload(add(tablePtr, and(shr(12, input), 0x3F))), 0xFF))
-                out := shl(8, out)
-                out := add(out, and(mload(add(tablePtr, and(shr(6, input), 0x3F))), 0xFF))
-                out := shl(8, out)
-                out := add(out, and(mload(add(tablePtr, and(input, 0x3F))), 0xFF))
-                out := shl(224, out)
-
-                mstore(resultPtr, out)
-
-                resultPtr := add(resultPtr, 4)
-            }
-
-            switch mod(len, 3)
-            case 1 {
-                mstore(sub(resultPtr, 2), shl(240, 0x3d3d))
-            }
-            case 2 {
-                mstore(sub(resultPtr, 1), shl(248, 0x3d))
-            }
-
-            mstore(result, encodedLen)
-        }
-
-        return string(result);
     }
 }
