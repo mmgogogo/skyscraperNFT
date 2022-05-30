@@ -60,7 +60,7 @@ contract IBuilding is Context, Ownable, ERC721, ERC721Burnable, ERC721Pausable, 
     constructor() ERC721("Skyscraper NFT", "SKY") {
         _status = _NOT_ENTERED;
         receiver = payable(msg.sender);
-        _mintPrice = 0.01 ether;
+        _mintPrice = 0.1 ether;
     }
 
     function Kill() public payable onlyOwner() {
