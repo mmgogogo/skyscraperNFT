@@ -270,12 +270,11 @@
             <div class="mint-right flex-col">
               <span class="mint-desc-title flex-row">Skyscraper Floor</span>
               <span class="mint-desc-content flex-row">
-                Phanta Bear is a collection of 10,000 algorithmically generated digital collectibles that double as memebership cards for the Ezek Club. Each Phanta Bear has a unique set of traits and unlocks varying, unique levels of access and perks for its owner. Phanta Bear project was jointly launched by PHANTACi and Ezek
+                Skyscrapers is a Metaverse built on networks and block chains. Each floor of the Skyscraper, as an independent NFT space, extends from the bottom up to form a single-dimensional perspective. This can be your room, the asset showroom, the Party scene, the community space, a variety of ways to participate.
               </span>
               <div class="mint-btn flex-row align-center btn-hand">
                 <span class="mint-btn-txt flex-col" @click="realMint()">MINT</span>
               </div>
-              <!-- <span class="txt4">请输入你需要mint的楼层号</span> -->
             </div>
           </div>
           <div class="mint-left-layer flex-col">
