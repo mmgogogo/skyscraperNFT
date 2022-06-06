@@ -438,10 +438,14 @@ export default {
       },
       gameConfig: {
         // baseUrl: 'http://127.0.0.1:9000', // https://dontil.github.io/test/ http://127.0.0.1:9000
-        baseUrl: 'https://kokoya-game-1308188195.file.myqcloud.com/dress/game/nft/index.html',
+        // baseUrl: 'https://kokoya-game-1308188195.file.myqcloud.com/dress/game/nft/index.html',
+        // gameUrl: '',
+        // avatarBaseUrl: 'https://kokoya-game-1308188195.file.myqcloud.com/dress/game/nftAvatar/index.html',
+        // lobbyUrl: 'https://kokoya-game-1308188195.file.myqcloud.com/dress/game/nftHall/index.html',
+        baseUrl: 'https://sky001-1300260371.cos.ap-hongkong.myqcloud.com/game/index.html',
         gameUrl: '',
-        avatarBaseUrl: 'https://kokoya-game-1308188195.file.myqcloud.com/dress/game/nftAvatar/index.html',
-        lobbyUrl: 'https://kokoya-game-1308188195.file.myqcloud.com/dress/game/nftHall/index.html',
+        avatarBaseUrl: 'https://sky001-1300260371.cos.ap-hongkong.myqcloud.com/avatar/index.html',
+        lobbyUrl: 'https://sky001-1300260371.cos.ap-hongkong.myqcloud.com/hall/index.html',
         windowHeight: window.innerHeight
       },
       address: '',
