@@ -1759,7 +1759,7 @@ export default {
         console.log('[Main][created] display Dapp innerHeight ', _that.$Dapp, window.innerHeight)
         const innerHeight = window.innerHeight
         if (innerHeight) {
-          const tempFloors = Math.ceil(innerHeight / 50)
+          const tempFloors = Math.ceil(innerHeight / 75)
           console.log('[Main][created] tempFloors ', tempFloors)
           // if (tempFloors > _that.building.page) {
           _that.building.page = tempFloors

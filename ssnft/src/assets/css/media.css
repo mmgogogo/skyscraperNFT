@@ -532,7 +532,7 @@ html {
     z-index: 100;
 }
 .navigation {
-  width: 50%;
+  width:50%;
   display: flex;
   justify-content: flex-end;
   align-content: center;
@@ -559,11 +559,11 @@ html {
 }
 
 .logo {
-  width: 50%;
+  width: 240px;
   height: 75px;
   background-size: auto 57px;
   margin-top: 0px;
-  margin-left: -20px;
+  margin-left: 1%;
 }
 
 .btn-margin-2 {
